@@ -46,6 +46,10 @@ public class Budget {
 		return ownCategory;
 	}
 	
+	public Set<Tag> getTags() {
+		return Collections.unmodifiableSet(tags);
+	}
+	
 	public void addTag(Tag t) {
 		if (t != null) {
 			this.tags.add(t);
@@ -60,9 +64,5 @@ public class Budget {
 		} else {
 			//TODO exception in tags/budget?
 		}
-	}
-	
-	public Set<Tag> getTags() {
-		return Collections.unmodifiableSet(tags);
 	}
 }
