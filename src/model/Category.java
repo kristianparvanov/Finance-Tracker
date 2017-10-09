@@ -2,12 +2,22 @@ package model;
 
 public class Category {
 
+	private int categoryID;
 	private String name;
-	private String type;
+	private TransactionType type;
 	
-	public Category(String name, String type) {
+	public Category(int categoryID, String name, TransactionType type) {
+		this.categoryID = categoryID;
 		this.name = name;
 		this.type = type;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public TransactionType getType() {
+		return type;
 	}
 	
 	
