@@ -10,12 +10,12 @@ public class DBManager {
     private static final String DB_URL = "jdbc:mysql://localhost:3306/finance_tracker";
     private static final String USERNAME = "root";
     private static final String PASSWORD = "root"; 
-    private Connection conn;
+    private Connection connection;
 
     private DBManager() {
         try {
             Class.forName(DBManager.JDBC_DRIVER);
-            this.conn = DriverManager.getConnection(DBManager.DB_URL, DBManager.USERNAME, DBManager.PASSWORD);
+            this.connection = DriverManager.getConnection(DBManager.DB_URL, DBManager.USERNAME, DBManager.PASSWORD);
         } catch (ClassNotFoundException e) {
             System.out.println("Unable to load database driver: " + e.getMessage());
         } catch (SQLException e) {
@@ -35,12 +35,12 @@ public class DBManager {
     }
 
     public Connection getConnection() {
-        return this.conn;	
+        return this.connection;	
     }
 
     public void closeConnection() {
         try {
-            this.conn.close();
+            this.connection.close();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
