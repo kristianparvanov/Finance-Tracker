@@ -10,11 +10,13 @@ public class Account {
 	private long accaountID;
 	private String name;
 	private BigDecimal amount;
+	private User user;
 	private List<Transaction> transactions;
 	
-	public Account(String name, BigDecimal amount) {
+	public Account(String name, BigDecimal amount, User user) {
 		this.name = name;
 		this.amount = amount;
+		this.user = user;
 		
 		transactions = new ArrayList<>();
 	}

@@ -41,4 +41,21 @@ public class UserDAO {
 		
 		u.setUserId(rs.getLong(1));
 	}
+	
+	public User getUserByUserId(int userId) throws SQLException {
+		String query = "SELECT user_id, username, password, email, first_name, last_name FROM finance_tracker.users WHERE finance_tracker.users.user_id = ?";
+		
+		PreparedStatement statement = null;
+		User user = null;
+		statement = DBManager.getInstance().getConnection().prepareStatement(query);
+		statement.setInt(1, userId);
+		ResultSet result = statement.executeQuery();
+		String userName = result.getString("username");
+		String password = result.getString("password");
+		String email = result.getString("email");
+		String firstName = result.getString("first_name");
+		String lastName = result.getString("last_name");
+		user = new User(userName, password, email, firstName, lastName);
+		return user;
+	}
 }

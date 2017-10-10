@@ -4,11 +4,14 @@ import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.Account;
+import model.Category;
+import model.OwnCategory;
+import model.Tag;
 import model.Transaction;
 
 public class TransactionDAO {
@@ -23,7 +26,7 @@ public class TransactionDAO {
 	
 	public List<Transaction> getAllTransactions() throws SQLException {
 		List<Transaction> transactions = new ArrayList<Transaction>();
-		String query = "SELECT transaction_id, type, date, amount, account, category, own_category FROM finance_tracker.transactions";
+		String query = "SELECT transaction_id, type, date, amount, account_id, category_id, own_category_id FROM finance_tracker.transactions";
 		
 		PreparedStatement statement = null;
 		statement = DBManager.getInstance().getConnection().prepareStatement(query);
@@ -33,9 +36,11 @@ public class TransactionDAO {
 			String type = result.getString("type");
 			LocalDateTime date = result.getTimestamp("date").toLocalDateTime();
 			BigDecimal amount = result.getBigDecimal("amount");
-			String account = result.getString("account");
-			String category = result.getString("category");
-			String ownCategory = result.getString("own_category");
+			int accountId = result.getInt("account_id");
+			Account account = AccountDAO.getInstance().getAccountByAccountId(accountId);
+			//Category category = result.getString("category");
+			//OwnCategory ownCategory = result.getString("own_category");
+			List<Tag> tags = TagDAO.getInstance().getTagsByTransactionId(transactionId);
 			//Transaction t = new Transaction(transactionId, type, amount, account, category, ownCategory, date, tags);
 			//transactions.add(t);
 		}
