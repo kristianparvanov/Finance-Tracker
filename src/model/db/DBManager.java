@@ -22,27 +22,14 @@ public class DBManager {
             System.out.println("Unable to connect to database: " + e.getMessage());
         }
     }
-
-//    public static DBManager getInstance() {
-//        if (DBManager.instance == null) {
-//            synchronized (DBManager.class) {
-//                if (DBManager.instance == null) {
-//                    DBManager.instance = new DBManager();
-//                }
-//            }
-//        }
-//        return DBManager.instance;
-//    }
     
     public static synchronized DBManager getInstance() {
-    	if (instance == null) {
-			instance = new DBManager();
+    	if (DBManager.instance == null) {
+    		DBManager.instance = new DBManager();
 		}
-    	
-    	return instance;
+    	return DBManager.instance;
     }
     
-
     public Connection getConnection() {
         return this.connection;	
     }
