@@ -1,4 +1,4 @@
-package dao;
+package model.db;
 
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;

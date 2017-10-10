@@ -1,4 +1,4 @@
-package dao;
+package model.db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -23,16 +23,25 @@ public class DBManager {
         }
     }
 
-    public static DBManager getInstance() {
-        if (DBManager.instance == null) {
-            synchronized (DBManager.class) {
-                if (DBManager.instance == null) {
-                    DBManager.instance = new DBManager();
-                }
-            }
-        }
-        return DBManager.instance;
+//    public static DBManager getInstance() {
+//        if (DBManager.instance == null) {
+//            synchronized (DBManager.class) {
+//                if (DBManager.instance == null) {
+//                    DBManager.instance = new DBManager();
+//                }
+//            }
+//        }
+//        return DBManager.instance;
+//    }
+    
+    public static synchronized DBManager getInstance() {
+    	if (instance == null) {
+			instance = new DBManager();
+		}
+    	
+    	return instance;
     }
+    
 
     public Connection getConnection() {
         return this.connection;	

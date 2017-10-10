@@ -7,13 +7,12 @@ import java.util.Collections;
 
 public class Account {
 
-	private int accaountID;
+	private long accaountID;
 	private String name;
 	private BigDecimal amount;
 	private List<Transaction> transactions;
 	
-	public Account(int accaountID, String name, BigDecimal amount) {
-		this.accaountID = accaountID;
+	public Account(String name, BigDecimal amount) {
 		this.name = name;
 		this.amount = amount;
 		
@@ -36,7 +35,7 @@ public class Account {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + accaountID;
+		result = prime * result + (int) (accaountID ^ (accaountID >>> 32));
 		result = prime * result + ((amount == null) ? 0 : amount.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((transactions == null) ? 0 : transactions.hashCode());
@@ -72,7 +71,4 @@ public class Account {
 		return true;
 	}
 
-	
-	
-	
 }

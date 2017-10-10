@@ -4,21 +4,22 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.codec.digest.DigestUtils;
+
 public class User {
 
-	private int userID;
-	private String name;
-	private String password;
+	private long userId;
+	private String userName;
+	private byte[] password;
 	private String email;
 	private String firstName;
 	private String lastName;
 	private Set<Account> accounts;
 	private Set<OwnCategory> ownCategories;
 	
-	public User(int userID, String name, String password, String email, String firstName, String lastName) {
-		this.userID = userID;
-		this.name = name;
-		this.password = password;
+	public User(String userName, String password, String email, String firstName, String lastName) {
+		this.userName = userName;
+		this.password = DigestUtils.sha512(password);
 		this.email = email;
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -27,12 +28,12 @@ public class User {
 		this.ownCategories = new HashSet<>();
 	}
 
-	public String getName() {
-		return name;
+	public String getUserName() {
+		return userName;
 	}
 
-	public String getPassword() {
-		return password;
+	public byte[] getPassword() {
+		return password.clone();
 	}
 
 	public String getEmail() {
@@ -54,7 +55,10 @@ public class User {
 	public Set<OwnCategory> getOwnCategories() {
 		return Collections.unmodifiableSet(ownCategories);
 	}
-	
+
+	public void setUserId(long userID) {
+		this.userId = userID;
+	}
 	
 	
 }

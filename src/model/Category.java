@@ -2,12 +2,11 @@ package model;
 
 public class Category {
 
-	private int categoryID;
+	private long categoryID;
 	private String name;
 	private TransactionType type;
 	
-	public Category(int categoryID, String name, TransactionType type) {
-		this.categoryID = categoryID;
+	public Category(String name, TransactionType type) {
 		this.name = name;
 		this.type = type;
 	}
@@ -19,6 +18,5 @@ public class Category {
 	public TransactionType getType() {
 		return type;
 	}
-	
 	
 }

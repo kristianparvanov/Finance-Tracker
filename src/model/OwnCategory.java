@@ -2,12 +2,11 @@ package model;
 
 public class OwnCategory {
 
-	private int ownCategoryId;
+	private long ownCategoryId;
 	private String name;
 	private TransactionType type;
 	
-	public OwnCategory(int ownCategoryId, String name, TransactionType type) {
-		this.ownCategoryId = ownCategoryId;
+	public OwnCategory(String name, TransactionType type) {
 		this.name = name;
 		this.type = type;
 	}
@@ -25,7 +24,7 @@ public class OwnCategory {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ownCategoryId;
+		result = prime * result + (int) (ownCategoryId ^ (ownCategoryId >>> 32));
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
 	}
@@ -51,7 +50,4 @@ public class OwnCategory {
 		return true;
 	}
 
-	
-	
-	
 }
