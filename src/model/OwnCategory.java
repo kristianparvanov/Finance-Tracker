@@ -19,6 +19,10 @@ public class OwnCategory {
 		return type;
 	}
 	
+	public long getOwnCategoryId() {
+		return ownCategoryId;
+	}
+	
 	public void setOwnCategoryId(long ownCategoryId) {
 		this.ownCategoryId = ownCategoryId;
 	}

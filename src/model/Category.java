@@ -19,6 +19,10 @@ public class Category {
 		return type;
 	}
 	
+	public long getCategoryId() {
+		return categoryID;
+	}
+	
 	public void setCategoryID(long categoryID) {
 		this.categoryID = categoryID;
 	}
