@@ -161,7 +161,7 @@ public class UserDAO {
 		if (ALL_USERS.containsKey(username)) {
 			User user = ALL_USERS.get(username);
 			
-			return hashedPassword.equals(DigestUtils.sha512Hex(user.getPassword()));
+			return hashedPassword.equals(user.getPassword());
 		}
 		
 		return false;
