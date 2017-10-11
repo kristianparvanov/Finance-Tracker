@@ -33,13 +33,29 @@ public class TagDAO {
 		return tag;
 	}
 	
-	public HashSet<Tag> getTagsByTransactionId(int transactionId) throws SQLException {
+	public HashSet<Tag> getTagsByTransactionId(long transactionId) throws SQLException {
 		HashSet<Tag> tags = new HashSet<Tag>();
 		String query = "SELECT tag_id, transaction_id FROM finance_tracker.transactions_has_tags WHERE transaction_id = ?";
 		
 		PreparedStatement statement = null;
 		statement = CONNECTION.prepareStatement(query);
-		statement.setInt(1, transactionId);
+		statement.setLong(1, transactionId);
+		ResultSet result = statement.executeQuery();
+		while (result.next()) {
+			int tagId = result.getInt("tag_id");
+			Tag tag = getTagByTagId(tagId);
+			tags.add(tag);
+		}
+		return tags;
+	}
+
+	public HashSet<Tag> getTagsByBudgetId(long budgetId) throws SQLException {
+		HashSet<Tag> tags = new HashSet<Tag>();
+		String query = "SELECT budget_id, tag_id FROM finance_tracker.budgets_has_tags WHERE budget_id = ?";
+		
+		PreparedStatement statement = null;
+		statement = CONNECTION.prepareStatement(query);
+		statement.setLong(1, budgetId);
 		ResultSet result = statement.executeQuery();
 		while (result.next()) {
 			int tagId = result.getInt("tag_id");
