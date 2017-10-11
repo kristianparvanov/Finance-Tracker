@@ -13,6 +13,7 @@ import model.Category;
 import model.OwnCategory;
 import model.Tag;
 import model.Transaction;
+import model.TransactionType;
 
 public class TransactionDAO {
 	private static TransactionDAO instance;
@@ -34,15 +35,18 @@ public class TransactionDAO {
 		while (result.next()) {
 			int transactionId = result.getInt("transaction_id");
 			String type = result.getString("type");
+			TransactionType transactionType = 
 			LocalDateTime date = result.getTimestamp("date").toLocalDateTime();
 			BigDecimal amount = result.getBigDecimal("amount");
 			int accountId = result.getInt("account_id");
 			Account account = AccountDAO.getInstance().getAccountByAccountId(accountId);
-			//Category category = result.getString("category");
-			//OwnCategory ownCategory = result.getString("own_category");
+			int categoryId = result.getInt("category_id");
+			Category category = CategoryDAO.getInstance().getCategoryByCategoryId(categoryId);
+			int ownCategoryId = result.getInt("own_category_id");
+			OwnCategory ownCategory = OwnCategoryDAO.getInstance().getOwnCategoryByOwnCategoryId(ownCategoryId);
 			List<Tag> tags = TagDAO.getInstance().getTagsByTransactionId(transactionId);
-			//Transaction t = new Transaction(transactionId, type, amount, account, category, ownCategory, date, tags);
-			//transactions.add(t);
+			Transaction t = new Transaction(transactionId, type, amount, account, category, ownCategory, date, tags);
+			transactions.add(t);
 		}
 		return transactions;
 	}
