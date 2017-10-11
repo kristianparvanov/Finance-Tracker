@@ -28,6 +28,10 @@ public class User {
 		this.ownCategories = new HashSet<>();
 	}
 
+	public long getUserId() {
+		return userId;
+	}
+	
 	public String getUserName() {
 		return userName;
 	}

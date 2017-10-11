@@ -18,6 +18,10 @@ public class OwnCategory {
 	public TransactionType getType() {
 		return type;
 	}
+	
+	public void setOwnCategoryId(long ownCategoryId) {
+		this.ownCategoryId = ownCategoryId;
+	}
 
 	@Override
 	public int hashCode() {

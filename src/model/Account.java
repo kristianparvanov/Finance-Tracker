@@ -13,12 +13,15 @@ public class Account {
 	private User user;
 	private List<Transaction> transactions;
 	
-	public Account(String name, BigDecimal amount, User user) {
+	public Account(String name, BigDecimal amount, User user, List<Transaction> transactions) {
 		this.name = name;
 		this.amount = amount;
 		this.user = user;
-		
-		transactions = new ArrayList<>();
+		this.transactions = transactions;
+	}
+	
+	public Account(String name, BigDecimal amount, User user) {
+		this(name, amount, user, new ArrayList<>());
 	}
 
 	public String getName() {
@@ -33,6 +36,10 @@ public class Account {
 		return Collections.unmodifiableList(transactions);
 	}
 
+	public void setAccaountID(long accaountID) {
+		this.accaountID = accaountID;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
