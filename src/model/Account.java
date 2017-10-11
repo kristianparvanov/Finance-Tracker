@@ -40,6 +40,10 @@ public class Account {
 		return accaountID;
 	}
 
+	public long getUserId() {
+		return user.getUserId();
+	}
+
 	public void setAccaountID(long accaountID) {
 		this.accaountID = accaountID;
 	}

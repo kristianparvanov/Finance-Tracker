@@ -45,7 +45,7 @@ public class CategoryDAO {
 		String sql = "SELECT name, type FROM categories WHERE category_id = ?";
 		
 		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(sql);
-		ps.setInt(1, + categoryId);
+		ps.setInt(1, categoryId);
 		
 		ResultSet rs = ps.executeQuery();
 		

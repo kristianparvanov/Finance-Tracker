@@ -1,6 +1,7 @@
 package model.db;
 
 import java.math.BigDecimal;
+import java.security.MessageDigest;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,6 +13,7 @@ import java.util.HashMap;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.util.List;
+import java.util.Map;
 
 import model.Account;
 import model.Transaction;
@@ -20,7 +22,7 @@ import model.User;
 public class UserDAO {
 
 	private static UserDAO instance;
-	private static final HashMap<String, User> ALL_USERS = new HashMap<>();
+	private static final Map<String, User> ALL_USERS = new HashMap<>();
 	
 	private UserDAO() throws SQLException{
 		getAllUsers();
@@ -70,10 +72,10 @@ public class UserDAO {
 		ps.setString(5, u.getLastName());
 		ps.executeUpdate();
 		
-		ResultSet rs = ps.getGeneratedKeys();
-		rs.next();
+		ResultSet res = ps.getGeneratedKeys();
+		res.next();
 		
-		u.setUserId(rs.getLong(1));
+		u.setUserId(res.getLong(1));
 		
 		ALL_USERS.put(u.getUserName(), u);
 	}
@@ -148,14 +150,14 @@ public class UserDAO {
 	}
 	
 	public synchronized boolean isValidLogin(String username, String password) throws SQLException {
-		String hashedPassword = DigestUtils.sha512Hex(password);
+		byte[] hashedPassword = DigestUtils.sha512(DigestUtils.sha512Hex(DigestUtils.sha512(password)));
 		
 		getAllUsers();
 		
 		if (ALL_USERS.containsKey(username)) {
 			User user = ALL_USERS.get(username);
 			
-			return hashedPassword.equals(user.getPassword());
+			return MessageDigest.isEqual(hashedPassword, user.getPassword());
 		}
 		
 		return false;
