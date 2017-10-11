@@ -17,15 +17,18 @@ public class User {
 	private Set<Account> accounts;
 	private Set<OwnCategory> ownCategories;
 	
-	public User(String userName, String password, String email, String firstName, String lastName) {
+	public User(String userName, String password, String email, String firstName, String lastName, Set<Account> accounts, Set<OwnCategory> ownCategories) {
 		this.userName = userName;
 		this.password = DigestUtils.sha512(password);
 		this.email = email;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		
-		this.accounts = new HashSet<>();
-		this.ownCategories = new HashSet<>();
+		this.accounts = accounts;
+		this.ownCategories = ownCategories;
+	}
+	
+	public User(String userName, String password, String email, String firstName, String lastName) {
+		this(userName, password, email, firstName, lastName, new HashSet<>(), new HashSet<>());
 	}
 
 	public long getUserId() {
