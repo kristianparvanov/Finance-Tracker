@@ -3,8 +3,8 @@ package model.db;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import model.Tag;
 
@@ -32,8 +32,8 @@ public class TagDAO {
 		return tag;
 	}
 	
-	public List<Tag> getTagsByTransactionId(int transactionId) throws SQLException {
-		List<Tag> tags = new ArrayList<Tag>();
+	public HashSet<Tag> getTagsByTransactionId(int transactionId) throws SQLException {
+		HashSet<Tag> tags = new HashSet<Tag>();
 		String query = "SELECT tag_id, transaction_id FROM finance_tracker.transactions_has_tags WHERE transaction_id = ?";
 		
 		PreparedStatement statement = null;
