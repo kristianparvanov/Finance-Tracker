@@ -65,7 +65,7 @@ public class TransactionDAO {
 	}
 
 	public void insertTransaction(Transaction t) throws SQLException {
-		String query = "INSERT INTO finance_tracker.transactions (type, date, amount, account_id, category_id, own_category_id) VALUES (?, ?, ?, ?, ?, ?)";
+		String query = "INSERT INTO finance_tracker.transactions (type, date, amount, account_id, category_id, own_category_id) VALUES (?, STR_TO_DATE('?', '%Y-%m-%d %H:%i:%s'), ?, ?, ?, ?)";
 		PreparedStatement statement = CONNECTION.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 		statement.setString(1, t.getType().toString());
 		statement.setTimestamp(2, Timestamp.valueOf(t.getDate()));
@@ -83,7 +83,7 @@ public class TransactionDAO {
 	}
 	
 	public void updateTransaction(Transaction t) throws SQLException {
-		String query = "UPDATE finance_tracker.transactions SET type = ?, date = ?, amount = ?, account_id = ?, category_id = ?, own_category_id = ?) WHERE transaction_id = ?";
+		String query = "UPDATE finance_tracker.transactions SET type = ?, date = STR_TO_DATE('?', '%Y-%m-%d %H:%i:%s'), amount = ?, account_id = ?, category_id = ?, own_category_id = ?) WHERE transaction_id = ?";
 		PreparedStatement statement = CONNECTION.prepareStatement(query);
 		statement.setString(1, t.getType().toString());
 		statement.setTimestamp(2, Timestamp.valueOf(t.getDate()));

@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Budget {
-	private int budgetId;
+	private long budgetId;
 	private String name;
 	private BigDecimal amount;
 	private LocalDateTime fromDate;
@@ -29,12 +29,28 @@ public class Budget {
 		this.ownCategory = ownCategory;
 	}
 	
+	public long getBudgetId() {
+		return budgetId;
+	}
+	
+	public void setBudgetId(long budgetId) {
+		this.budgetId = budgetId;
+	}
+	
 	public String getName() {
 		return name;
 	}
 	
 	public BigDecimal getAmount() {
 		return amount;
+	}
+	
+	public LocalDateTime getFromDate() {
+		return fromDate;
+	}
+	
+	public LocalDateTime getToDate() {
+		return toDate;
 	}
 	
 	public Category getCategory() {
@@ -47,25 +63,5 @@ public class Budget {
 	
 	public Set<Tag> getTags() {
 		return Collections.unmodifiableSet(tags);
-	}
-	
-	public void setBudgetId(int budgetId) {
-		this.budgetId = budgetId;
-	}
-	
-	public void addTag(Tag t) {
-		if (t != null) {
-			this.tags.add(t);
-		} else {
-			//TODO exception in tags/budget?
-		}
-	}
-	
-	public void removeTag(Tag t) {
-		if (t != null) {
-			this.tags.remove(t);
-		} else {
-			//TODO exception in tags/budget?
-		}
 	}
 }
