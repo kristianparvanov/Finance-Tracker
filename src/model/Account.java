@@ -35,6 +35,10 @@ public class Account {
 	public List<Transaction> getTransactions() {
 		return Collections.unmodifiableList(transactions);
 	}
+	
+	public long getAccaountId() {
+		return accaountID;
+	}
 
 	public void setAccaountID(long accaountID) {
 		this.accaountID = accaountID;

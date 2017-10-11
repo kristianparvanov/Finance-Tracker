@@ -142,7 +142,7 @@ public class UserDAO {
 			int accountId = res.getInt("account_id");
 			String name = res.getString("name");
 			BigDecimal amount = new BigDecimal(res.getDouble("amount"));
-			List<Transaction> transactions = TransactionDAO.getInstance().getAllTransactions();
+			List<Transaction> transactions = TransactionDAO.getInstance().getAllTransactionsByAccountId(accountId);
 			
 			Account acc = new Account(name, amount, user, transactions);
 			acc.setAccaountID(accountId);

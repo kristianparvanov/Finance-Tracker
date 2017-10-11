@@ -1,15 +1,16 @@
 package model.db;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashSet;
-import java.util.Set;
 
 import model.Tag;
 
 public class TagDAO {
 	private static TagDAO instance;
+	private static final Connection CONNECTION = DBManager.getInstance().getConnection();
 	
 	public synchronized static TagDAO getInstance() {
 		if (instance == null) {
@@ -23,7 +24,7 @@ public class TagDAO {
 		
 		PreparedStatement statement = null;
 		Tag tag = null;
-		statement = DBManager.getInstance().getConnection().prepareStatement(query);
+		statement = CONNECTION.prepareStatement(query);
 		statement.setInt(1, tagId);
 		ResultSet result = statement.executeQuery();
 		int id = result.getInt("tag_id");
@@ -37,7 +38,7 @@ public class TagDAO {
 		String query = "SELECT tag_id, transaction_id FROM finance_tracker.transactions_has_tags WHERE transaction_id = ?";
 		
 		PreparedStatement statement = null;
-		statement = DBManager.getInstance().getConnection().prepareStatement(query);
+		statement = CONNECTION.prepareStatement(query);
 		statement.setInt(1, transactionId);
 		ResultSet result = statement.executeQuery();
 		while (result.next()) {

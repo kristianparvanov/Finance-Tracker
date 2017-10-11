@@ -18,9 +18,8 @@ public class Budget {
 	//tags Ì:Ì??
 	private HashSet<Tag> tags = new HashSet<Tag>();
 	
-	public Budget(int budgetId, String name, BigDecimal amount, LocalDateTime fromDate, LocalDateTime toDate,
+	public Budget(String name, BigDecimal amount, LocalDateTime fromDate, LocalDateTime toDate,
 			Account account, Category category, OwnCategory ownCategory) {
-		this.budgetId = budgetId;
 		this.name = name;
 		this.amount = amount;
 		this.fromDate = fromDate;
@@ -48,6 +47,10 @@ public class Budget {
 	
 	public Set<Tag> getTags() {
 		return Collections.unmodifiableSet(tags);
+	}
+	
+	public void setBudgetId(int budgetId) {
+		this.budgetId = budgetId;
 	}
 	
 	public void addTag(Tag t) {
