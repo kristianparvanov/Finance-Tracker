@@ -95,4 +95,15 @@ public class OwnCategoryDAO {
 		return oc;
 	}
 
+	public synchronized boolean isValidOwnCategory(User user, String name) throws SQLException {
+		Set<OwnCategory> ownCategories = getAllOwnCategoriesByUserId((int)user.getUserId());
+		
+		for (OwnCategory ownCategory : ownCategories) {
+			if (ownCategory.getName().equals(name)) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
 }
