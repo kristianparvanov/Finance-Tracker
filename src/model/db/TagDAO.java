@@ -12,8 +12,7 @@ public class TagDAO {
 	private static TagDAO instance;
 	private static final Connection CONNECTION = DBManager.getInstance().getConnection();
 	
-	public TagDAO() {
-	}
+	private TagDAO() {}
 	
 	public synchronized static TagDAO getInstance() {
 		if (instance == null) {
@@ -26,13 +25,13 @@ public class TagDAO {
 		String query = "SELECT tag_id, name FROM finance_tracker.tags WHERE finance_tracker.tags.tag_id = ?";
 		
 		PreparedStatement statement = null;
-		Tag tag = null;
 		statement = CONNECTION.prepareStatement(query);
 		statement.setInt(1, tagId);
 		ResultSet result = statement.executeQuery();
 		int id = result.getInt("tag_id");
 		String name = result.getString("name");
-		tag = new Tag(id, name);
+		Tag tag = new Tag(id, name);
+		tag.setTagId(id);
 		return tag;
 	}
 	

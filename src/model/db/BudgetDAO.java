@@ -24,7 +24,9 @@ public class BudgetDAO {
 	private static final HashMap<String , Budget> ALL_BUDGETS = new HashMap<>();
 	private static final Connection CONNECTION = DBManager.getInstance().getConnection();
 	
-	private BudgetDAO() {}
+	private BudgetDAO() {
+		//getAllBudgets();??
+	}
 	
 	public synchronized static BudgetDAO getInstance() {
 		if (instance == null) {
@@ -64,6 +66,26 @@ public class BudgetDAO {
 		List<Budget> budgets = new ArrayList<Budget>();
 		for (Budget budget : ALL_BUDGETS.values()) {
 			if (budget.getAccount().getAccaountId() == accountId) {
+				budgets.add(budget);
+			}
+		}
+		return budgets;
+	}
+	
+	public synchronized List<Budget> getAllBudgetsByCategoryId(int categoryId) {
+		List<Budget> budgets = new ArrayList<Budget>();
+		for (Budget budget : ALL_BUDGETS.values()) {
+			if (budget.getCategory().getCategoryId() == categoryId) {
+				budgets.add(budget);
+			}
+		}
+		return budgets;
+	}
+	
+	public synchronized List<Budget> getAllBudgetsByOwnCategoryId(int ownCategoryId) {
+		List<Budget> budgets = new ArrayList<Budget>();
+		for (Budget budget : ALL_BUDGETS.values()) {
+			if (budget.getOwnCategory().getOwnCategoryId() == ownCategoryId) {
 				budgets.add(budget);
 			}
 		}

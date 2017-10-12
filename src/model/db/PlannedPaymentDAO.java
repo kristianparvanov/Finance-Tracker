@@ -24,7 +24,9 @@ public class PlannedPaymentDAO {
 	private static final HashMap<String , PlannedPayment> ALL_PLANNED_PAYMENTS = new HashMap<>();
 	private static final Connection CONNECTION = DBManager.getInstance().getConnection();
 	
-	private PlannedPaymentDAO() {}
+	private PlannedPaymentDAO() {
+		//getAllPlannedPayments()??
+	}
 	
 	public synchronized static PlannedPaymentDAO getInstance() {
 		if (instance == null) {
@@ -63,6 +65,26 @@ public class PlannedPaymentDAO {
 		List<PlannedPayment> payments = new ArrayList<PlannedPayment>();
 		for (PlannedPayment payment : ALL_PLANNED_PAYMENTS.values()) {
 			if (payment.getAccount().getAccaountId() == accountId) {
+				payments.add(payment);
+			}
+		}
+		return payments;
+	}
+	
+	public synchronized List<PlannedPayment> getAllPlannedPaymentsByCategoryId(int categoryId) {
+		List<PlannedPayment> payments = new ArrayList<PlannedPayment>();
+		for (PlannedPayment payment : ALL_PLANNED_PAYMENTS.values()) {
+			if (payment.getCategory().getCategoryId() == categoryId) {
+				payments.add(payment);
+			}
+		}
+		return payments;
+	}
+	
+	public synchronized List<PlannedPayment> getAllPlannedPaymentsByOwnCategoryId(int ownCategoryId) {
+		List<PlannedPayment> payments = new ArrayList<PlannedPayment>();
+		for (PlannedPayment payment : ALL_PLANNED_PAYMENTS.values()) {
+			if (payment.getOwnCategory().getOwnCategoryId() == ownCategoryId) {
 				payments.add(payment);
 			}
 		}
