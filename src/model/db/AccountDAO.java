@@ -74,6 +74,18 @@ public class AccountDAO {
 		}*/
 	}
 	
+	public synchronized long getAccountId(User user, String name) throws SQLException {
+		String sql = "SELECT account_id FROM accounts WHERE user_id = ? and name = ?;";
+		
+		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(sql);
+		ps.setLong(1, user.getUserId());
+		ps.setString(2, name);
+		
+		ResultSet res = ps.executeQuery();
+		
+		return res.getLong("account_id");
+	}
+	
 	public synchronized Set<Account> getAllAccountsByUserId(int userId) throws SQLException {
 		Set<Account> accounts = new HashSet<>();
 		
@@ -101,7 +113,7 @@ public class AccountDAO {
 		return accounts;
 	}
 	
-	public Account getAccountByAccountId(int accountId) throws SQLException {
+	public synchronized Account getAccountByAccountId(int accountId) throws SQLException {
 		String sql = "SELECT account_id, name, amount, user_id FROM accounts WHERE accounts.account_id = ?;";
 		
 		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(sql);
@@ -119,5 +131,31 @@ public class AccountDAO {
 		Account acc = new Account(name, amount, UserDAO.getInstance().getUserByUserId(userId), transactions, budgets, plannedPayments);
 		
 		return acc;
+	}
+	
+	public synchronized void updateAccountAmmount(Account acc, BigDecimal newAmmount) throws SQLException {
+		String sql = "UPDATE accounts SET ammount = ? WHERE account_id = ?;";
+		
+		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(sql);
+		ps.setBigDecimal(1, newAmmount);
+		ps.setLong(2, acc.getAccaountId());
+		ps.executeUpdate();
+	}
+	
+	public synchronized void makeTransferToOtherAccount(Account currentAcc, Account otherAcc, BigDecimal ammount) throws SQLException {
+		updateAccountAmmount(currentAcc, currentAcc.getAmount().subtract(ammount));
+		updateAccountAmmount(otherAcc, otherAcc.getAmount().add(ammount));
+	}
+	
+	public synchronized boolean isValidAccount(User user, String name) throws SQLException {
+		Set<Account> accounts = getAllAccountsByUserId((int)user.getUserId());
+		
+		for (Account acc : accounts) {
+			if (acc.getName().equals(name)) {
+				return false;
+			}
+		}
+		
+		return true;
 	}
 }
