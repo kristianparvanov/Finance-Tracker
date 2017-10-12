@@ -7,16 +7,21 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import model.Account;
+import model.Budget;
+import model.PlannedPayment;
+import model.Transaction;
 import model.User;
 
 public class AccountDAO {
 	
 	private static AccountDAO instance;
 //	private static final HashMap<String, ArrayList<Account>> ALL_ACCOUNTS = new HashMap<>(); 
-	private static final List<Account> ALL_ACCOUNTS = new ArrayList<>(); 
+	//private static final List<Account> ALL_ACCOUNTS = new ArrayList<>(); 
 	
 	private AccountDAO() {
 		//getAllAccounts();
@@ -50,38 +55,69 @@ public class AccountDAO {
 		
 		acc.setAccaountID(rs.getLong(1));
 		
-		ALL_ACCOUNTS.add(acc);
+		//ALL_ACCOUNTS.add(acc);
 	}
 	
 	public synchronized void deleteAccount(int accountId) throws SQLException {
-		String sql = "DELETE FROM accounts WHERE account_id = ?";
+		String sql = "DELETE FROM accounts WHERE account_id = ?;";
 		
 		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(sql);
 		ps.setInt(1, accountId);
 		ps.executeUpdate();
 		
-		for (Account account : ALL_ACCOUNTS) {
+		/*for (Account account : ALL_ACCOUNTS) {
 			if (account.getAccaountId() == accountId) {
 				ALL_ACCOUNTS.remove(account);
 				
 				return;
 			}
+		}*/
+	}
+	
+	public synchronized Set<Account> getAllAccountsByUserId(int userId) throws SQLException {
+		Set<Account> accounts = new HashSet<>();
+		
+		String sql = "SELECT account_id, name, amount FROM accounts WHERE user_id = ?;";
+		
+		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(sql);
+		ps.setInt(1, userId);
+		
+		ResultSet res = ps.executeQuery();
+		
+		while(res.next()) {
+			int accountId = res.getInt("account_id");
+			String name = res.getString("name");
+			BigDecimal amount = new BigDecimal(res.getDouble("amount"));
+			List<Transaction> transactions = TransactionDAO.getInstance().getAllTransactionsByAccountId(accountId);
+			List<Budget> budgets = BudgetDAO.getInstance().getAllBudgetsByAccountId(accountId);
+			List<PlannedPayment> plannedPayments = PlannedPaymentDAO.getInstance().getAllPlannedPaymentsByAccountId(accountId);
+			
+			Account acc = new Account(name, amount, UserDAO.getInstance().getUserByUserId(userId), transactions, budgets, plannedPayments);
+			acc.setAccaountID(accountId);
+			
+			accounts.add(acc);
 		}
+		
+		return accounts;
 	}
 	
 	public Account getAccountByAccountId(int accountId) throws SQLException {
-		String query = "SELECT account_id, name, amount, user_id FROM finance_tracker.accounts WHERE finance_tracker.accounts.account_id = ?";
+		String sql = "SELECT account_id, name, amount, user_id FROM accounts WHERE accounts.account_id = ?;";
 		
-		PreparedStatement statement = null;
-		Account account = null;
-		statement = DBManager.getInstance().getConnection().prepareStatement(query);
-		statement.setInt(1, accountId);
-		ResultSet result = statement.executeQuery();
-		String name = result.getString("name");
-		BigDecimal amount = result.getBigDecimal("amount");
-		int userId = result.getInt("user_id");
-		User user = UserDAO.getInstance().getUserByUserId(userId);
-		account = new Account(name, amount, user);
-		return account;
+		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(sql);
+		ps.setInt(1, accountId);
+		
+		ResultSet res = ps.executeQuery();
+		
+		String name = res.getString("name");
+		BigDecimal amount = res.getBigDecimal("amount");
+		int userId = res.getInt("user_id");
+		List<Transaction> transactions = TransactionDAO.getInstance().getAllTransactionsByAccountId(accountId);
+		List<Budget> budgets = BudgetDAO.getInstance().getAllBudgetsByAccountId(accountId);
+		List<PlannedPayment> plannedPayments = PlannedPaymentDAO.getInstance().getAllPlannedPaymentsByAccountId(accountId);
+		
+		Account acc = new Account(name, amount, UserDAO.getInstance().getUserByUserId(userId), transactions, budgets, plannedPayments);
+		
+		return acc;
 	}
 }

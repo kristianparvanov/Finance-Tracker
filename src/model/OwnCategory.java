@@ -1,14 +1,31 @@
 package model;
 
+import java.util.Collections;
+import java.util.List;
+
 public class OwnCategory {
 
 	private long ownCategoryId;
 	private String name;
 	private TransactionType type;
+	private User user;
+	private List<Transaction> transactions;
+	private List<Budget> budgets;
+	private List<PlannedPayment> plannedPayments;
 	
-	public OwnCategory(String name, TransactionType type) {
+	public OwnCategory(long ownCategoryId, String name, User user, TransactionType type, List<Transaction> transactions, List<Budget> budgets, List<PlannedPayment> plannedPayments) {
+		this(name, type, user, transactions, budgets, plannedPayments);
+		
+		this.ownCategoryId = ownCategoryId;
+	}
+	
+	public OwnCategory(String name, TransactionType type, User user, List<Transaction> transactions, List<Budget> budgets, List<PlannedPayment> plannedPayments) {
 		this.name = name;
 		this.type = type;
+		this.user = user;
+		this.transactions = transactions;
+		this.budgets = budgets;
+		this.plannedPayments = plannedPayments;
 	}
 
 	public String getName() {
@@ -21,6 +38,18 @@ public class OwnCategory {
 	
 	public long getOwnCategoryId() {
 		return ownCategoryId;
+	}
+	
+	public List<Transaction> getTransactions() {
+		return Collections.unmodifiableList(transactions);
+	}
+	
+	public List<Budget> getBudgets() {
+		return Collections.unmodifiableList(budgets);
+	}
+	
+	public List<PlannedPayment> getPlannedPayments() {
+		return Collections.unmodifiableList(plannedPayments);
 	}
 	
 	public void setOwnCategoryId(long ownCategoryId) {

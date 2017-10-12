@@ -1,22 +1,20 @@
 package model.db;
 
-import java.math.BigDecimal;
 import java.security.MessageDigest;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import model.Account;
-import model.Transaction;
+import model.OwnCategory;
 import model.User;
 
 public class UserDAO {
@@ -44,9 +42,12 @@ public class UserDAO {
 			String email = res.getString("email");
 			String firstName = res.getString("firstName");
 			String lastName = res.getString("last_name");
+			int userId = res.getInt("user_id");
+			Set<Account> accounts = AccountDAO.getInstance().getAllAccountsByUserId(userId);
+			Set<OwnCategory> ownCategories = OwnCategoryDAO.getInstance().getAllOwnCategoriesByUserId(userId);
 			
-			User user = new User(userName, password, email, firstName, lastName);
-			user.setUserId(res.getInt("user_id"));
+			User user = new User(userName, password, email, firstName, lastName, accounts, ownCategories);
+			user.setUserId(userId);
 			
 			ALL_USERS.put(userName, user);
 		}
@@ -122,32 +123,7 @@ public class UserDAO {
 		ALL_USERS.remove(username);
 	}
 	
-	public synchronized ArrayList<Account> getAllAccountsByUser(String username) throws SQLException {
-		User user = ALL_USERS.get(username);
-		
-		ArrayList<Account> accounts = new ArrayList<>();
-		
-		String sql = "SELECT a.account_id, a.name, a.amount FROM accounts a JOIN users u ON a.user_id = u.user_id AND u.username = ?;";
-		
-		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(sql);
-		ps.setString(1, username);
-		
-		ResultSet res = ps.executeQuery();
-		
-		while(res.next()) {
-			int accountId = res.getInt("account_id");
-			String name = res.getString("name");
-			BigDecimal amount = new BigDecimal(res.getDouble("amount"));
-			List<Transaction> transactions = TransactionDAO.getInstance().getAllTransactionsByAccountId(accountId);
-			
-			Account acc = new Account(name, amount, user, transactions);
-			acc.setAccaountID(accountId);
-			
-			accounts.add(acc);
-		}
-		
-		return accounts;
-	}
+	
 	
 	public synchronized boolean isValidLogin(String username, String password) throws SQLException {
 		byte[] hashedPassword = DigestUtils.sha512(DigestUtils.sha512Hex(DigestUtils.sha512(password)));

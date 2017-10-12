@@ -1,9 +1,11 @@
 package model;
 
 import java.math.BigDecimal;
+import java.util.Set;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 
 public class Account {
 
@@ -12,16 +14,21 @@ public class Account {
 	private BigDecimal amount;
 	private User user;
 	private List<Transaction> transactions;
+	private List<Budget> budgets;
+	private List<PlannedPayment> plannedPayments;
 	
-	public Account(String name, BigDecimal amount, User user, List<Transaction> transactions) {
+	
+	public Account(String name, BigDecimal amount, User user, List<Transaction> transactions, List<Budget> budgets, List<PlannedPayment> plannedPayments) {
 		this.name = name;
 		this.amount = amount;
 		this.user = user;
 		this.transactions = transactions;
+		this.budgets = budgets;
+		this.plannedPayments = plannedPayments;
 	}
 	
 	public Account(String name, BigDecimal amount, User user) {
-		this(name, amount, user, new ArrayList<>());
+		this(name, amount, user, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
 	}
 
 	public String getName() {
@@ -34,6 +41,14 @@ public class Account {
 
 	public List<Transaction> getTransactions() {
 		return Collections.unmodifiableList(transactions);
+	}
+	
+	public List<Budget> getBudgets() {
+		return Collections.unmodifiableList(budgets);
+	}
+	
+	public List<PlannedPayment> getPlannedPayments() {
+		return Collections.unmodifiableList(plannedPayments);
 	}
 	
 	public long getAccaountId() {

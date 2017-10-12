@@ -6,7 +6,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
+
+import model.Budget;
 import model.Category;
+import model.PlannedPayment;
+import model.Transaction;
 import model.TransactionType;
 
 public class CategoryDAO {
@@ -42,7 +47,7 @@ public class CategoryDAO {
 	}
 	
 	public synchronized Category getCategoryByCategoryId(int categoryId) throws SQLException {
-		String sql = "SELECT name, type FROM categories WHERE category_id = ?";
+		String sql = "SELECT name, type FROM categories WHERE category_id = ?;";
 		
 		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(sql);
 		ps.setInt(1, categoryId);
@@ -51,9 +56,12 @@ public class CategoryDAO {
 		
 		String name = rs.getString("name");
 		TransactionType type = TransactionType.valueOf(rs.getString("type"));
+		List<Transaction> transactions = TransactionDAO.getInstance().getAllTransactionsByCategoryId(categoryId);
+		List<Budget> budgets = BudgetDAO.getInstance().getAllBudgetsByCategoryId(categoryId);
+		List<PlannedPayment> plannedPayments = PlannedPaymentDAO.getInstance().getAllPlannedPaymentsByCategoryId(categoryId);
 		
-		Category category = null;
-		category = new Category(name, type);
+		
+		Category category = new Category(name, type, transactions, budgets, plannedPayments);
 		
 		return category;
 	}
