@@ -18,6 +18,7 @@ import model.Budget;
 import model.Category;
 import model.OwnCategory;
 import model.Tag;
+import model.Transaction;
 
 public class BudgetDAO {
 	private static BudgetDAO instance;
@@ -59,17 +60,6 @@ public class BudgetDAO {
 		}
 	}
 	
-	public synchronized List<Budget> getAllBudgetsByAccountId(int accountId) {
-		List<Budget> budgets = new ArrayList<Budget>();
-		
-		for (Budget budget : ALL_BUDGETS.values()) {
-			if (budget.getAccount().getAccaountId() == accountId) {
-				budgets.add(budget);
-			}
-		}
-		return budgets;
-	}
-	
 	public synchronized void insertBudget(Budget b) throws SQLException {
 		String query = "INSERT INTO finance_tracker.budgets (name, amount, from_date, to_date, account_id, category_id, own_category_id) VALUES (?, ?, STR_TO_DATE('?', '%Y-%m-%d %H:%i:%s'), STR_TO_DATE('?', '%Y-%m-%d %H:%i:%s'), ?, ?, ?)";
 		PreparedStatement statement = CONNECTION.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -90,7 +80,6 @@ public class BudgetDAO {
 	}
 	
 	public synchronized void updateBudget(Budget b) throws SQLException {
-		ALL_BUDGETS.remove(b.getName());
 		String query = "UPDATE finance_tracker.budgets SET name = ?, amount = ?, from_date = STR_TO_DATE('?', '%Y-%m-%d %H:%i:%s'), to_date = STR_TO_DATE('?', '%Y-%m-%d %H:%i:%s'), account_id = ?, category_id = ?, own_category_id = ?) WHERE budget_id = ?";
 		PreparedStatement statement = CONNECTION.prepareStatement(query);
 		statement.setString(1, b.getName());
@@ -112,6 +101,10 @@ public class BudgetDAO {
 		statement.setLong(1, b.getBudgetId());
 		statement.executeUpdate();
 		
+		ALL_BUDGETS.remove(b.getName(), b);
+	}
+	
+	public synchronized void removeBudget(Budget b) {
 		ALL_BUDGETS.remove(b.getName(), b);
 	}
 }

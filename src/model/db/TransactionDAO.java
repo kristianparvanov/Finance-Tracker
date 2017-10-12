@@ -19,7 +19,6 @@ import model.OwnCategory;
 import model.Tag;
 import model.Transaction;
 import model.TransactionType;
-import model.User;
 
 public class TransactionDAO {
 	private static TransactionDAO instance;
@@ -67,6 +66,35 @@ public class TransactionDAO {
 		}
 	}
 	
+//	public synchronized void getAllTransactions() throws SQLException {
+//		if (!ALL_TRANSACTIONS.isEmpty()) {
+//			return;
+//		}
+//		
+//		String query = "SELECT transaction_id, type, date, amount, account_id, category_id, own_category_id FROM finance_tracker.transactions";
+//		PreparedStatement statement = null;
+//		statement = CONNECTION.prepareStatement(query);
+//		
+//		ResultSet result = statement.executeQuery();
+//		while (result.next()) {
+//			long transactionId = result.getInt("transaction_id");
+//			String type = result.getString("type");
+//			TransactionType transactionType = TransactionType.valueOf(type);
+//			LocalDateTime date = result.getTimestamp("date").toLocalDateTime();
+//			BigDecimal amount = result.getBigDecimal("amount");
+//			int accountId = result.getInt("account_id");
+//			Account account = AccountDAO.getInstance().getAccountByAccountId(accountId);
+//			int categoryId = result.getInt("category_id");
+//			Category category = CategoryDAO.getInstance().getCategoryByCategoryId(categoryId);
+//			int ownCategoryId = result.getInt("own_category_id");
+//			OwnCategory ownCategory = OwnCategoryDAO.getInstance().getOwnCategoryByOwnCategoryId(ownCategoryId);
+//			HashSet<Tag> tags = TagDAO.getInstance().getTagsByTransactionId(transactionId);
+//			Transaction t = new Transaction(transactionType, amount, account, category, ownCategory, date, tags);
+//			t.setTransactionId(transactionId);
+//			ALL_TRANSACTIONS.get(t.getType()).add(t);
+//		}
+//	}
+//	
 	public synchronized List<Transaction> getAllTransactionsByAccountId(int accountId) {
 		List<Transaction> transactions = new ArrayList<Transaction>();
 		
@@ -99,7 +127,6 @@ public class TransactionDAO {
 	}
 	
 	public synchronized void updateTransaction(Transaction t) throws SQLException {
-		ALL_TRANSACTIONS.get(t.getType()).remove(t);
 		String query = "UPDATE finance_tracker.transactions SET type = ?, date = STR_TO_DATE('?', '%Y-%m-%d %H:%i:%s'), amount = ?, account_id = ?, category_id = ?, own_category_id = ?) WHERE transaction_id = ?";
 		PreparedStatement statement = CONNECTION.prepareStatement(query);
 		statement.setString(1, t.getType().toString());
@@ -120,6 +147,10 @@ public class TransactionDAO {
 		statement.setLong(1, t.getTransactionId());
 		statement.executeUpdate();
 		
+		ALL_TRANSACTIONS.get(t.getType()).remove(t);
+	}
+	
+	public synchronized void removeTransaction(Transaction t) {
 		ALL_TRANSACTIONS.get(t.getType()).remove(t);
 	}
 }

@@ -64,4 +64,20 @@ public class TagDAO {
 		}
 		return tags;
 	}
+
+	public HashSet<Tag> getTagsByPlannedPaymentId(long plannedPaymentId) throws SQLException {
+		HashSet<Tag> tags = new HashSet<Tag>();
+		String query = "SELECT budget_id, tag_id FROM finance_tracker.planned_payments_has_tags WHERE planned_payment_id = ?";
+		
+		PreparedStatement statement = null;
+		statement = CONNECTION.prepareStatement(query);
+		statement.setLong(1, plannedPaymentId);
+		ResultSet result = statement.executeQuery();
+		while (result.next()) {
+			int tagId = result.getInt("tag_id");
+			Tag tag = getTagByTagId(tagId);
+			tags.add(tag);
+		}
+		return tags;
+	}
 }

@@ -41,6 +41,14 @@ public class PlannedPayment {
 		return name;
 	}
 	
+	public LocalDateTime getFromDate() {
+		return fromDate;
+	}
+	
+	public LocalDateTime getToDate() {
+		return toDate;
+	}
+	
 	public Category getCategory() {
 		return category;
 	}
