@@ -105,6 +105,30 @@ public class TransactionDAO {
 		}
 		return transactions;
 	}
+	
+	public synchronized List<Transaction> getAllTransactionsByCategoryId(int categoryId) {
+		List<Transaction> transactions = new ArrayList<Transaction>();
+		for (ArrayList<Transaction> transactionTypes : ALL_TRANSACTIONS.values()) {
+			for (Transaction transaction : transactionTypes) {
+				if (transaction.getCategory().getCategoryId() == categoryId) {
+					transactions.add(transaction);
+				}
+			}
+		}
+		return transactions;
+	}
+	
+	public synchronized List<Transaction> getAllTransactionsByOwnCategoryId(int ownCategoryId) {
+		List<Transaction> transactions = new ArrayList<Transaction>();
+		for (ArrayList<Transaction> transactionTypes : ALL_TRANSACTIONS.values()) {
+			for (Transaction transaction : transactionTypes) {
+				if (transaction.getOwnCategory().getOwnCategoryId() == ownCategoryId) {
+					transactions.add(transaction);
+				}
+			}
+		}
+		return transactions;
+	}
 
 	public synchronized void insertTransaction(Transaction t) throws SQLException {
 		String query = "INSERT INTO finance_tracker.transactions (type, date, amount, account_id, category_id, own_category_id) VALUES (?, STR_TO_DATE('?', '%Y-%m-%d %H:%i:%s'), ?, ?, ?, ?)";
