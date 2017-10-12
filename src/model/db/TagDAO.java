@@ -12,6 +12,9 @@ public class TagDAO {
 	private static TagDAO instance;
 	private static final Connection CONNECTION = DBManager.getInstance().getConnection();
 	
+	public TagDAO() {
+	}
+	
 	public synchronized static TagDAO getInstance() {
 		if (instance == null) {
 			instance = new TagDAO();

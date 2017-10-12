@@ -25,12 +25,13 @@ public class TransactionDAO {
 	private static final HashMap<TransactionType, ArrayList<Transaction>> ALL_TRANSACTIONS = new HashMap<>();
 	private static final Connection CONNECTION = DBManager.getInstance().getConnection();
 	
-	private TransactionDAO() {
+	private TransactionDAO() throws SQLException {
 		ALL_TRANSACTIONS.put(TransactionType.EXPENCE, new ArrayList<>());
 		ALL_TRANSACTIONS.put(TransactionType.INCOME, new ArrayList<>());
+		getAllTransactions();
 	}
 	
-	public synchronized static TransactionDAO getInstance() {
+	public synchronized static TransactionDAO getInstance() throws SQLException {
 		if (instance == null) {
 			instance = new TransactionDAO();
 		}
@@ -41,7 +42,6 @@ public class TransactionDAO {
 		if (!ALL_TRANSACTIONS.isEmpty()) {
 			return;
 		}
-		
 		String query = "SELECT transaction_id, type, date, amount, account_id, category_id, own_category_id FROM finance_tracker.transactions";
 		PreparedStatement statement = null;
 		statement = CONNECTION.prepareStatement(query);
@@ -70,7 +70,6 @@ public class TransactionDAO {
 //		if (!ALL_TRANSACTIONS.isEmpty()) {
 //			return;
 //		}
-//		
 //		String query = "SELECT transaction_id, type, date, amount, account_id, category_id, own_category_id FROM finance_tracker.transactions";
 //		PreparedStatement statement = null;
 //		statement = CONNECTION.prepareStatement(query);
@@ -97,7 +96,6 @@ public class TransactionDAO {
 //	
 	public synchronized List<Transaction> getAllTransactionsByAccountId(int accountId) {
 		List<Transaction> transactions = new ArrayList<Transaction>();
-		
 		for (ArrayList<Transaction> transactionTypes : ALL_TRANSACTIONS.values()) {
 			for (Transaction transaction : transactionTypes) {
 				if (transaction.getAccount().getAccaountId() == accountId) {

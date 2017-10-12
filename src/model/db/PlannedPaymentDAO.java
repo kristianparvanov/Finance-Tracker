@@ -8,8 +8,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 
 import model.Account;
 import model.Category;
@@ -22,6 +24,8 @@ public class PlannedPaymentDAO {
 	private static final HashMap<String , PlannedPayment> ALL_PLANNED_PAYMENTS = new HashMap<>();
 	private static final Connection CONNECTION = DBManager.getInstance().getConnection();
 	
+	private PlannedPaymentDAO() {}
+	
 	public synchronized static PlannedPaymentDAO getInstance() {
 		if (instance == null) {
 			instance = new PlannedPaymentDAO();
@@ -33,7 +37,6 @@ public class PlannedPaymentDAO {
 		if (!ALL_PLANNED_PAYMENTS.isEmpty()) {
 			return;
 		}
-		
 		String query = "SELECT planned_payment_id, name, from_date, to_date, amount, account_id, category_id, own_category_id FROM finance_tracker.planned_payments";
 		PreparedStatement statement = CONNECTION.prepareStatement(query);
 		ResultSet result = statement.executeQuery();
@@ -54,6 +57,16 @@ public class PlannedPaymentDAO {
 			payment.setPlannedPaymentId(plannedPaymentId);
 			ALL_PLANNED_PAYMENTS.put(name, payment);
 		}
+	}
+	
+	public synchronized List<PlannedPayment> getAllPlannedPaymentsByAccountId(int accountId) {
+		List<PlannedPayment> payments = new ArrayList<PlannedPayment>();
+		for (PlannedPayment payment : ALL_PLANNED_PAYMENTS.values()) {
+			if (payment.getAccount().getAccaountId() == accountId) {
+				payments.add(payment);
+			}
+		}
+		return payments;
 	}
 	
 	public synchronized void insertPlannedPayment(PlannedPayment p) throws SQLException {

@@ -18,12 +18,13 @@ import model.Budget;
 import model.Category;
 import model.OwnCategory;
 import model.Tag;
-import model.Transaction;
 
 public class BudgetDAO {
 	private static BudgetDAO instance;
 	private static final HashMap<String , Budget> ALL_BUDGETS = new HashMap<>();
 	private static final Connection CONNECTION = DBManager.getInstance().getConnection();
+	
+	private BudgetDAO() {}
 	
 	public synchronized static BudgetDAO getInstance() {
 		if (instance == null) {
@@ -36,7 +37,6 @@ public class BudgetDAO {
 		if (!ALL_BUDGETS.isEmpty()) {
 			return;
 		}
-		
 		String sql = "SELECT budget_id, name, amount, from_date, to_date, account_id, category_id, own_category_id FROM finance_tracker.budgets";
 		PreparedStatement statement = DBManager.getInstance().getConnection().prepareStatement(sql);
 		ResultSet result = statement.executeQuery();
@@ -58,6 +58,16 @@ public class BudgetDAO {
 			
 			ALL_BUDGETS.put(name, budget);
 		}
+	}
+	
+	public synchronized List<Budget> getAllBudgetsByAccountId(int accountId) {
+		List<Budget> budgets = new ArrayList<Budget>();
+		for (Budget budget : ALL_BUDGETS.values()) {
+			if (budget.getAccount().getAccaountId() == accountId) {
+				budgets.add(budget);
+			}
+		}
+		return budgets;
 	}
 	
 	public synchronized void insertBudget(Budget b) throws SQLException {
