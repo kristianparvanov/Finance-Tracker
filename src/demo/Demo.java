@@ -54,7 +54,7 @@ public class Demo {
 		PlannedPayment p1 = new PlannedPayment("CARS", TransactionType.EXPENCE, LocalDateTime.of(2017, 11, 12, 15, 37, 25), BigDecimal.valueOf(250), "nosa4a", a1.getAccaountId(), c1.getCategoryId(), oc1.getOwnCategoryId(), tags);
 		Budget b1 = new Budget("za kolata", BigDecimal.valueOf(250), LocalDateTime.of(2017, 11, 12, 15, 37, 25), LocalDateTime.of(2017, 11, 12, 15, 37, 25), a1.getAccaountId(), c1.getCategoryId(), oc1.getOwnCategoryId(), tags);
 		
-		try {
+		//try {
 			//UserDAO.getInstance().insertUser(new User("Kristian", "123", "kris@40", "Kristian", "purvanov"));
 			//!!System.out.println(UserDAO.getInstance().isValidLogin("Kristian", "123"));
 			
@@ -85,9 +85,9 @@ public class Demo {
 //			System.out.println(AccountDAO.getInstance().getAllAccountsByUserId((int)u1.getUserId()));
 //			System.out.println(AccountDAO.getInstance().getAccountByAccountId((int)u1.getUserId()));
 //			AccountDAO.getInstance().makeTransferToOtherAccount(a2, a1, BigDecimal.valueOf(414));
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
 		
 	}
 }

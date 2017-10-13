@@ -82,6 +82,7 @@ public class AccountDAO {
 		ps.setString(2, name);
 		
 		ResultSet res = ps.executeQuery();
+		res.next();
 		
 		return res.getLong("account_id");
 	}
@@ -122,6 +123,7 @@ public class AccountDAO {
 		
 		ResultSet res = ps.executeQuery();
 		res.next();
+		
 		String name = res.getString("name");
 		BigDecimal amount = res.getBigDecimal("amount");
 		int userId = res.getInt("user_id");
