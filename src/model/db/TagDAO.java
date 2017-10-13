@@ -22,16 +22,16 @@ public class TagDAO {
 	}
 	
 	public Tag getTagByTagId(int tagId) throws SQLException {
-		String query = "SELECT tag_id, name FROM finance_tracker.tags WHERE finance_tracker.tags.tag_id = ?";
-		
+		String query = "SELECT name FROM finance_tracker.tags WHERE finance_tracker.tags.tag_id = ?";
+		Tag tag = null;
 		PreparedStatement statement = null;
 		statement = CONNECTION.prepareStatement(query);
 		statement.setInt(1, tagId);
 		ResultSet result = statement.executeQuery();
-		int id = result.getInt("tag_id");
-		String name = result.getString("name");
-		Tag tag = new Tag(id, name);
-		tag.setTagId(id);
+		while (result.next()) {
+			String name = result.getString("name");
+			tag = new Tag(tagId, name);
+		}
 		return tag;
 	}
 	

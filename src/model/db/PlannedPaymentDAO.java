@@ -95,11 +95,11 @@ public class PlannedPaymentDAO {
 	}
 	
 	public synchronized void insertPlannedPayment(PlannedPayment p) throws SQLException {
-		String query = "INSERT INTO finance_tracker.planned_payments (name, type, from_date, amount, description, account_id, category_id, own_category_id) VALUES (?, ?, STR_TO_DATE('?', '%Y-%m-%d %H:%i:%s'), ?, ?, ?, ?, ?)";
+		String query = "INSERT INTO finance_tracker.planned_payments (name, type, from_date, amount, description, account_id, category_id, own_category_id) VALUES (?, ?, STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), ?, ?, ?, ?, ?)";
 		PreparedStatement statement = CONNECTION.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 		statement.setString(1, p.getName());
 		statement.setString(2, p.getPaymentType().toString());
-		statement.setTimestamp(3, Timestamp.valueOf(p.getFromDate()));
+		statement.setTimestamp(3, Timestamp.valueOf(p.getFromDate().withNano(0)));
 		statement.setBigDecimal(4, p.getAmount());
 		statement.setString(5, p.getDescription());
 		statement.setLong(6, p.getAccount().getAccaountId());
@@ -115,11 +115,11 @@ public class PlannedPaymentDAO {
 	}
 	
 	public synchronized void updatePlannedPayment(PlannedPayment p) throws SQLException {
-		String query = "UPDATE finance_tracker.planned_payments SET name = ?, type = ?, from_date = STR_TO_DATE('?', '%Y-%m-%d %H:%i:%s'), amount = ?, description = ?, account_id = ?, category_id = ?, own_category_id = ?) WHERE planned_payment_id = ?";
+		String query = "UPDATE finance_tracker.planned_payments SET name = ?, type = ?, from_date = STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), amount = ?, description = ?, account_id = ?, category_id = ?, own_category_id = ?) WHERE planned_payment_id = ?";
 		PreparedStatement statement = CONNECTION.prepareStatement(query);
 		statement.setString(1, p.getName());
 		statement.setString(2, p.getPaymentType().toString());
-		statement.setTimestamp(3, Timestamp.valueOf(p.getFromDate()));
+		statement.setTimestamp(3, Timestamp.valueOf(p.getFromDate().withNano(0)));
 		statement.setBigDecimal(4, p.getAmount());
 		statement.setString(5, p.getDescription());
 		statement.setLong(6, p.getAccount().getAccaountId());

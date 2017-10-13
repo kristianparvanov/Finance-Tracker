@@ -12,13 +12,13 @@ public class Account {
 	private long accaountID;
 	private String name;
 	private BigDecimal amount;
-	private User user;
+	private int user;
 	private List<Transaction> transactions;
 	private List<Budget> budgets;
 	private List<PlannedPayment> plannedPayments;
 	
 	
-	public Account(String name, BigDecimal amount, User user, List<Transaction> transactions, List<Budget> budgets, List<PlannedPayment> plannedPayments) {
+	public Account(String name, BigDecimal amount, int user, List<Transaction> transactions, List<Budget> budgets, List<PlannedPayment> plannedPayments) {
 		this.name = name;
 		this.amount = amount;
 		this.user = user;
@@ -27,7 +27,7 @@ public class Account {
 		this.plannedPayments = plannedPayments;
 	}
 	
-	public Account(String name, BigDecimal amount, User user) {
+	public Account(String name, BigDecimal amount, int user) {
 		this(name, amount, user, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
 	}
 
@@ -56,7 +56,7 @@ public class Account {
 	}
 
 	public long getUserId() {
-		return user.getUserId();
+		return user;
 	}
 
 	public void setAccaountID(long accaountID) {

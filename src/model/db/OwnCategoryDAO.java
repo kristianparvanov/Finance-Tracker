@@ -49,7 +49,7 @@ public class OwnCategoryDAO {
 	public synchronized Set<OwnCategory> getAllOwnCategoriesByUserId(int userId) throws SQLException {
 		Set<OwnCategory> ownCategories = new HashSet<>();
 		
-		String sql = "SELECT own_category_id, name, type FROM accounts WHERE user_id = ?;";
+		String sql = "SELECT own_category_id, name, type FROM own_categories WHERE user_id = ?;";
 		
 		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(sql);
 		ps.setInt(1, userId);
@@ -63,9 +63,9 @@ public class OwnCategoryDAO {
 			List<Transaction> transactions = TransactionDAO.getInstance().getAllTransactionsByOwnCategoryId(ownCategoryId);
 			List<Budget> budgets = BudgetDAO.getInstance().getAllBudgetsByOwnCategoryId(ownCategoryId);
 			List<PlannedPayment> plannedPayments = PlannedPaymentDAO.getInstance().getAllPlannedPaymentsByOwnCategoryId(ownCategoryId);
-			User user = UserDAO.getInstance().getUserByUserId(userId);
+			//User user = UserDAO.getInstance().getUserByUserId(userId);
 			
-			OwnCategory oc = new OwnCategory(ownCategoryId, name, user, type, transactions, budgets, plannedPayments);
+			OwnCategory oc = new OwnCategory(ownCategoryId, name, userId, type, transactions, budgets, plannedPayments);
 			
 			ownCategories.add(oc);
 		}
@@ -90,7 +90,7 @@ public class OwnCategoryDAO {
 		List<PlannedPayment> plannedPayments = PlannedPaymentDAO.getInstance().getAllPlannedPaymentsByOwnCategoryId(ownCategoryId);
 		User user = UserDAO.getInstance().getUserByUserId(userId);
 		
-		OwnCategory oc = new OwnCategory(ownCategoryId, name, user, type, transactions, budgets, plannedPayments);
+		OwnCategory oc = new OwnCategory(ownCategoryId, name, userId, type, transactions, budgets, plannedPayments);
 		
 		return oc;
 	}

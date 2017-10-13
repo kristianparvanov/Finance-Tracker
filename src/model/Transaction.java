@@ -10,14 +10,14 @@ public class Transaction {
 	private long transactionId;
 	private TransactionType type;
 	private BigDecimal amount;
-	private Account account;
-	private Category category;
-	private OwnCategory ownCategory;
+	private long account;
+	private long category;
+	private long ownCategory;
 	private LocalDateTime date;
 	private HashSet<Tag> tags = new HashSet<Tag>();
 	
-	public Transaction(TransactionType type, BigDecimal amount, Account account, Category category,
-			OwnCategory ownCategory, LocalDateTime date, HashSet<Tag> tags) {
+	public Transaction(TransactionType type, BigDecimal amount, long account, long category,
+			long ownCategory, LocalDateTime date, HashSet<Tag> tags) {
 		this.type = type;
 		this.amount = amount;
 		this.account = account;
@@ -43,15 +43,15 @@ public class Transaction {
 		return amount;
 	}
 	
-	public Account getAccount() {
+	public long getAccount() {
 		return account;
 	}
 	
-	public Category getCategory() {
+	public long getCategory() {
 		return category;
 	}
 	
-	public OwnCategory getOwnCategory() {
+	public long getOwnCategory() {
 		return ownCategory;
 	}
 	
@@ -62,4 +62,13 @@ public class Transaction {
 	public Set<Tag> getTags() {
 		return Collections.unmodifiableSet(tags);
 	}
+
+	@Override
+	public String toString() {
+		return "Transaction [transactionId=" + transactionId + ", type=" + type + ", amount=" + amount + ", account="
+				+ account + ", category=" + category + ", ownCategory=" + ownCategory + ", date=" + date + ", tags="
+				+ tags + "]";
+	}
+	
+	
 }

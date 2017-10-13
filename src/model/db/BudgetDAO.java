@@ -93,12 +93,12 @@ public class BudgetDAO {
 	}
 	
 	public synchronized void insertBudget(Budget b) throws SQLException {
-		String query = "INSERT INTO finance_tracker.budgets (name, amount, from_date, to_date, account_id, category_id, own_category_id) VALUES (?, ?, STR_TO_DATE('?', '%Y-%m-%d %H:%i:%s'), STR_TO_DATE('?', '%Y-%m-%d %H:%i:%s'), ?, ?, ?)";
+		String query = "INSERT INTO finance_tracker.budgets (name, amount, from_date, to_date, account_id, category_id, own_category_id) VALUES (?, ?, STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), ?, ?, ?)";
 		PreparedStatement statement = CONNECTION.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 		statement.setString(1, b.getName());
 		statement.setBigDecimal(2, b.getAmount());
-		statement.setTimestamp(3, Timestamp.valueOf(b.getFromDate()));
-		statement.setTimestamp(4, Timestamp.valueOf(b.getToDate()));
+		statement.setTimestamp(3, Timestamp.valueOf(b.getFromDate().withNano(0)));
+		statement.setTimestamp(4, Timestamp.valueOf(b.getToDate().withNano(0)));
 		statement.setLong(5, b.getAccount().getAccaountId());
 		statement.setLong(6, b.getCategory().getCategoryId());
 		statement.setLong(7, b.getOwnCategory().getOwnCategoryId());
@@ -112,12 +112,12 @@ public class BudgetDAO {
 	}
 	
 	public synchronized void updateBudget(Budget b) throws SQLException {
-		String query = "UPDATE finance_tracker.budgets SET name = ?, amount = ?, from_date = STR_TO_DATE('?', '%Y-%m-%d %H:%i:%s'), to_date = STR_TO_DATE('?', '%Y-%m-%d %H:%i:%s'), account_id = ?, category_id = ?, own_category_id = ?) WHERE budget_id = ?";
+		String query = "UPDATE finance_tracker.budgets SET name = ?, amount = ?, from_date = STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), to_date = STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), account_id = ?, category_id = ?, own_category_id = ?) WHERE budget_id = ?";
 		PreparedStatement statement = CONNECTION.prepareStatement(query);
 		statement.setString(1, b.getName());
 		statement.setBigDecimal(2, b.getAmount());
-		statement.setTimestamp(3, Timestamp.valueOf(b.getFromDate()));
-		statement.setTimestamp(4, Timestamp.valueOf(b.getToDate()));
+		statement.setTimestamp(3, Timestamp.valueOf(b.getFromDate().withNano(0)));
+		statement.setTimestamp(4, Timestamp.valueOf(b.getToDate().withNano(0)));
 		statement.setLong(4, b.getAccount().getAccaountId());
 		statement.setLong(5, b.getCategory().getCategoryId());
 		statement.setLong(6, b.getOwnCategory().getOwnCategoryId());

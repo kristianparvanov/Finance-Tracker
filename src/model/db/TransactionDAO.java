@@ -39,13 +39,14 @@ public class TransactionDAO {
 	}
 	
 	public synchronized void getAllTransactions() throws SQLException {
-		if (!ALL_TRANSACTIONS.isEmpty()) {
-			return;
-		}
+//		if (!ALL_TRANSACTIONS.isEmpty()) {
+//			System.out.println(ALL_TRANSACTIONS);
+//			return;
+//		}
 		String query = "SELECT transaction_id, type, date, amount, account_id, category_id, own_category_id FROM finance_tracker.transactions";
 		PreparedStatement statement = null;
 		statement = CONNECTION.prepareStatement(query);
-		
+		System.out.println("sas");
 		ResultSet result = statement.executeQuery();
 		while (result.next()) {
 			long transactionId = result.getInt("transaction_id");
@@ -54,15 +55,16 @@ public class TransactionDAO {
 			LocalDateTime date = result.getTimestamp("date").toLocalDateTime();
 			BigDecimal amount = result.getBigDecimal("amount");
 			int accountId = result.getInt("account_id");
-			Account account = AccountDAO.getInstance().getAccountByAccountId(accountId);
+			//Account account = AccountDAO.getInstance().getAccountByAccountId(accountId);
 			int categoryId = result.getInt("category_id");
-			Category category = CategoryDAO.getInstance().getCategoryByCategoryId(categoryId);
+			//Category category = CategoryDAO.getInstance().getCategoryByCategoryId(categoryId);
 			int ownCategoryId = result.getInt("own_category_id");
-			OwnCategory ownCategory = OwnCategoryDAO.getInstance().getOwnCategoryByOwnCategoryId(ownCategoryId);
+			//OwnCategory ownCategory = OwnCategoryDAO.getInstance().getOwnCategoryByOwnCategoryId(ownCategoryId);
 			HashSet<Tag> tags = TagDAO.getInstance().getTagsByTransactionId(transactionId);
-			Transaction t = new Transaction(transactionType, amount, account, category, ownCategory, date, tags);
+			Transaction t = new Transaction(transactionType, amount, accountId, categoryId, ownCategoryId, date, tags);
 			t.setTransactionId(transactionId);
 			ALL_TRANSACTIONS.get(t.getType()).add(t);
+			System.out.println(t.toString());
 		}
 	}
 	
@@ -98,7 +100,7 @@ public class TransactionDAO {
 		List<Transaction> transactions = new ArrayList<Transaction>();
 		for (ArrayList<Transaction> transactionTypes : ALL_TRANSACTIONS.values()) {
 			for (Transaction transaction : transactionTypes) {
-				if (transaction.getAccount().getAccaountId() == accountId) {
+				if (transaction.getAccount() == accountId) {
 					transactions.add(transaction);
 				}
 			}
@@ -110,7 +112,7 @@ public class TransactionDAO {
 		List<Transaction> transactions = new ArrayList<Transaction>();
 		for (ArrayList<Transaction> transactionTypes : ALL_TRANSACTIONS.values()) {
 			for (Transaction transaction : transactionTypes) {
-				if (transaction.getCategory().getCategoryId() == categoryId) {
+				if (transaction.getCategory() == categoryId) {
 					transactions.add(transaction);
 				}
 			}
@@ -122,7 +124,7 @@ public class TransactionDAO {
 		List<Transaction> transactions = new ArrayList<Transaction>();
 		for (ArrayList<Transaction> transactionTypes : ALL_TRANSACTIONS.values()) {
 			for (Transaction transaction : transactionTypes) {
-				if (transaction.getOwnCategory().getOwnCategoryId() == ownCategoryId) {
+				if (transaction.getOwnCategory() == ownCategoryId) {
 					transactions.add(transaction);
 				}
 			}
@@ -131,14 +133,14 @@ public class TransactionDAO {
 	}
 
 	public synchronized void insertTransaction(Transaction t) throws SQLException {
-		String query = "INSERT INTO finance_tracker.transactions (type, date, amount, account_id, category_id, own_category_id) VALUES (?, STR_TO_DATE('?', '%Y-%m-%d %H:%i:%s'), ?, ?, ?, ?)";
+		String query = "INSERT INTO finance_tracker.transactions (type, date, amount, account_id, category_id, own_category_id) VALUES (?, STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), ?, ?, ?, ?)";
 		PreparedStatement statement = CONNECTION.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 		statement.setString(1, t.getType().toString());
-		statement.setTimestamp(2, Timestamp.valueOf(t.getDate()));
+		statement.setTimestamp(2, Timestamp.valueOf(t.getDate().withNano(0)));
 		statement.setBigDecimal(3, t.getAmount());
-		statement.setLong(4, t.getAccount().getAccaountId());
-		statement.setLong(5, t.getCategory().getCategoryId());
-		statement.setLong(6, t.getOwnCategory().getOwnCategoryId());
+		statement.setLong(4, t.getAccount());
+		statement.setLong(5, t.getCategory());
+		statement.setLong(6, t.getOwnCategory());
 		statement.executeUpdate();
 		
 		ResultSet resultSet = statement.getGeneratedKeys();
@@ -149,14 +151,14 @@ public class TransactionDAO {
 	}
 	
 	public synchronized void updateTransaction(Transaction t) throws SQLException {
-		String query = "UPDATE finance_tracker.transactions SET type = ?, date = STR_TO_DATE('?', '%Y-%m-%d %H:%i:%s'), amount = ?, account_id = ?, category_id = ?, own_category_id = ?) WHERE transaction_id = ?";
+		String query = "UPDATE finance_tracker.transactions SET type = ?, date = STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), amount = ?, account_id = ?, category_id = ?, own_category_id = ?) WHERE transaction_id = ?";
 		PreparedStatement statement = CONNECTION.prepareStatement(query);
 		statement.setString(1, t.getType().toString());
-		statement.setTimestamp(2, Timestamp.valueOf(t.getDate()));
+		statement.setTimestamp(2, Timestamp.valueOf(t.getDate().withNano(0)));
 		statement.setBigDecimal(3, t.getAmount());
-		statement.setLong(4, t.getAccount().getAccaountId());
-		statement.setLong(5, t.getCategory().getCategoryId());
-		statement.setLong(6, t.getOwnCategory().getOwnCategoryId());
+		statement.setLong(4, t.getAccount());
+		statement.setLong(5, t.getCategory());
+		statement.setLong(6, t.getOwnCategory());
 		statement.setLong(7, t.getTransactionId());
 		statement.executeUpdate();
 		

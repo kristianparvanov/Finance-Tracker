@@ -8,18 +8,18 @@ public class OwnCategory {
 	private long ownCategoryId;
 	private String name;
 	private TransactionType type;
-	private User user;
+	private long user;
 	private List<Transaction> transactions;
 	private List<Budget> budgets;
 	private List<PlannedPayment> plannedPayments;
 	
-	public OwnCategory(long ownCategoryId, String name, User user, TransactionType type, List<Transaction> transactions, List<Budget> budgets, List<PlannedPayment> plannedPayments) {
+	public OwnCategory(long ownCategoryId, String name, long user, TransactionType type, List<Transaction> transactions, List<Budget> budgets, List<PlannedPayment> plannedPayments) {
 		this(name, type, user, transactions, budgets, plannedPayments);
 		
 		this.ownCategoryId = ownCategoryId;
 	}
 	
-	public OwnCategory(String name, TransactionType type, User user, List<Transaction> transactions, List<Budget> budgets, List<PlannedPayment> plannedPayments) {
+	public OwnCategory(String name, TransactionType type, long user, List<Transaction> transactions, List<Budget> budgets, List<PlannedPayment> plannedPayments) {
 		this.name = name;
 		this.type = type;
 		this.user = user;

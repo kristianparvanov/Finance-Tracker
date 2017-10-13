@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import org.apache.commons.codec.digest.DigestUtils;
@@ -40,7 +41,7 @@ public class UserDAO {
 			String userName = res.getString("username");
 			String password = res.getString("password");
 			String email = res.getString("email");
-			String firstName = res.getString("firstName");
+			String firstName = res.getString("first_name");
 			String lastName = res.getString("last_name");
 			int userId = res.getInt("user_id");
 			Set<Account> accounts = AccountDAO.getInstance().getAllAccountsByUserId(userId);
@@ -126,13 +127,18 @@ public class UserDAO {
 	
 	
 	public synchronized boolean isValidLogin(String username, String password) throws SQLException {
-		byte[] hashedPassword = DigestUtils.sha512(DigestUtils.sha512Hex(DigestUtils.sha512(password)));
+		//byte[] hashedPassword = DigestUtils.sha512(DigestUtils.sha512Hex(DigestUtils.sha512(password)));
+		byte[] hashedPassword = DigestUtils.sha512(password);
+		String str =  DigestUtils.sha512Hex(hashedPassword);
+		byte[] hashedPassword2 = DigestUtils.sha512(str);
 		
 		getAllUsers();
 		
 		if (ALL_USERS.containsKey(username)) {
 			User user = ALL_USERS.get(username);
-			
+			System.out.println(Arrays.toString(hashedPassword2));
+			System.out.println(Arrays.toString(hashedPassword));
+			System.out.println(Arrays.toString(user.getPassword()));
 			return MessageDigest.isEqual(hashedPassword, user.getPassword());
 		}
 		

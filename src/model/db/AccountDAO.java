@@ -42,7 +42,7 @@ public class AccountDAO {
 	
 	public synchronized void insertAccount(Account acc) throws SQLException {
 		Connection con = DBManager.getInstance().getConnection();
-		PreparedStatement ps = con.prepareStatement("INSERT INTO accounts (name, ammount, user_id) "
+		PreparedStatement ps = con.prepareStatement("INSERT INTO accounts (name, amount, user_id) "
 														+ "VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 		
 		ps.setString(1, acc.getName());
@@ -104,10 +104,11 @@ public class AccountDAO {
 			List<Budget> budgets = BudgetDAO.getInstance().getAllBudgetsByAccountId(accountId);
 			List<PlannedPayment> plannedPayments = PlannedPaymentDAO.getInstance().getAllPlannedPaymentsByAccountId(accountId);
 			
-			Account acc = new Account(name, amount, UserDAO.getInstance().getUserByUserId(userId), transactions, budgets, plannedPayments);
+			Account acc = new Account(name, amount, userId, transactions, budgets, plannedPayments);
 			acc.setAccaountID(accountId);
 			
 			accounts.add(acc);
+
 		}
 		
 		return accounts;
@@ -120,7 +121,7 @@ public class AccountDAO {
 		ps.setInt(1, accountId);
 		
 		ResultSet res = ps.executeQuery();
-		
+		res.next();
 		String name = res.getString("name");
 		BigDecimal amount = res.getBigDecimal("amount");
 		int userId = res.getInt("user_id");
@@ -128,13 +129,13 @@ public class AccountDAO {
 		List<Budget> budgets = BudgetDAO.getInstance().getAllBudgetsByAccountId(accountId);
 		List<PlannedPayment> plannedPayments = PlannedPaymentDAO.getInstance().getAllPlannedPaymentsByAccountId(accountId);
 		
-		Account acc = new Account(name, amount, UserDAO.getInstance().getUserByUserId(userId), transactions, budgets, plannedPayments);
+		Account acc = new Account(name, amount, userId, transactions, budgets, plannedPayments);
 		
 		return acc;
 	}
 	
 	public synchronized void updateAccountAmmount(Account acc, BigDecimal newAmmount) throws SQLException {
-		String sql = "UPDATE accounts SET ammount = ? WHERE account_id = ?;";
+		String sql = "UPDATE accounts SET amount = ? WHERE account_id = ?;";
 		
 		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(sql);
 		ps.setBigDecimal(1, newAmmount);
