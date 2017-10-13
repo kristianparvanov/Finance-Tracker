@@ -9,26 +9,28 @@ import java.util.Set;
 public class PlannedPayment {
 	private long plannedPaymentId;
 	private String name;
+	private TransactionType paymentType;
 	private LocalDateTime fromDate;
-	private LocalDateTime toDate;
 	private BigDecimal amount;
+	private String description;
 	private Account account;
 	private Category category;
 	private OwnCategory ownCategory;
 	private HashSet<Tag> tags = new HashSet<Tag>();
 	
-	public PlannedPayment(String name, LocalDateTime fromDate, LocalDateTime toDate,
-			BigDecimal amount, Account account, Category category, OwnCategory ownCategory, HashSet<Tag> tags) {
+	public PlannedPayment(String name, TransactionType paymentType, LocalDateTime fromDate, BigDecimal amount,
+			String description, Account account, Category category, OwnCategory ownCategory, HashSet<Tag> tags) {
 		this.name = name;
+		this.paymentType = paymentType;
 		this.fromDate = fromDate;
-		this.toDate = toDate;
 		this.amount = amount;
+		this.description = description;
 		this.account = account;
 		this.category = category;
 		this.ownCategory = ownCategory;
 		this.tags = tags;
 	}
-	
+
 	public long getPlannedPaymentId() {
 		return plannedPaymentId;
 	}
@@ -41,12 +43,24 @@ public class PlannedPayment {
 		return name;
 	}
 	
+	public TransactionType getPaymentType() {
+		return paymentType;
+	}
+	
 	public LocalDateTime getFromDate() {
 		return fromDate;
 	}
 	
-	public LocalDateTime getToDate() {
-		return toDate;
+	public BigDecimal getAmount() {
+		return amount;
+	}
+	
+	public String getDescription() {
+		return description;
+	}
+	
+	public Account getAccount() {
+		return account;
 	}
 	
 	public Category getCategory() {
@@ -55,14 +69,6 @@ public class PlannedPayment {
 	
 	public OwnCategory getOwnCategory() {
 		return ownCategory;
-	}
-	
-	public Account getAccount() {
-		return account;
-	}
-	
-	public BigDecimal getAmount() {
-		return amount;
 	}
 	
 	public Set<Tag> getTags() {

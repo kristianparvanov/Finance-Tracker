@@ -18,6 +18,7 @@ import model.Category;
 import model.OwnCategory;
 import model.PlannedPayment;
 import model.Tag;
+import model.TransactionType;
 
 public class PlannedPaymentDAO {
 	private static PlannedPaymentDAO instance;
@@ -39,15 +40,17 @@ public class PlannedPaymentDAO {
 		if (!ALL_PLANNED_PAYMENTS.isEmpty()) {
 			return;
 		}
-		String query = "SELECT planned_payment_id, name, from_date, to_date, amount, account_id, category_id, own_category_id FROM finance_tracker.planned_payments";
+		String query = "SELECT planned_payment_id, name, type, from_date, amount, description, account_id, category_id, own_category_id FROM finance_tracker.planned_payments";
 		PreparedStatement statement = CONNECTION.prepareStatement(query);
 		ResultSet result = statement.executeQuery();
 		while (result.next()) {
 			long plannedPaymentId = result.getLong("planned_payment_id");
 			String name = result.getString("name");
+			String type = result.getString("type");
+			TransactionType paymentType = TransactionType.valueOf(type);
 			LocalDateTime fromDate = result.getTimestamp("from_date").toLocalDateTime();
-			LocalDateTime toDate = result.getTimestamp("to_date").toLocalDateTime();
 			BigDecimal amount = result.getBigDecimal("amount");
+			String description = result.getString("description");
 			int accountId = result.getInt("account_id");
 			Account account = AccountDAO.getInstance().getAccountByAccountId(accountId);
 			int categoryId = result.getInt("category_id");
@@ -55,7 +58,7 @@ public class PlannedPaymentDAO {
 			int ownCategoryId = result.getInt("own_category_id");
 			OwnCategory ownCategory = OwnCategoryDAO.getInstance().getOwnCategoryByOwnCategoryId(ownCategoryId);
 			HashSet<Tag> tags = TagDAO.getInstance().getTagsByPlannedPaymentId(plannedPaymentId);
-			PlannedPayment payment = new PlannedPayment(name, fromDate, toDate, amount, account, category, ownCategory, tags);
+			PlannedPayment payment = new PlannedPayment(name, paymentType, fromDate, amount, description, account, category, ownCategory, tags);
 			payment.setPlannedPaymentId(plannedPaymentId);
 			ALL_PLANNED_PAYMENTS.put(name, payment);
 		}
@@ -92,15 +95,16 @@ public class PlannedPaymentDAO {
 	}
 	
 	public synchronized void insertPlannedPayment(PlannedPayment p) throws SQLException {
-		String query = "INSERT INTO finance_tracker.planned_payments (name, from_date, to_date, amount, account_id, category_id, own_category_id) VALUES (?, STR_TO_DATE('?', '%Y-%m-%d %H:%i:%s'), STR_TO_DATE('?', '%Y-%m-%d %H:%i:%s'), ?, ?, ?, ?)";
+		String query = "INSERT INTO finance_tracker.planned_payments (name, type, from_date, amount, description, account_id, category_id, own_category_id) VALUES (?, ?, STR_TO_DATE('?', '%Y-%m-%d %H:%i:%s'), ?, ?, ?, ?, ?)";
 		PreparedStatement statement = CONNECTION.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 		statement.setString(1, p.getName());
-		statement.setTimestamp(2, Timestamp.valueOf(p.getFromDate()));
-		statement.setTimestamp(3, Timestamp.valueOf(p.getToDate()));
+		statement.setString(2, p.getPaymentType().toString());
+		statement.setTimestamp(3, Timestamp.valueOf(p.getFromDate()));
 		statement.setBigDecimal(4, p.getAmount());
-		statement.setLong(5, p.getAccount().getAccaountId());
-		statement.setLong(6, p.getCategory().getCategoryId());
-		statement.setLong(7, p.getOwnCategory().getOwnCategoryId());
+		statement.setString(5, p.getDescription());
+		statement.setLong(6, p.getAccount().getAccaountId());
+		statement.setLong(7, p.getCategory().getCategoryId());
+		statement.setLong(8, p.getOwnCategory().getOwnCategoryId());
 		statement.executeUpdate();
 		
 		ResultSet resultSet = statement.getGeneratedKeys();
@@ -111,16 +115,17 @@ public class PlannedPaymentDAO {
 	}
 	
 	public synchronized void updatePlannedPayment(PlannedPayment p) throws SQLException {
-		String query = "UPDATE finance_tracker.planned_payments SET name = ?, from_date = STR_TO_DATE('?', '%Y-%m-%d %H:%i:%s'), to_date = STR_TO_DATE('?', '%Y-%m-%d %H:%i:%s'), amount = ?, account_id = ?, category_id = ?, own_category_id = ?) WHERE planned_payment_id = ?";
+		String query = "UPDATE finance_tracker.planned_payments SET name = ?, type = ?, from_date = STR_TO_DATE('?', '%Y-%m-%d %H:%i:%s'), amount = ?, description = ?, account_id = ?, category_id = ?, own_category_id = ?) WHERE planned_payment_id = ?";
 		PreparedStatement statement = CONNECTION.prepareStatement(query);
 		statement.setString(1, p.getName());
-		statement.setTimestamp(2, Timestamp.valueOf(p.getFromDate()));
-		statement.setTimestamp(3, Timestamp.valueOf(p.getToDate()));
+		statement.setString(2, p.getPaymentType().toString());
+		statement.setTimestamp(3, Timestamp.valueOf(p.getFromDate()));
 		statement.setBigDecimal(4, p.getAmount());
-		statement.setLong(4, p.getAccount().getAccaountId());
-		statement.setLong(5, p.getCategory().getCategoryId());
-		statement.setLong(6, p.getOwnCategory().getOwnCategoryId());
-		statement.setLong(7, p.getPlannedPaymentId());
+		statement.setString(5, p.getDescription());
+		statement.setLong(6, p.getAccount().getAccaountId());
+		statement.setLong(7, p.getCategory().getCategoryId());
+		statement.setLong(8, p.getOwnCategory().getOwnCategoryId());
+		statement.setLong(9, p.getPlannedPaymentId());
 		statement.executeUpdate();
 		
 		ALL_PLANNED_PAYMENTS.put(p.getName(), p);
