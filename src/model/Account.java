@@ -12,23 +12,23 @@ public class Account {
 	private long accaountID;
 	private String name;
 	private BigDecimal amount;
-	private int user;
+	private int userID;
 	private List<Transaction> transactions;
 	private List<Budget> budgets;
 	private List<PlannedPayment> plannedPayments;
 	
 	
-	public Account(String name, BigDecimal amount, int user, List<Transaction> transactions, List<Budget> budgets, List<PlannedPayment> plannedPayments) {
+	public Account(String name, BigDecimal amount, int userID, List<Transaction> transactions, List<Budget> budgets, List<PlannedPayment> plannedPayments) {
 		this.name = name;
 		this.amount = amount;
-		this.user = user;
+		this.userID = userID;
 		this.transactions = transactions;
 		this.budgets = budgets;
 		this.plannedPayments = plannedPayments;
 	}
 	
-	public Account(String name, BigDecimal amount, int user) {
-		this(name, amount, user, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+	public Account(String name, BigDecimal amount, int userID) {
+		this(name, amount, userID, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
 	}
 
 	public String getName() {
@@ -56,21 +56,24 @@ public class Account {
 	}
 
 	public long getUserId() {
-		return user;
+		return userID;
 	}
 
 	public void setAccaountID(long accaountID) {
 		this.accaountID = accaountID;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + (int) (accaountID ^ (accaountID >>> 32));
 		result = prime * result + ((amount == null) ? 0 : amount.hashCode());
+		result = prime * result + ((budgets == null) ? 0 : budgets.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((plannedPayments == null) ? 0 : plannedPayments.hashCode());
 		result = prime * result + ((transactions == null) ? 0 : transactions.hashCode());
+		result = prime * result + userID;
 		return result;
 	}
 
@@ -90,17 +93,28 @@ public class Account {
 				return false;
 		} else if (!amount.equals(other.amount))
 			return false;
+		if (budgets == null) {
+			if (other.budgets != null)
+				return false;
+		} else if (!budgets.equals(other.budgets))
+			return false;
 		if (name == null) {
 			if (other.name != null)
 				return false;
 		} else if (!name.equals(other.name))
+			return false;
+		if (plannedPayments == null) {
+			if (other.plannedPayments != null)
+				return false;
+		} else if (!plannedPayments.equals(other.plannedPayments))
 			return false;
 		if (transactions == null) {
 			if (other.transactions != null)
 				return false;
 		} else if (!transactions.equals(other.transactions))
 			return false;
+		if (userID != other.userID)
+			return false;
 		return true;
 	}
-
 }

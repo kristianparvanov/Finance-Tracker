@@ -63,7 +63,6 @@ public class OwnCategoryDAO {
 			List<Transaction> transactions = TransactionDAO.getInstance().getAllTransactionsByOwnCategoryId(ownCategoryId);
 			List<Budget> budgets = BudgetDAO.getInstance().getAllBudgetsByOwnCategoryId(ownCategoryId);
 			List<PlannedPayment> plannedPayments = PlannedPaymentDAO.getInstance().getAllPlannedPaymentsByOwnCategoryId(ownCategoryId);
-			//User user = UserDAO.getInstance().getUserByUserId(userId);
 			
 			OwnCategory oc = new OwnCategory(ownCategoryId, name, userId, type, transactions, budgets, plannedPayments);
 			
@@ -81,6 +80,7 @@ public class OwnCategoryDAO {
 		ps.setInt(1, + ownCategoryId);
 		
 		ResultSet res = ps.executeQuery();
+		res.next();
 		
 		String name = res.getString("name");
 		TransactionType type = TransactionType.valueOf(res.getString("type"));
@@ -88,7 +88,6 @@ public class OwnCategoryDAO {
 		List<Transaction> transactions = TransactionDAO.getInstance().getAllTransactionsByOwnCategoryId(ownCategoryId);
 		List<Budget> budgets = BudgetDAO.getInstance().getAllBudgetsByOwnCategoryId(ownCategoryId);
 		List<PlannedPayment> plannedPayments = PlannedPaymentDAO.getInstance().getAllPlannedPaymentsByOwnCategoryId(ownCategoryId);
-		User user = UserDAO.getInstance().getUserByUserId(userId);
 		
 		OwnCategory oc = new OwnCategory(ownCategoryId, name, userId, type, transactions, budgets, plannedPayments);
 		

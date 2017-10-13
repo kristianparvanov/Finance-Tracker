@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.tomcat.util.digester.Digester;
 
 import java.util.Map;
 import java.util.Set;
@@ -125,20 +126,15 @@ public class UserDAO {
 	}
 	
 	
-	
+	// TODO
 	public synchronized boolean isValidLogin(String username, String password) throws SQLException {
-		//byte[] hashedPassword = DigestUtils.sha512(DigestUtils.sha512Hex(DigestUtils.sha512(password)));
-		byte[] hashedPassword = DigestUtils.sha512(password);
-		String str =  DigestUtils.sha512Hex(hashedPassword);
-		byte[] hashedPassword2 = DigestUtils.sha512(str);
+		byte[] hashedPassword = DigestUtils.sha512(DigestUtils.sha512Hex(DigestUtils.sha512(password)));
 		
 		getAllUsers();
 		
+		
 		if (ALL_USERS.containsKey(username)) {
 			User user = ALL_USERS.get(username);
-			System.out.println(Arrays.toString(hashedPassword2));
-			System.out.println(Arrays.toString(hashedPassword));
-			System.out.println(Arrays.toString(user.getPassword()));
 			return MessageDigest.isEqual(hashedPassword, user.getPassword());
 		}
 		

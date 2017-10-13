@@ -57,13 +57,13 @@ public class Demo {
 			//OKTransactionDAO.getInstance().insertTransaction(t1);
 			//OKPlannedPaymentDAO.getInstance().insertPlannedPayment(p1);
 			//OKBudgetDAO.getInstance().insertBudget(b1);
-			//UserDAO.getInstance().insertUser(new User("Kristian", "123", "kris@40", "Kristian", "purvanov"));
+//			UserDAO.getInstance().insertUser(new User("Kristian", "123", "kris@40", "Kristian", "purvanov"));
 			//OKAccountDAO.getInstance().insertAccount(new Account("Debit card", BigDecimal.valueOf(25000), u1));
 			//OKCategoryDAO.getInstance().insertCategory(new Category("kurvi", TransactionType.EXPENCE, transactions, budgets, plannedPayments));
-			//!!System.out.println(UserDAO.getInstance().isValidLogin("Kristian", "123"));
+			//System.out.println(UserDAO.getInstance().isValidLogin("Kristian", "123"));
 			//TransactionDAO.getInstance();
-			System.out.println(AccountDAO.getInstance().getAllAccountsByUserId((int)u1.getUserId()));
-			System.out.println(AccountDAO.getInstance().getAccountByAccountId((int)u1.getUserId()));
+//			System.out.println(AccountDAO.getInstance().getAllAccountsByUserId((int)u1.getUserId()));
+//			System.out.println(AccountDAO.getInstance().getAccountByAccountId((int)u1.getUserId()));
 			AccountDAO.getInstance().makeTransferToOtherAccount(a2, a1, BigDecimal.valueOf(414));
 		} catch (SQLException e) {
 			e.printStackTrace();
