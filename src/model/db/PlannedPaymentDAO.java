@@ -52,22 +52,24 @@ public class PlannedPaymentDAO {
 			BigDecimal amount = result.getBigDecimal("amount");
 			String description = result.getString("description");
 			int accountId = result.getInt("account_id");
-			Account account = AccountDAO.getInstance().getAccountByAccountId(accountId);
+			//Account account = AccountDAO.getInstance().getAccountByAccountId(accountId);
 			int categoryId = result.getInt("category_id");
-			Category category = CategoryDAO.getInstance().getCategoryByCategoryId(categoryId);
+			//Category category = CategoryDAO.getInstance().getCategoryByCategoryId(categoryId);
 			int ownCategoryId = result.getInt("own_category_id");
-			OwnCategory ownCategory = OwnCategoryDAO.getInstance().getOwnCategoryByOwnCategoryId(ownCategoryId);
+			//OwnCategory ownCategory = OwnCategoryDAO.getInstance().getOwnCategoryByOwnCategoryId(ownCategoryId);
 			HashSet<Tag> tags = TagDAO.getInstance().getTagsByPlannedPaymentId(plannedPaymentId);
-			PlannedPayment payment = new PlannedPayment(name, paymentType, fromDate, amount, description, account, category, ownCategory, tags);
+			PlannedPayment payment = new PlannedPayment(name, paymentType, fromDate, amount, description, accountId, categoryId, ownCategoryId, tags);
 			payment.setPlannedPaymentId(plannedPaymentId);
 			ALL_PLANNED_PAYMENTS.put(name, payment);
+			
+			System.out.println(payment);
 		}
 	}
 	
 	public synchronized List<PlannedPayment> getAllPlannedPaymentsByAccountId(int accountId) {
 		List<PlannedPayment> payments = new ArrayList<PlannedPayment>();
 		for (PlannedPayment payment : ALL_PLANNED_PAYMENTS.values()) {
-			if (payment.getAccount().getAccaountId() == accountId) {
+			if (payment.getAccount() == accountId) {
 				payments.add(payment);
 			}
 		}
@@ -77,7 +79,7 @@ public class PlannedPaymentDAO {
 	public synchronized List<PlannedPayment> getAllPlannedPaymentsByCategoryId(int categoryId) {
 		List<PlannedPayment> payments = new ArrayList<PlannedPayment>();
 		for (PlannedPayment payment : ALL_PLANNED_PAYMENTS.values()) {
-			if (payment.getCategory().getCategoryId() == categoryId) {
+			if (payment.getCategory() == categoryId) {
 				payments.add(payment);
 			}
 		}
@@ -87,7 +89,7 @@ public class PlannedPaymentDAO {
 	public synchronized List<PlannedPayment> getAllPlannedPaymentsByOwnCategoryId(int ownCategoryId) {
 		List<PlannedPayment> payments = new ArrayList<PlannedPayment>();
 		for (PlannedPayment payment : ALL_PLANNED_PAYMENTS.values()) {
-			if (payment.getOwnCategory().getOwnCategoryId() == ownCategoryId) {
+			if (payment.getOwnCategory() == ownCategoryId) {
 				payments.add(payment);
 			}
 		}
@@ -102,9 +104,9 @@ public class PlannedPaymentDAO {
 		statement.setTimestamp(3, Timestamp.valueOf(p.getFromDate().withNano(0)));
 		statement.setBigDecimal(4, p.getAmount());
 		statement.setString(5, p.getDescription());
-		statement.setLong(6, p.getAccount().getAccaountId());
-		statement.setLong(7, p.getCategory().getCategoryId());
-		statement.setLong(8, p.getOwnCategory().getOwnCategoryId());
+		statement.setLong(6, p.getAccount());
+		statement.setLong(7, p.getCategory());
+		statement.setLong(8, p.getOwnCategory());
 		statement.executeUpdate();
 		
 		ResultSet resultSet = statement.getGeneratedKeys();
@@ -115,16 +117,16 @@ public class PlannedPaymentDAO {
 	}
 	
 	public synchronized void updatePlannedPayment(PlannedPayment p) throws SQLException {
-		String query = "UPDATE finance_tracker.planned_payments SET name = ?, type = ?, from_date = STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), amount = ?, description = ?, account_id = ?, category_id = ?, own_category_id = ?) WHERE planned_payment_id = ?";
+		String query = "UPDATE finance_tracker.planned_payments SET name = ?, type = ?, from_date = STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), amount = ?, description = ?, account_id = ?, category_id = ?, own_category_id = ? WHERE planned_payment_id = ?";
 		PreparedStatement statement = CONNECTION.prepareStatement(query);
 		statement.setString(1, p.getName());
 		statement.setString(2, p.getPaymentType().toString());
 		statement.setTimestamp(3, Timestamp.valueOf(p.getFromDate().withNano(0)));
 		statement.setBigDecimal(4, p.getAmount());
 		statement.setString(5, p.getDescription());
-		statement.setLong(6, p.getAccount().getAccaountId());
-		statement.setLong(7, p.getCategory().getCategoryId());
-		statement.setLong(8, p.getOwnCategory().getOwnCategoryId());
+		statement.setLong(6, p.getAccount());
+		statement.setLong(7, p.getCategory());
+		statement.setLong(8, p.getOwnCategory());
 		statement.setLong(9, p.getPlannedPaymentId());
 		statement.executeUpdate();
 		

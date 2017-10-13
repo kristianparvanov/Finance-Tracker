@@ -49,22 +49,42 @@ public class Demo {
 		OwnCategory oc1 = new OwnCategory("sth", TransactionType.EXPENCE, u1.getUserId(), transactions, budgets, plannedPayments);
 		oc1.setOwnCategoryId(2);
 		
-		Transaction t1 = new Transaction(TransactionType.EXPENCE, BigDecimal.valueOf(250), a1.getAccaountId(), c1.getCategoryId(), oc1.getOwnCategoryId(), LocalDateTime.now(), tags);
-		PlannedPayment p1 = new PlannedPayment("CARS", TransactionType.EXPENCE, LocalDateTime.of(2017, 11, 12, 15, 37, 25), BigDecimal.valueOf(250), "nosa4a", a1, c1, oc1, tags);
-		Budget b1 = new Budget("za kolata", BigDecimal.valueOf(250), LocalDateTime.of(2017, 11, 12, 15, 37, 25), LocalDateTime.of(2017, 11, 12, 15, 37, 25), a1, c1, oc1, tags);
+		Transaction t1 = new Transaction(TransactionType.INCOME, BigDecimal.valueOf(2500), a1.getAccaountId(), c1.getCategoryId(), oc1.getOwnCategoryId(), LocalDateTime.now(), tags);
+		t1.setTransactionId(9);
+		PlannedPayment p1 = new PlannedPayment("CARS", TransactionType.EXPENCE, LocalDateTime.of(2017, 11, 12, 15, 37, 25), BigDecimal.valueOf(250), "nosa4a", a1.getAccaountId(), c1.getCategoryId(), oc1.getOwnCategoryId(), tags);
+		Budget b1 = new Budget("za kolata", BigDecimal.valueOf(250), LocalDateTime.of(2017, 11, 12, 15, 37, 25), LocalDateTime.of(2017, 11, 12, 15, 37, 25), a1.getAccaountId(), c1.getCategoryId(), oc1.getOwnCategoryId(), tags);
 		
 		try {
-			//OKTransactionDAO.getInstance().insertTransaction(t1);
-			//OKPlannedPaymentDAO.getInstance().insertPlannedPayment(p1);
-			//OKBudgetDAO.getInstance().insertBudget(b1);
 			//UserDAO.getInstance().insertUser(new User("Kristian", "123", "kris@40", "Kristian", "purvanov"));
-			//OKAccountDAO.getInstance().insertAccount(new Account("Debit card", BigDecimal.valueOf(25000), u1));
-			//OKCategoryDAO.getInstance().insertCategory(new Category("kurvi", TransactionType.EXPENCE, transactions, budgets, plannedPayments));
 			//!!System.out.println(UserDAO.getInstance().isValidLogin("Kristian", "123"));
+			
+			//transactions
 			//TransactionDAO.getInstance();
-			System.out.println(AccountDAO.getInstance().getAllAccountsByUserId((int)u1.getUserId()));
-			System.out.println(AccountDAO.getInstance().getAccountByAccountId((int)u1.getUserId()));
-			AccountDAO.getInstance().makeTransferToOtherAccount(a2, a1, BigDecimal.valueOf(414));
+			//TransactionDAO.getInstance().insertTransaction(t1);
+			//TransactionDAO.getInstance().updateTransaction(t1);
+//			Transaction t6 = new Transaction(TransactionType.INCOME, BigDecimal.valueOf(2500), a1.getAccaountId(), c1.getCategoryId(), oc1.getOwnCategoryId(), LocalDateTime.now(), tags);
+//			t6.setTransactionId(6);
+//			TransactionDAO.getInstance().deleteTransaction(t6);
+			
+			//planned
+			//PlannedPaymentDAO.getInstance().getAllPlannedPayments();
+			//PlannedPaymentDAO.getInstance().insertPlannedPayment(p1);
+			
+			//budget
+			//BudgetDAO.getInstance().getAllBudgets();
+			//BudgetDAO.getInstance().insertBudget(b1);
+			
+			//account
+			//AccountDAO.getInstance().insertAccount(new Account("Debit card", BigDecimal.valueOf(25000), u1));
+			
+			//category
+			//CategoryDAO.getInstance().insertCategory(new Category("kurvi", TransactionType.EXPENCE, transactions, budgets, plannedPayments));
+			
+			
+			
+//			System.out.println(AccountDAO.getInstance().getAllAccountsByUserId((int)u1.getUserId()));
+//			System.out.println(AccountDAO.getInstance().getAccountByAccountId((int)u1.getUserId()));
+//			AccountDAO.getInstance().makeTransferToOtherAccount(a2, a1, BigDecimal.valueOf(414));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

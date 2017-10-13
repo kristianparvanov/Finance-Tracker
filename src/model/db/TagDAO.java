@@ -69,7 +69,7 @@ public class TagDAO {
 
 	public HashSet<Tag> getTagsByPlannedPaymentId(long plannedPaymentId) throws SQLException {
 		HashSet<Tag> tags = new HashSet<Tag>();
-		String query = "SELECT budget_id, tag_id FROM finance_tracker.planned_payments_has_tags WHERE planned_payment_id = ?";
+		String query = "SELECT planned_payment_id, tag_id FROM finance_tracker.planned_payments_has_tags WHERE planned_payment_id = ?";
 		
 		PreparedStatement statement = null;
 		statement = CONNECTION.prepareStatement(query);

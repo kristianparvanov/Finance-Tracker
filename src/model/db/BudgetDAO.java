@@ -35,7 +35,7 @@ public class BudgetDAO {
 		return instance;
 	}
 	
-	private synchronized void getAllBudgets() throws SQLException {
+	public synchronized void getAllBudgets() throws SQLException {
 		if (!ALL_BUDGETS.isEmpty()) {
 			return;
 		}
@@ -49,14 +49,16 @@ public class BudgetDAO {
 			LocalDateTime fromDate = result.getTimestamp("from_date").toLocalDateTime();
 			LocalDateTime toDate = result.getTimestamp("to_date").toLocalDateTime();
 			int accountId = result.getInt("account_id");
-			Account account = AccountDAO.getInstance().getAccountByAccountId(accountId);
+			//Account account = AccountDAO.getInstance().getAccountByAccountId(accountId);
 			int categoryId = result.getInt("category_id");
-			Category category = CategoryDAO.getInstance().getCategoryByCategoryId(categoryId);
+			//Category category = CategoryDAO.getInstance().getCategoryByCategoryId(categoryId);
 			int ownCategoryId = result.getInt("own_category_id");
-			OwnCategory ownCategory = OwnCategoryDAO.getInstance().getOwnCategoryByOwnCategoryId(ownCategoryId);
+			//OwnCategory ownCategory = OwnCategoryDAO.getInstance().getOwnCategoryByOwnCategoryId(ownCategoryId);
 			HashSet<Tag> tags = TagDAO.getInstance().getTagsByBudgetId(budgetId);
-			Budget budget = new Budget(name, amount, fromDate, toDate, account, category, ownCategory, tags);
+			Budget budget = new Budget(name, amount, fromDate, toDate, accountId, categoryId, ownCategoryId, tags);
 			budget.setBudgetId(budgetId);
+			
+			System.out.println(budget);
 			
 			ALL_BUDGETS.put(name, budget);
 		}
@@ -65,7 +67,7 @@ public class BudgetDAO {
 	public synchronized List<Budget> getAllBudgetsByAccountId(int accountId) {
 		List<Budget> budgets = new ArrayList<Budget>();
 		for (Budget budget : ALL_BUDGETS.values()) {
-			if (budget.getAccount().getAccaountId() == accountId) {
+			if (budget.getAccount() == accountId) {
 				budgets.add(budget);
 			}
 		}
@@ -75,7 +77,7 @@ public class BudgetDAO {
 	public synchronized List<Budget> getAllBudgetsByCategoryId(int categoryId) {
 		List<Budget> budgets = new ArrayList<Budget>();
 		for (Budget budget : ALL_BUDGETS.values()) {
-			if (budget.getCategory().getCategoryId() == categoryId) {
+			if (budget.getCategory() == categoryId) {
 				budgets.add(budget);
 			}
 		}
@@ -85,7 +87,7 @@ public class BudgetDAO {
 	public synchronized List<Budget> getAllBudgetsByOwnCategoryId(int ownCategoryId) {
 		List<Budget> budgets = new ArrayList<Budget>();
 		for (Budget budget : ALL_BUDGETS.values()) {
-			if (budget.getOwnCategory().getOwnCategoryId() == ownCategoryId) {
+			if (budget.getOwnCategory() == ownCategoryId) {
 				budgets.add(budget);
 			}
 		}
@@ -99,9 +101,9 @@ public class BudgetDAO {
 		statement.setBigDecimal(2, b.getAmount());
 		statement.setTimestamp(3, Timestamp.valueOf(b.getFromDate().withNano(0)));
 		statement.setTimestamp(4, Timestamp.valueOf(b.getToDate().withNano(0)));
-		statement.setLong(5, b.getAccount().getAccaountId());
-		statement.setLong(6, b.getCategory().getCategoryId());
-		statement.setLong(7, b.getOwnCategory().getOwnCategoryId());
+		statement.setLong(5, b.getAccount());
+		statement.setLong(6, b.getCategory());
+		statement.setLong(7, b.getOwnCategory());
 		statement.executeUpdate();
 		
 		ResultSet resultSet = statement.getGeneratedKeys();
@@ -112,15 +114,15 @@ public class BudgetDAO {
 	}
 	
 	public synchronized void updateBudget(Budget b) throws SQLException {
-		String query = "UPDATE finance_tracker.budgets SET name = ?, amount = ?, from_date = STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), to_date = STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), account_id = ?, category_id = ?, own_category_id = ?) WHERE budget_id = ?";
+		String query = "UPDATE finance_tracker.budgets SET name = ?, amount = ?, from_date = STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), to_date = STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), account_id = ?, category_id = ?, own_category_id = ? WHERE budget_id = ?";
 		PreparedStatement statement = CONNECTION.prepareStatement(query);
 		statement.setString(1, b.getName());
 		statement.setBigDecimal(2, b.getAmount());
 		statement.setTimestamp(3, Timestamp.valueOf(b.getFromDate().withNano(0)));
 		statement.setTimestamp(4, Timestamp.valueOf(b.getToDate().withNano(0)));
-		statement.setLong(4, b.getAccount().getAccaountId());
-		statement.setLong(5, b.getCategory().getCategoryId());
-		statement.setLong(6, b.getOwnCategory().getOwnCategoryId());
+		statement.setLong(4, b.getAccount());
+		statement.setLong(5, b.getCategory());
+		statement.setLong(6, b.getOwnCategory());
 		statement.setLong(7, b.getBudgetId());
 		statement.executeUpdate();
 		

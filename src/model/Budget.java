@@ -12,13 +12,13 @@ public class Budget {
 	private BigDecimal amount;
 	private LocalDateTime fromDate;
 	private LocalDateTime toDate;
-	private Account account;
-	private Category category;
-	private OwnCategory ownCategory;
+	private long account;
+	private long category;
+	private long ownCategory;
 	private HashSet<Tag> tags = new HashSet<Tag>();
 	
 	public Budget(String name, BigDecimal amount, LocalDateTime fromDate, LocalDateTime toDate,
-			Account account, Category category, OwnCategory ownCategory, HashSet<Tag> tags) {
+			long account, long category, long ownCategory, HashSet<Tag> tags) {
 		this.name = name;
 		this.amount = amount;
 		this.fromDate = fromDate;
@@ -53,19 +53,26 @@ public class Budget {
 		return toDate;
 	}
 	
-	public Account getAccount() {
+	public long getAccount() {
 		return account;
 	}
 	
-	public Category getCategory() {
+	public long getCategory() {
 		return category;
 	}
 	
-	public OwnCategory getOwnCategory() {
+	public long getOwnCategory() {
 		return ownCategory;
 	}
 	
 	public Set<Tag> getTags() {
 		return Collections.unmodifiableSet(tags);
+	}
+
+	@Override
+	public String toString() {
+		return "Budget [budgetId=" + budgetId + ", name=" + name + ", amount=" + amount + ", fromDate=" + fromDate
+				+ ", toDate=" + toDate + ", account=" + account + ", category=" + category + ", ownCategory="
+				+ ownCategory + ", tags=" + tags + "]";
 	}
 }
