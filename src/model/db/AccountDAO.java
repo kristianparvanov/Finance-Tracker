@@ -20,12 +20,8 @@ import model.User;
 public class AccountDAO {
 	
 	private static AccountDAO instance;
-//	private static final HashMap<String, ArrayList<Account>> ALL_ACCOUNTS = new HashMap<>(); 
-	//private static final List<Account> ALL_ACCOUNTS = new ArrayList<>(); 
 	
-	private AccountDAO() {
-		//getAllAccounts();
-	}
+	private AccountDAO() {}
 	
 	public synchronized static AccountDAO getInstance() {
 		if (instance == null) {
@@ -33,12 +29,6 @@ public class AccountDAO {
 		}
 		return instance;
 	}
-	
-	// TODO
-//	private void getAllAccounts() {
-//		// TODO Auto-generated method stub
-//		
-//	}
 	
 	public synchronized void insertAccount(Account acc) throws SQLException {
 		Connection con = DBManager.getInstance().getConnection();
@@ -54,8 +44,6 @@ public class AccountDAO {
 		rs.next();
 		
 		acc.setAccaountID(rs.getLong(1));
-		
-		//ALL_ACCOUNTS.add(acc);
 	}
 	
 	public synchronized void deleteAccount(int accountId) throws SQLException {
@@ -64,14 +52,6 @@ public class AccountDAO {
 		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(sql);
 		ps.setInt(1, accountId);
 		ps.executeUpdate();
-		
-		/*for (Account account : ALL_ACCOUNTS) {
-			if (account.getAccaountId() == accountId) {
-				ALL_ACCOUNTS.remove(account);
-				
-				return;
-			}
-		}*/
 	}
 	
 	public synchronized long getAccountId(User user, String name) throws SQLException {
@@ -137,18 +117,30 @@ public class AccountDAO {
 		return acc;
 	}
 	
-	public synchronized void updateAccountAmmount(Account acc, BigDecimal newAmmount) throws SQLException {
+	public synchronized void updateAccountAmount(Account acc, BigDecimal newAmount) throws SQLException {
 		String sql = "UPDATE accounts SET amount = ? WHERE account_id = ?;";
 		
 		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(sql);
-		ps.setBigDecimal(1, newAmmount);
+		ps.setBigDecimal(1, newAmount);
 		ps.setLong(2, acc.getAccaountId());
 		ps.executeUpdate();
 	}
 	
-	public synchronized void makeTransferToOtherAccount(Account currentAcc, Account otherAcc, BigDecimal ammount) throws SQLException {
-		updateAccountAmmount(currentAcc, currentAcc.getAmount().subtract(ammount));
-		updateAccountAmmount(otherAcc, otherAcc.getAmount().add(ammount));
+	public synchronized void makeTransferToOtherAccount(Account currentAcc, Account otherAcc, BigDecimal amount) throws SQLException {
+		updateAccountAmount(currentAcc, currentAcc.getAmount().subtract(amount));
+		updateAccountAmount(otherAcc, otherAcc.getAmount().add(amount));
+	}
+	
+	public synchronized BigDecimal getAmountByAccountId(int accountId) throws SQLException {
+		String sql = "SELECT amount FROM accounts WHERE account_id = ?;";
+		
+		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(sql);
+		ps.setInt(1, accountId);
+
+		ResultSet res = ps.executeQuery();
+		res.next();
+		
+		return res.getBigDecimal("amount");
 	}
 	
 	public synchronized boolean isValidAccount(User user, String name) throws SQLException {
