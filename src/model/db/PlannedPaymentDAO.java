@@ -113,6 +113,12 @@ public class PlannedPaymentDAO {
 		resultSet.next();
 		p.setPlannedPaymentId(resultSet.getLong(1));
 		
+		for (Tag tag : p.getTags()) {
+			TagDAO.getInstance().insertTagToTags(tag);
+			TagDAO.getInstance().insertTagToPlannedPayment(p, tag);
+		}
+		
+		
 		ALL_PLANNED_PAYMENTS.put(p.getName(), p);
 	}
 	

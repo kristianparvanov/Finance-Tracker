@@ -4,9 +4,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.HashSet;
 
+import model.Budget;
+import model.PlannedPayment;
 import model.Tag;
+import model.Transaction;
 
 public class TagDAO {
 	private static TagDAO instance;
@@ -35,6 +40,17 @@ public class TagDAO {
 		return tag;
 	}
 	
+	public void insertTagToTags(Tag tag) throws SQLException {
+		String query = "INSERT INTO finance_tracker.tags (name) VALUES (?)";
+		PreparedStatement statement = CONNECTION.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+		statement.setString(1, tag.getName());
+		statement.executeUpdate();
+		
+		ResultSet resultSet = statement.getGeneratedKeys();
+		resultSet.next();
+		tag.setTagId(resultSet.getInt(1));
+	}
+	
 	public HashSet<Tag> getTagsByTransactionId(long transactionId) throws SQLException {
 		HashSet<Tag> tags = new HashSet<Tag>();
 		String query = "SELECT tag_id, transaction_id FROM finance_tracker.transactions_has_tags WHERE transaction_id = ?";
@@ -49,6 +65,14 @@ public class TagDAO {
 			tags.add(tag);
 		}
 		return tags;
+	}
+	
+	public void insertTagToTransaction(Transaction t, Tag tag) throws SQLException {
+		String query = "INSERT INTO finance_tracker.transactions_has_tags (transaction_id, tag_id) VALUES (?, ?)";
+		PreparedStatement statement = CONNECTION.prepareStatement(query);
+		statement.setLong(1, t.getTransactionId());
+		statement.setLong(2, tag.getTagId());
+		statement.executeUpdate();
 	}
 
 	public HashSet<Tag> getTagsByBudgetId(long budgetId) throws SQLException {
@@ -66,6 +90,14 @@ public class TagDAO {
 		}
 		return tags;
 	}
+	
+	public synchronized void insertTagToBudget(Budget b, Tag tag) throws SQLException {
+		String query = "INSERT INTO finance_tracker.budgets_has_tags (budget_id, tag_id) VALUES (?, ?)";
+		PreparedStatement statement = CONNECTION.prepareStatement(query);
+		statement.setLong(1, b.getBudgetId());
+		statement.setLong(2, tag.getTagId());
+		statement.executeUpdate();
+	}
 
 	public HashSet<Tag> getTagsByPlannedPaymentId(long plannedPaymentId) throws SQLException {
 		HashSet<Tag> tags = new HashSet<Tag>();
@@ -81,5 +113,14 @@ public class TagDAO {
 			tags.add(tag);
 		}
 		return tags;
+	}
+	
+	public void insertTagToPlannedPayment(PlannedPayment p, Tag tag) throws SQLException {
+		String query = "INSERT INTO finance_tracker.planned_payments_has_tags (planned_payment_id, tag_id) VALUES (?, ?)";
+		PreparedStatement statement = CONNECTION.prepareStatement(query);
+		statement.setLong(1, p.getPlannedPaymentId());
+		statement.setLong(2, tag.getTagId());
+		statement.executeUpdate();
+		
 	}
 }

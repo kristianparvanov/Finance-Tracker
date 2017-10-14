@@ -110,6 +110,12 @@ public class BudgetDAO {
 		resultSet.next();
 		b.setBudgetId(resultSet.getLong(1));
 		
+		for (Tag tag : b.getTags()) {
+			TagDAO.getInstance().insertTagToTags(tag);
+			TagDAO.getInstance().insertTagToBudget(b, tag);
+		}
+		
+		
 		ALL_BUDGETS.put(b.getName(), b);
 	}
 	

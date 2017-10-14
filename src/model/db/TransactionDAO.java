@@ -46,7 +46,6 @@ public class TransactionDAO {
 		String query = "SELECT transaction_id, type, date, amount, account_id, category_id, own_category_id FROM finance_tracker.transactions";
 		PreparedStatement statement = null;
 		statement = CONNECTION.prepareStatement(query);
-		System.out.println("sas");
 		ResultSet result = statement.executeQuery();
 		while (result.next()) {
 			long transactionId = result.getInt("transaction_id");
@@ -146,6 +145,11 @@ public class TransactionDAO {
 		ResultSet resultSet = statement.getGeneratedKeys();
 		resultSet.next();
 		t.setTransactionId(resultSet.getLong(1));
+		
+		for (Tag tag : t.getTags()) {
+			TagDAO.getInstance().insertTagToTags(tag);
+			TagDAO.getInstance().insertTagToTransaction(t, tag);
+		}
 		
 		ALL_TRANSACTIONS.get(t.getType()).add(t);
 	}
