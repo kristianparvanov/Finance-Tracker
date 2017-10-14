@@ -69,7 +69,7 @@ public class UserDAO {
 														+ "VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 		
 		ps.setString(1, u.getUserName());
-		ps.setString(2, DigestUtils.sha512Hex(u.getUserName()));
+		ps.setString(2, DigestUtils.sha512Hex(u.getPassword()));
 		ps.setString(3, u.getEmail());
 		ps.setString(4, u.getFirstName());
 		ps.setString(5, u.getLastName());
