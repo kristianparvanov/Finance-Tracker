@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,53 +20,46 @@ import model.TransactionType;
 import model.db.AccountDAO;
 import model.db.TransactionDAO;
 
-/**
- * Servlet implementation class TransactionServlet
- */
 @WebServlet("/transaction")
 public class TransactionServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public TransactionServlet() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
+
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		List<Transaction> trans = null;
+		try {
+			trans = TransactionDAO.getInstance().getAllTransactionsByAccountId(Integer.valueOf(request.getParameter("id")));
+			
+		} catch (SQLException e) {
+			System.out.println("neshto katastrofalno se slu4i");
+			e.printStackTrace();
+		}
+		for (Transaction transaction : trans) {
+			response.getWriter().append(transaction.toString()).append(request.getContextPath());
+		}
+		
 		response.getWriter().append("Served at: ").append(request.getContextPath());
+		//response.sendRedirect("result.html");
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
+		//doGet(request, response);
 		String type = request.getParameter("type");
 		String amount = request.getParameter("amount");
 		String account = request.getParameter("account");
 		String category = request.getParameter("category");
 		String ownCategory = request.getParameter("ownCategory");
-		String date = request.getParameter("date");
-		Transaction t = new Transaction(TransactionType.valueOf(type), BigDecimal.valueOf(Double.valueOf(amount)), Long.parseLong(account), Long.parseLong(category), Long.parseLong(ownCategory), LocalDateTime.parse(date), new HashSet<Tag>());
+		Transaction t = new Transaction(TransactionType.valueOf(type), BigDecimal.valueOf(Double.valueOf(amount)), Long.parseLong(account), Long.parseLong(category), Long.parseLong(ownCategory), LocalDateTime.now(), new HashSet<Tag>());
 		try {
 			Account acc = AccountDAO.getInstance().getAccountByAccountId(Long.parseLong(account));
+			BigDecimal newValue = BigDecimal.valueOf(Double.valueOf(amount));
+			BigDecimal oldValue = AccountDAO.getInstance().getAmountByAccountId((int)acc.getAccaountId());
 			if (type.equals("EXPENCE")) {
-				BigDecimal newValue = BigDecimal.valueOf(Double.valueOf(amount));
-				//BigDecimal oldValue = AccountDAO.getInstance().
-				//AccountDAO.getInstance().updateAccountAmmount(acc, (oldValue - newValue));
+				AccountDAO.getInstance().updateAccountAmount(acc, (oldValue.subtract(newValue)));
 			} else 
 			if (type.equals("INCOME")) {
-				BigDecimal newValue = BigDecimal.valueOf(Double.valueOf(amount));
-				//BigDecimal oldValue = AccountDAO.getInstance().
-				//AccountDAO.getInstance().updateAccountAmmount(acc, (oldValue + newValue));
+				AccountDAO.getInstance().updateAccountAmount(acc, (oldValue.add(newValue)));
 			}
 			TransactionDAO.getInstance().insertTransaction(t);
 		} catch (SQLException e) {
