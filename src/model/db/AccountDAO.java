@@ -115,15 +115,16 @@ public class AccountDAO {
 		return accounts;
 	}
 	
-	public synchronized Account getAccountByAccountId(int accountId) throws SQLException {
+	public synchronized Account getAccountByAccountId(long accountId) throws SQLException {
 		String sql = "SELECT account_id, name, amount, user_id FROM accounts WHERE accounts.account_id = ?;";
 		
 		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(sql);
-		ps.setInt(1, accountId);
+		ps.setLong(1, accountId);
 		
 		ResultSet res = ps.executeQuery();
 		res.next();
 		
+		Long accaountID = res.getLong("account_id");
 		String name = res.getString("name");
 		BigDecimal amount = res.getBigDecimal("amount");
 		int userId = res.getInt("user_id");
@@ -132,7 +133,7 @@ public class AccountDAO {
 		List<PlannedPayment> plannedPayments = PlannedPaymentDAO.getInstance().getAllPlannedPaymentsByAccountId(accountId);
 		
 		Account acc = new Account(name, amount, userId, transactions, budgets, plannedPayments);
-		
+		acc.setAccaountID(accaountID);
 		return acc;
 	}
 	

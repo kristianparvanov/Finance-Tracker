@@ -66,7 +66,8 @@ public class PlannedPaymentDAO {
 		}
 	}
 	
-	public synchronized List<PlannedPayment> getAllPlannedPaymentsByAccountId(int accountId) {
+	public synchronized List<PlannedPayment> getAllPlannedPaymentsByAccountId(long accountId) {
+		//SELECT planned_payment_id, name, type, from_date, amount, description, account_id, category_id, own_category_id FROM finance_tracker.planned_payments WHERE account_id = ?
 		List<PlannedPayment> payments = new ArrayList<PlannedPayment>();
 		for (PlannedPayment payment : ALL_PLANNED_PAYMENTS.values()) {
 			if (payment.getAccount() == accountId) {
@@ -76,7 +77,8 @@ public class PlannedPaymentDAO {
 		return payments;
 	}
 	
-	public synchronized List<PlannedPayment> getAllPlannedPaymentsByCategoryId(int categoryId) {
+	public synchronized List<PlannedPayment> getAllPlannedPaymentsByCategoryId(long categoryId) {
+		//SELECT planned_payment_id, name, type, from_date, amount, description, account_id, category_id, own_category_id FROM finance_tracker.planned_payments WHERE category_id = ?
 		List<PlannedPayment> payments = new ArrayList<PlannedPayment>();
 		for (PlannedPayment payment : ALL_PLANNED_PAYMENTS.values()) {
 			if (payment.getCategory() == categoryId) {
@@ -86,7 +88,8 @@ public class PlannedPaymentDAO {
 		return payments;
 	}
 	
-	public synchronized List<PlannedPayment> getAllPlannedPaymentsByOwnCategoryId(int ownCategoryId) {
+	public synchronized List<PlannedPayment> getAllPlannedPaymentsByOwnCategoryId(long ownCategoryId) {
+		//SELECT planned_payment_id, name, type, from_date, amount, description, account_id, category_id, own_category_id FROM finance_tracker.planned_payments WHERE own_category_id = ?
 		List<PlannedPayment> payments = new ArrayList<PlannedPayment>();
 		for (PlannedPayment payment : ALL_PLANNED_PAYMENTS.values()) {
 			if (payment.getOwnCategory() == ownCategoryId) {

@@ -37,7 +37,7 @@ public class Demo {
 		Account a1 = new Account("bank", BigDecimal.valueOf(5000), (int)u1.getUserId());
 		a1.setAccaountID(1);
 		Account a2 = new Account("cred", BigDecimal.valueOf(421414.0000), (int)u1.getUserId());
-		a1.setAccaountID(2);
+		a2.setAccaountID(2);
 		
 		List<Transaction> transactions = new ArrayList<Transaction>();
 		List<Budget> budgets = new ArrayList<Budget>();
@@ -66,19 +66,26 @@ public class Demo {
 			
 			//transactions
 			//TransactionDAO.getInstance();
-			TransactionDAO.getInstance().insertTransaction(t1);
+			//TransactionDAO.getInstance().insertTransaction(t1);
 			//TransactionDAO.getInstance().updateTransaction(t1);
 //			Transaction t6 = new Transaction(TransactionType.INCOME, BigDecimal.valueOf(2500), a1.getAccaountId(), c1.getCategoryId(), oc1.getOwnCategoryId(), LocalDateTime.now(), tags);
 //			t6.setTransactionId(6);
 //			TransactionDAO.getInstance().deleteTransaction(t6);
 			
+//			System.out.println(TransactionDAO.getInstance().getAllTransactionsByAccountId(a1.getAccaountId()));
+//			System.out.println(TransactionDAO.getInstance().getAllTransactionsByAccountId(a2.getAccaountId()));
+			
+			System.out.println(TransactionDAO.getInstance().getAllTransactionsByCategoryId(c1.getCategoryId()));
+			
+			System.out.println(TransactionDAO.getInstance().getAllTransactionsByOwnCategoryId(oc1.getOwnCategoryId()));
+			
 			//planned
 			//PlannedPaymentDAO.getInstance().getAllPlannedPayments();
-			PlannedPaymentDAO.getInstance().insertPlannedPayment(p1);
+			//PlannedPaymentDAO.getInstance().insertPlannedPayment(p1);
 			
 			//budget
 			//BudgetDAO.getInstance().getAllBudgets();
-			BudgetDAO.getInstance().insertBudget(b1);
+			//BudgetDAO.getInstance().insertBudget(b1);
 			
 			//account
 			//AccountDAO.getInstance().insertAccount(new Account("Debit card", BigDecimal.valueOf(25000), u1));

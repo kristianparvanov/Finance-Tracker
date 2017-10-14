@@ -67,7 +67,7 @@ public class Transaction {
 	public String toString() {
 		return "Transaction [transactionId=" + transactionId + ", type=" + type + ", amount=" + amount + ", account="
 				+ account + ", category=" + category + ", ownCategory=" + ownCategory + ", date=" + date + ", tags="
-				+ tags + "]";
+				+ tags + "]\n";
 	}
 	
 	

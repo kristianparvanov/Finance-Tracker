@@ -63,7 +63,7 @@ public class TransactionDAO {
 			Transaction t = new Transaction(transactionType, amount, accountId, categoryId, ownCategoryId, date, tags);
 			t.setTransactionId(transactionId);
 			ALL_TRANSACTIONS.get(t.getType()).add(t);
-			System.out.println(t.toString());
+			//System.out.println(t.toString());
 		}
 	}
 	
@@ -95,7 +95,7 @@ public class TransactionDAO {
 //		}
 //	}
 //	
-	public synchronized List<Transaction> getAllTransactionsByAccountId(int accountId) {
+	public synchronized List<Transaction> getAllTransactionsByAccountId(long accountId) {
 		List<Transaction> transactions = new ArrayList<Transaction>();
 		for (ArrayList<Transaction> transactionTypes : ALL_TRANSACTIONS.values()) {
 			for (Transaction transaction : transactionTypes) {
@@ -107,7 +107,7 @@ public class TransactionDAO {
 		return transactions;
 	}
 	
-	public synchronized List<Transaction> getAllTransactionsByCategoryId(int categoryId) {
+	public synchronized List<Transaction> getAllTransactionsByCategoryId(long categoryId) {
 		List<Transaction> transactions = new ArrayList<Transaction>();
 		for (ArrayList<Transaction> transactionTypes : ALL_TRANSACTIONS.values()) {
 			for (Transaction transaction : transactionTypes) {
@@ -119,7 +119,7 @@ public class TransactionDAO {
 		return transactions;
 	}
 	
-	public synchronized List<Transaction> getAllTransactionsByOwnCategoryId(int ownCategoryId) {
+	public synchronized List<Transaction> getAllTransactionsByOwnCategoryId(long ownCategoryId) {
 		List<Transaction> transactions = new ArrayList<Transaction>();
 		for (ArrayList<Transaction> transactionTypes : ALL_TRANSACTIONS.values()) {
 			for (Transaction transaction : transactionTypes) {

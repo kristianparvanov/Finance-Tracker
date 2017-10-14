@@ -64,7 +64,8 @@ public class BudgetDAO {
 		}
 	}
 	
-	public synchronized List<Budget> getAllBudgetsByAccountId(int accountId) {
+	public synchronized List<Budget> getAllBudgetsByAccountId(long accountId) {
+		//SELECT budget_id, name, amount, from_date, to_date, account_id, category_id, own_category_id FROM finance_tracker.budgets WHERE account_id = ?
 		List<Budget> budgets = new ArrayList<Budget>();
 		for (Budget budget : ALL_BUDGETS.values()) {
 			if (budget.getAccount() == accountId) {
@@ -74,7 +75,8 @@ public class BudgetDAO {
 		return budgets;
 	}
 	
-	public synchronized List<Budget> getAllBudgetsByCategoryId(int categoryId) {
+	public synchronized List<Budget> getAllBudgetsByCategoryId(long categoryId) {
+		//SELECT budget_id, name, amount, from_date, to_date, account_id, category_id, own_category_id FROM finance_tracker.budgets WHERE category_id = ?
 		List<Budget> budgets = new ArrayList<Budget>();
 		for (Budget budget : ALL_BUDGETS.values()) {
 			if (budget.getCategory() == categoryId) {
@@ -84,7 +86,8 @@ public class BudgetDAO {
 		return budgets;
 	}
 	
-	public synchronized List<Budget> getAllBudgetsByOwnCategoryId(int ownCategoryId) {
+	public synchronized List<Budget> getAllBudgetsByOwnCategoryId(long ownCategoryId) {
+		//SELECT budget_id, name, amount, from_date, to_date, account_id, category_id, own_category_id FROM finance_tracker.budgets WHERE own_category_id = ?
 		List<Budget> budgets = new ArrayList<Budget>();
 		for (Budget budget : ALL_BUDGETS.values()) {
 			if (budget.getOwnCategory() == ownCategoryId) {
