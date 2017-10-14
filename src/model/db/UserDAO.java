@@ -126,7 +126,6 @@ public class UserDAO {
 	}
 	
 	
-	// TODO
 	public synchronized boolean isValidLogin(String username, String password) throws SQLException {
 		byte[] hashedPassword = DigestUtils.sha512(DigestUtils.sha512Hex(DigestUtils.sha512(password)));
 		
