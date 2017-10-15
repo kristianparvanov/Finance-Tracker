@@ -80,6 +80,6 @@ public class PlannedPayment {
 		return "PlannedPayment [plannedPaymentId=" + plannedPaymentId + ", name=" + name + ", paymentType="
 				+ paymentType + ", fromDate=" + fromDate + ", amount=" + amount + ", description=" + description
 				+ ", account=" + account + ", category=" + category + ", ownCategory=" + ownCategory + ", tags=" + tags
-				+ "]";
+				+ "]\n";
 	}
 }

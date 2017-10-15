@@ -66,14 +66,38 @@ public class PlannedPaymentDAO {
 		}
 	}
 	
-	public synchronized List<PlannedPayment> getAllPlannedPaymentsByAccountId(long accountId) {
-		//SELECT planned_payment_id, name, type, from_date, amount, description, account_id, category_id, own_category_id FROM finance_tracker.planned_payments WHERE account_id = ?
+	public synchronized List<PlannedPayment> getAllPlannedPaymentsByAccountId(long accountId) throws SQLException {
+		String query = "SELECT planned_payment_id, name, type, from_date, amount, description, account_id, category_id, own_category_id FROM finance_tracker.planned_payments WHERE account_id = ?";
 		List<PlannedPayment> payments = new ArrayList<PlannedPayment>();
-		for (PlannedPayment payment : ALL_PLANNED_PAYMENTS.values()) {
-			if (payment.getAccount() == accountId) {
-				payments.add(payment);
-			}
+		
+		PreparedStatement statement = DBManager.getInstance().getConnection().prepareStatement(query);
+		statement.setLong(1, accountId);
+		ResultSet result = statement.executeQuery();
+		while(result.next()) {
+			long plannedPaymentId = result.getLong("planned_payment_id");
+			String name = result.getString("name");
+			String type = result.getString("type");
+			TransactionType paymentType = TransactionType.valueOf(type);
+			LocalDateTime fromDate = result.getTimestamp("from_date").toLocalDateTime();
+			BigDecimal amount = result.getBigDecimal("amount");
+			String description = result.getString("description");
+			int account = result.getInt("account_id");
+			int categoryId = result.getInt("category_id");
+			int ownCategoryId = result.getInt("own_category_id");
+			HashSet<Tag> tags = TagDAO.getInstance().getTagsByPlannedPaymentId(plannedPaymentId);
+			PlannedPayment payment = new PlannedPayment(name, paymentType, fromDate, amount, description, account, categoryId, ownCategoryId, tags);
+			payment.setPlannedPaymentId(plannedPaymentId);
+			payments.add(payment);
+			
+			ALL_PLANNED_PAYMENTS.put(name, payment);
+			
 		}
+		
+//		for (PlannedPayment payment : ALL_PLANNED_PAYMENTS.values()) {
+//			if (payment.getAccount() == accountId) {
+//				payments.add(payment);
+//			}
+//		}
 		return payments;
 	}
 	

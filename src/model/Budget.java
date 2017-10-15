@@ -73,6 +73,6 @@ public class Budget {
 	public String toString() {
 		return "Budget [budgetId=" + budgetId + ", name=" + name + ", amount=" + amount + ", fromDate=" + fromDate
 				+ ", toDate=" + toDate + ", account=" + account + ", category=" + category + ", ownCategory="
-				+ ownCategory + ", tags=" + tags + "]";
+				+ ownCategory + ", tags=" + tags + "]\n";
 	}
 }

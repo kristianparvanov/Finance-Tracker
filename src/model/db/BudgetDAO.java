@@ -39,8 +39,8 @@ public class BudgetDAO {
 		if (!ALL_BUDGETS.isEmpty()) {
 			return;
 		}
-		String sql = "SELECT budget_id, name, amount, from_date, to_date, account_id, category_id, own_category_id FROM finance_tracker.budgets";
-		PreparedStatement statement = DBManager.getInstance().getConnection().prepareStatement(sql);
+		String query = "SELECT budget_id, name, amount, from_date, to_date, account_id, category_id, own_category_id FROM finance_tracker.budgets";
+		PreparedStatement statement = DBManager.getInstance().getConnection().prepareStatement(query);
 		ResultSet result = statement.executeQuery();
 		while(result.next()) {
 			long budgetId = result.getLong("budget_id");
@@ -64,15 +64,38 @@ public class BudgetDAO {
 		}
 	}
 	
-	public synchronized List<Budget> getAllBudgetsByAccountId(long accountId) {
-		//SELECT budget_id, name, amount, from_date, to_date, account_id, category_id, own_category_id FROM finance_tracker.budgets WHERE account_id = ?
+	public synchronized List<Budget> getAllBudgetsByAccountId(long accountId) throws SQLException {
 		List<Budget> budgets = new ArrayList<Budget>();
-		for (Budget budget : ALL_BUDGETS.values()) {
-			if (budget.getAccount() == accountId) {
-				budgets.add(budget);
-			}
+		String query = "SELECT budget_id, name, amount, from_date, to_date, account_id, category_id, own_category_id FROM finance_tracker.budgets WHERE account_id = ?";
+		PreparedStatement statement = DBManager.getInstance().getConnection().prepareStatement(query);
+		statement.setLong(1, accountId);
+		ResultSet result = statement.executeQuery();
+		while(result.next()) {
+			long budgetId = result.getLong("budget_id");
+			String name = result.getString("name");
+			BigDecimal amount = result.getBigDecimal("amount");
+			LocalDateTime fromDate = result.getTimestamp("from_date").toLocalDateTime();
+			LocalDateTime toDate = result.getTimestamp("to_date").toLocalDateTime();
+			int account = result.getInt("account_id");
+			int categoryId = result.getInt("category_id");
+			int ownCategoryId = result.getInt("own_category_id");
+			HashSet<Tag> tags = TagDAO.getInstance().getTagsByBudgetId(budgetId);
+			Budget budget = new Budget(name, amount, fromDate, toDate, account, categoryId, ownCategoryId, tags);
+			budget.setBudgetId(budgetId);
+			budgets.add(budget);
+			
+			ALL_BUDGETS.put(name, budget);
+			
 		}
 		return budgets;
+		
+//		List<Budget> budgets = new ArrayList<Budget>();
+//		for (Budget budget : ALL_BUDGETS.values()) {
+//			if (budget.getAccount() == accountId) {
+//				budgets.add(budget);
+//			}
+//		}
+//		return budgets;
 	}
 	
 	public synchronized List<Budget> getAllBudgetsByCategoryId(long categoryId) {

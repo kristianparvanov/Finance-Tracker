@@ -13,40 +13,34 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import model.Account;
+import model.PlannedPayment;
 import model.Tag;
-import model.Transaction;
 import model.TransactionType;
-import model.db.AccountDAO;
-import model.db.TransactionDAO;
+import model.db.PlannedPaymentDAO;
 
-@WebServlet("/transaction")
-public class TransactionServlet extends HttpServlet {
+@WebServlet("/planned")
+public class PlannedPaymentServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
-
+       
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		List<Transaction> trans = null;
+		List<PlannedPayment> plannedPayments = null;
+//		Long accountId = (Long) request.getAttribute("id");
 		try {
-			trans = TransactionDAO.getInstance().getAllTransactionsByAccountId(Integer.valueOf(request.getParameter("id")));
-			
+			plannedPayments = PlannedPaymentDAO.getInstance().getAllPlannedPaymentsByAccountId(Integer.valueOf(request.getParameter("id")));
 		} catch (SQLException e) {
-			System.out.println("neshto katastrofalno se slu4i");
 			e.printStackTrace();
 		}
-		for (Transaction transaction : trans) {
-			response.getWriter().append("<h4>" + transaction.toString() + "</h4>");
+		for (PlannedPayment plannedPayment : plannedPayments) {
+			response.getWriter().append("<h4>" + plannedPayment.toString() + "</h4>");
 		}
-		
-		response.getWriter().append("Served at: ").append(request.getContextPath());
-		//response.sendRedirect("result.html");
 	}
 
-
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//doGet(request, response);
+		String name = request.getParameter("name");
 		String type = request.getParameter("type");
+		String from = request.getParameter("from");
 		String amount = request.getParameter("amount");
+		String description = request.getParameter("description");
 		String account = request.getParameter("account");
 		String category = request.getParameter("category");
 		String ownCategory = request.getParameter("ownCategory");
@@ -60,18 +54,9 @@ public class TransactionServlet extends HttpServlet {
 			}
 		}
 		
-		Transaction t = new Transaction(TransactionType.valueOf(type), BigDecimal.valueOf(Double.valueOf(amount)), Long.parseLong(account), Long.parseLong(category), Long.parseLong(ownCategory), LocalDateTime.now(), tagsSet);
+		PlannedPayment p = new PlannedPayment(name, TransactionType.valueOf(type), LocalDateTime.parse(from), BigDecimal.valueOf(Double.valueOf(amount)), description, Long.parseLong(account), Long.parseLong(category), Long.parseLong(ownCategory), tagsSet);
 		try {
-			Account acc = AccountDAO.getInstance().getAccountByAccountId(Long.parseLong(account));
-			BigDecimal newValue = BigDecimal.valueOf(Double.valueOf(amount));
-			BigDecimal oldValue = AccountDAO.getInstance().getAmountByAccountId((int)acc.getAccaountId());
-			if (type.equals("EXPENCE")) {
-				AccountDAO.getInstance().updateAccountAmount(acc, (oldValue.subtract(newValue)));
-			} else 
-			if (type.equals("INCOME")) {
-				AccountDAO.getInstance().updateAccountAmount(acc, (oldValue.add(newValue)));
-			}
-			TransactionDAO.getInstance().insertTransaction(t);
+			PlannedPaymentDAO.getInstance().insertPlannedPayment(p);
 		} catch (SQLException e) {
 			System.out.println("neshto katastrofalno se slu4i");
 			e.printStackTrace();
