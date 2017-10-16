@@ -42,7 +42,7 @@ public class TransactionDAO {
 //			System.out.println(ALL_TRANSACTIONS);
 //			return;
 //		}
-		String query = "SELECT transaction_id, type, date, amount, account_id, category_id, own_category_id FROM finance_tracker.transactions";
+		String query = "SELECT transaction_id, type, date, description, amount, account_id, category_id FROM finance_tracker.transactions";
 		PreparedStatement statement = null;
 		statement = CONNECTION.prepareStatement(query);
 		ResultSet result = statement.executeQuery();
@@ -53,12 +53,11 @@ public class TransactionDAO {
 			LocalDateTime date = result.getTimestamp("date").toLocalDateTime();
 			BigDecimal amount = result.getBigDecimal("amount");
 			int accountId = result.getInt("account_id");
-			//Account account = AccountDAO.getInstance().getAccountByAccountId(accountId);
+			String description = result.getString("description");
 			int categoryId = result.getInt("category_id");
 			//Category category = CategoryDAO.getInstance().getCategoryByCategoryId(categoryId);
 			HashSet<Tag> tags = TagDAO.getInstance().getTagsByTransactionId(transactionId);
-			Transaction t = new Transaction(transactionType, amount, accountId, categoryId, date, tags);
-			t.setTransactionId(transactionId);
+			Transaction t = new Transaction(transactionId, transactionType, description, amount, accountId, categoryId, date, tags);
 			ALL_TRANSACTIONS.get(t.getType()).add(t);
 			//System.out.println(t.toString());
 		}
@@ -86,6 +85,29 @@ public class TransactionDAO {
 			}
 		}
 		return transactions;
+	}
+	
+	
+	public synchronized Transaction getTransactionByTransactionId(long transactionId) throws SQLException {
+		String sql = "SELECT type, date, description, amount, account_id, category_id FROM transactions WHERE transaction_id = ?;";
+		
+		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(sql);
+		ps.setLong(1, transactionId);
+		
+		ResultSet res = ps.executeQuery();
+		res.next();
+		
+		TransactionType transactionType = TransactionType.valueOf(res.getString("type"));
+		LocalDateTime date = res.getTimestamp("date").toLocalDateTime();
+		String description = res.getString("description");
+		BigDecimal amount = res.getBigDecimal("amount");
+		int accountId = res.getInt("account_id");
+		int categoryId = res.getInt("category_id");
+		HashSet<Tag> tags = TagDAO.getInstance().getTagsByTransactionId(transactionId);
+		
+		Transaction t = new Transaction(transactionId, transactionType, description, amount, accountId, categoryId, date, tags);
+		
+		return t;
 	}
 	
 /*	public synchronized List<Transaction> getAllTransactionsByOwnCategoryId(long ownCategoryId) {

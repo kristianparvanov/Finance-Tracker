@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -43,7 +44,7 @@ public class BudgetServlet extends HttpServlet {
 		String category = request.getParameter("category");
 		String tags = request.getParameter("tags");
 		
-		HashSet<Tag> tagsSet = new HashSet<>();
+		Set<Tag> tagsSet = new HashSet<>();
 		if (!tags.isEmpty()) {
 			String[] tagNames = tags.split(" ");
 			for (String tag : tagNames) {
@@ -51,7 +52,8 @@ public class BudgetServlet extends HttpServlet {
 			}
 		}
 		
-		Budget b = new Budget(name, BigDecimal.valueOf(Double.valueOf(amount)), LocalDateTime.parse(from), LocalDateTime.parse(to), Long.parseLong(account), Long.parseLong(category), tagsSet);
+		//TODO TRANSACTIONS??????
+		Budget b = new Budget(name, BigDecimal.valueOf(Double.valueOf(amount)), LocalDateTime.parse(from), LocalDateTime.parse(to), Long.parseLong(account), Long.parseLong(category), tagsSet, null);
 		try {
 			BudgetDAO.getInstance().insertBudget(b);
 		} catch (SQLException e) {
