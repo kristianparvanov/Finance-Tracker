@@ -12,17 +12,14 @@ public class Transaction {
 	private BigDecimal amount;
 	private long account;
 	private long category;
-	private long ownCategory;
 	private LocalDateTime date;
 	private HashSet<Tag> tags = new HashSet<Tag>();
 	
-	public Transaction(TransactionType type, BigDecimal amount, long account, long category,
-			long ownCategory, LocalDateTime date, HashSet<Tag> tags) {
+	public Transaction(TransactionType type, BigDecimal amount, long account, long category, LocalDateTime date, HashSet<Tag> tags) {
 		this.type = type;
 		this.amount = amount;
 		this.account = account;
 		this.category = category;
-		this.ownCategory = ownCategory;
 		this.date = date;
 		this.tags = tags;
 	}
@@ -51,10 +48,6 @@ public class Transaction {
 		return category;
 	}
 	
-	public long getOwnCategory() {
-		return ownCategory;
-	}
-	
 	public LocalDateTime getDate() {
 		return date;
 	}
@@ -66,7 +59,7 @@ public class Transaction {
 	@Override
 	public String toString() {
 		return "Transaction [transactionId=" + transactionId + ", type=" + type + ", amount=" + amount + ", account="
-				+ account + ", category=" + category + ", ownCategory=" + ownCategory + ", date=" + date + ", tags="
+				+ account + ", category=" + category + ", date=" + date + ", tags="
 				+ tags + "]\n";
 	}
 	

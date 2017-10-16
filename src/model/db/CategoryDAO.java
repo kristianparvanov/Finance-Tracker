@@ -6,13 +6,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import model.Budget;
 import model.Category;
 import model.PlannedPayment;
 import model.Transaction;
 import model.TransactionType;
+import model.User;
 
 public class CategoryDAO {
 
@@ -32,16 +35,17 @@ public class CategoryDAO {
 	
 	public synchronized void insertCategory(Category c) throws SQLException {
 		Connection con = DBManager.getInstance().getConnection();
-		PreparedStatement ps = con.prepareStatement("INSERT INTO categories (name, type) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS);
+		PreparedStatement ps = con.prepareStatement("INSERT INTO categories (name, type, user_id) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 		
 		ps.setString(1, c.getName());
 		ps.setString(2, c.getType().toString());
+		ps.setLong(3, c.getUserId());
 		ps.executeUpdate();
 		
-		ResultSet rs = ps.getGeneratedKeys();
-		rs.next();
+		ResultSet res = ps.getGeneratedKeys();
+		res.next();
 		
-		c.setCategoryID(rs.getLong(1));
+		c.setCategoryID(res.getLong(1));
 		
 		//ALL_CATEGORIES.add(c);
 	}
@@ -52,18 +56,55 @@ public class CategoryDAO {
 		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(sql);
 		ps.setInt(1, categoryId);
 		
-		ResultSet rs = ps.executeQuery();
+		ResultSet res = ps.executeQuery();
+		res.next();
 		
-		String name = rs.getString("name");
-		TransactionType type = TransactionType.valueOf(rs.getString("type"));
+		String name = res.getString("name");
+		TransactionType type = TransactionType.valueOf(res.getString("type"));
+		Long userId = new Long(res.getLong("user_id"));
 		List<Transaction> transactions = TransactionDAO.getInstance().getAllTransactionsByCategoryId(categoryId);
 		List<Budget> budgets = BudgetDAO.getInstance().getAllBudgetsByCategoryId(categoryId);
 		List<PlannedPayment> plannedPayments = PlannedPaymentDAO.getInstance().getAllPlannedPaymentsByCategoryId(categoryId);
 		
-		
-		Category category = new Category(name, type, transactions, budgets, plannedPayments);
+		Category category = new Category(name, type, userId, transactions, budgets, plannedPayments);
 		
 		return category;
+	}
+	
+	public synchronized Set<Category> getAllCategoriesByUserId(int userId) throws SQLException {
+		String sql = "SELECT category_id, name, type FROM categories WHERE user_id = ?;";
+		
+		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(sql);
+		ps.setInt(1, userId);
+		
+		Set<Category> categories = new HashSet<>();
+		
+		ResultSet res = ps.executeQuery();
+		
+		while(res.next()) {
+			long categoryId = res.getLong("category_id");
+			String name = res.getString("name");
+			TransactionType type = TransactionType.valueOf(res.getString("type"));
+			List<Transaction> transactions = TransactionDAO.getInstance().getAllTransactionsByCategoryId(categoryId);
+			List<Budget> budgets = BudgetDAO.getInstance().getAllBudgetsByCategoryId(categoryId);
+			List<PlannedPayment> plannedPayments = PlannedPaymentDAO.getInstance().getAllPlannedPaymentsByCategoryId(categoryId);
+			
+			categories.add(new Category(name, type, userId, transactions, budgets, plannedPayments));
+		}
+		
+		return categories;
+	}
+	
+	public synchronized boolean isValidOwnCategory(User user, String name) throws SQLException {
+		Set<Category> ownCategories = getAllCategoriesByUserId((int)user.getUserId());
+		
+		for (Category ownCategory : ownCategories) {
+			if (ownCategory.getName().equals(name)) {
+				return false;
+			}
+		}
+		
+		return true;
 	}
 
 }

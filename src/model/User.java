@@ -9,16 +9,16 @@ import org.apache.commons.codec.digest.DigestUtils;
 public class User {
 
 	private long userId;
-	private String userName;
+	private String username;
 	private byte[] password;
 	private String email;
 	private String firstName;
 	private String lastName;
 	private Set<Account> accounts;
-	private Set<OwnCategory> ownCategories;
+	private Set<Category> ownCategories;
 	
-	public User(String userName, String password, String email, String firstName, String lastName, Set<Account> accounts, Set<OwnCategory> ownCategories) {
-		this.userName = userName;
+	public User(String username, String password, String email, String firstName, String lastName, Set<Account> accounts, Set<Category> ownCategories) {
+		this.username = username;
 		this.password = DigestUtils.sha512(password);
 		this.email = email;
 		this.firstName = firstName;
@@ -27,8 +27,8 @@ public class User {
 		this.ownCategories = ownCategories;
 	}
 	
-	public User(String userName, String password, String email, String firstName, String lastName) {
-		this(userName, password, email, firstName, lastName, new HashSet<>(), new HashSet<>());
+	public User(String username, String password, String email, String firstName, String lastName) {
+		this(username, password, email, firstName, lastName, new HashSet<>(), new HashSet<>());
 	}
 
 	public long getUserId() {
@@ -36,7 +36,7 @@ public class User {
 	}
 	
 	public String getUserName() {
-		return userName;
+		return username;
 	}
 
 	public byte[] getPassword() {
@@ -59,7 +59,7 @@ public class User {
 		return Collections.unmodifiableSet(accounts);
 	}
 
-	public Set<OwnCategory> getOwnCategories() {
+	public Set<Category> getOwnCategories() {
 		return Collections.unmodifiableSet(ownCategories);
 	}
 

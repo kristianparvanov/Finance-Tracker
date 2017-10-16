@@ -43,7 +43,6 @@ public class PlannedPaymentServlet extends HttpServlet {
 		String description = request.getParameter("description");
 		String account = request.getParameter("account");
 		String category = request.getParameter("category");
-		String ownCategory = request.getParameter("ownCategory");
 		String tags = request.getParameter("tags");
 		
 		HashSet<Tag> tagsSet = new HashSet<>();
@@ -54,7 +53,7 @@ public class PlannedPaymentServlet extends HttpServlet {
 			}
 		}
 		
-		PlannedPayment p = new PlannedPayment(name, TransactionType.valueOf(type), LocalDateTime.parse(from), BigDecimal.valueOf(Double.valueOf(amount)), description, Long.parseLong(account), Long.parseLong(category), Long.parseLong(ownCategory), tagsSet);
+		PlannedPayment p = new PlannedPayment(name, TransactionType.valueOf(type), LocalDateTime.parse(from), BigDecimal.valueOf(Double.valueOf(amount)), description, Long.parseLong(account), Long.parseLong(category), tagsSet);
 		try {
 			PlannedPaymentDAO.getInstance().insertPlannedPayment(p);
 		} catch (SQLException e) {

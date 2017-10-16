@@ -41,7 +41,6 @@ public class BudgetServlet extends HttpServlet {
 		String to = request.getParameter("to");
 		String account = request.getParameter("account");
 		String category = request.getParameter("category");
-		String ownCategory = request.getParameter("ownCategory");
 		String tags = request.getParameter("tags");
 		
 		HashSet<Tag> tagsSet = new HashSet<>();
@@ -52,7 +51,7 @@ public class BudgetServlet extends HttpServlet {
 			}
 		}
 		
-		Budget b = new Budget(name, BigDecimal.valueOf(Double.valueOf(amount)), LocalDateTime.parse(from), LocalDateTime.parse(to), Long.parseLong(account), Long.parseLong(category), Long.parseLong(ownCategory), tagsSet);
+		Budget b = new Budget(name, BigDecimal.valueOf(Double.valueOf(amount)), LocalDateTime.parse(from), LocalDateTime.parse(to), Long.parseLong(account), Long.parseLong(category), tagsSet);
 		try {
 			BudgetDAO.getInstance().insertBudget(b);
 		} catch (SQLException e) {

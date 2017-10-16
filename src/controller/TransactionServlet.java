@@ -49,7 +49,6 @@ public class TransactionServlet extends HttpServlet {
 		String amount = request.getParameter("amount");
 		String account = request.getParameter("account");
 		String category = request.getParameter("category");
-		String ownCategory = request.getParameter("ownCategory");
 		String tags = request.getParameter("tags");
 		
 		HashSet<Tag> tagsSet = new HashSet<>();
@@ -60,7 +59,7 @@ public class TransactionServlet extends HttpServlet {
 			}
 		}
 		
-		Transaction t = new Transaction(TransactionType.valueOf(type), BigDecimal.valueOf(Double.valueOf(amount)), Long.parseLong(account), Long.parseLong(category), Long.parseLong(ownCategory), LocalDateTime.now(), tagsSet);
+		Transaction t = new Transaction(TransactionType.valueOf(type), BigDecimal.valueOf(Double.valueOf(amount)), Long.parseLong(account), Long.parseLong(category), LocalDateTime.now(), tagsSet);
 		try {
 			Account acc = AccountDAO.getInstance().getAccountByAccountId(Long.parseLong(account));
 			BigDecimal newValue = BigDecimal.valueOf(Double.valueOf(amount));

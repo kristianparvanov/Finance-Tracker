@@ -15,11 +15,10 @@ public class PlannedPayment {
 	private String description;
 	private long account;
 	private long category;
-	private long ownCategory;
 	private HashSet<Tag> tags = new HashSet<Tag>();
 	
 	public PlannedPayment(String name, TransactionType paymentType, LocalDateTime fromDate, BigDecimal amount,
-			String description, long account, long category, long ownCategory, HashSet<Tag> tags) {
+			String description, long account, long category, HashSet<Tag> tags) {
 		this.name = name;
 		this.paymentType = paymentType;
 		this.fromDate = fromDate;
@@ -27,7 +26,6 @@ public class PlannedPayment {
 		this.description = description;
 		this.account = account;
 		this.category = category;
-		this.ownCategory = ownCategory;
 		this.tags = tags;
 	}
 
@@ -67,9 +65,6 @@ public class PlannedPayment {
 		return category;
 	}
 	
-	public long getOwnCategory() {
-		return ownCategory;
-	}
 	
 	public Set<Tag> getTags() {
 		return Collections.unmodifiableSet(tags);
@@ -79,7 +74,7 @@ public class PlannedPayment {
 	public String toString() {
 		return "PlannedPayment [plannedPaymentId=" + plannedPaymentId + ", name=" + name + ", paymentType="
 				+ paymentType + ", fromDate=" + fromDate + ", amount=" + amount + ", description=" + description
-				+ ", account=" + account + ", category=" + category + ", ownCategory=" + ownCategory + ", tags=" + tags
+				+ ", account=" + account + ", category=" + category + ", tags=" + tags
 				+ "]\n";
 	}
 }
