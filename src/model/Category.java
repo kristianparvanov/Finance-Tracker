@@ -5,19 +5,26 @@ import java.util.List;
 
 public class Category {
 
-	private long categoryID;
+	private long categoryId;
 	private String name;
 	private TransactionType type;
+	private Long userId;
 	private List<Transaction> transactions;
 	private List<Budget> budgets;
 	private List<PlannedPayment> plannedPayments;
 	
-	public Category(String name, TransactionType type, List<Transaction> transactions, List<Budget> budgets, List<PlannedPayment> plannedPayments) {
+	public Category(String name, TransactionType type , long userId, List<Transaction> transactions, List<Budget> budgets, List<PlannedPayment> plannedPayments) {
 		this.name = name;
 		this.type = type;
+		this.userId = new Long(userId);
 		this.transactions = transactions;
 		this.budgets = budgets;
 		this.plannedPayments = plannedPayments;
+		
+	}
+
+	public Long getUserId() {
+		return userId;
 	}
 
 	public String getName() {
@@ -29,7 +36,7 @@ public class Category {
 	}
 	
 	public long getCategoryId() {
-		return categoryID;
+		return categoryId;
 	}
 	
 	public List<Transaction> getTransactions() {
@@ -45,6 +52,6 @@ public class Category {
 	}
 	
 	public void setCategoryID(long categoryID) {
-		this.categoryID = categoryID;
+		this.categoryId = categoryID;
 	}
 }

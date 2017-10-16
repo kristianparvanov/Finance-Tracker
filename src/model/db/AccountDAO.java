@@ -6,7 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -40,10 +39,10 @@ public class AccountDAO {
 		ps.setInt(3, (int)acc.getUserId());
 		ps.executeUpdate();
 		
-		ResultSet rs = ps.getGeneratedKeys();
-		rs.next();
+		ResultSet res = ps.getGeneratedKeys();
+		res.next();
 		
-		acc.setAccaountID(rs.getLong(1));
+		acc.setAccaountID(res.getLong(1));
 	}
 	
 	public synchronized void deleteAccount(int accountId) throws SQLException {
@@ -96,7 +95,7 @@ public class AccountDAO {
 	}
 	
 	public synchronized Account getAccountByAccountId(long accountId) throws SQLException {
-		String sql = "SELECT account_id, name, amount, user_id FROM accounts WHERE accounts.account_id = ?;";
+		String sql = "SELECT name, amount, user_id FROM accounts WHERE accounts.account_id = ?;";
 		
 		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(sql);
 		ps.setLong(1, accountId);
@@ -104,7 +103,6 @@ public class AccountDAO {
 		ResultSet res = ps.executeQuery();
 		res.next();
 		
-		Long accaountID = res.getLong("account_id");
 		String name = res.getString("name");
 		BigDecimal amount = res.getBigDecimal("amount");
 		int userId = res.getInt("user_id");
@@ -113,7 +111,8 @@ public class AccountDAO {
 		List<PlannedPayment> plannedPayments = PlannedPaymentDAO.getInstance().getAllPlannedPaymentsByAccountId(accountId);
 		
 		Account acc = new Account(name, amount, userId, transactions, budgets, plannedPayments);
-		acc.setAccaountID(accaountID);
+		acc.setAccaountID(accountId);
+		
 		return acc;
 	}
 	

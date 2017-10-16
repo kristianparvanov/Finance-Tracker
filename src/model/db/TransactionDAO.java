@@ -15,7 +15,6 @@ import java.util.List;
 
 import model.Account;
 import model.Category;
-import model.OwnCategory;
 import model.Tag;
 import model.Transaction;
 import model.TransactionType;
@@ -57,10 +56,8 @@ public class TransactionDAO {
 			//Account account = AccountDAO.getInstance().getAccountByAccountId(accountId);
 			int categoryId = result.getInt("category_id");
 			//Category category = CategoryDAO.getInstance().getCategoryByCategoryId(categoryId);
-			int ownCategoryId = result.getInt("own_category_id");
-			//OwnCategory ownCategory = OwnCategoryDAO.getInstance().getOwnCategoryByOwnCategoryId(ownCategoryId);
 			HashSet<Tag> tags = TagDAO.getInstance().getTagsByTransactionId(transactionId);
-			Transaction t = new Transaction(transactionType, amount, accountId, categoryId, ownCategoryId, date, tags);
+			Transaction t = new Transaction(transactionType, amount, accountId, categoryId, date, tags);
 			t.setTransactionId(transactionId);
 			ALL_TRANSACTIONS.get(t.getType()).add(t);
 			//System.out.println(t.toString());
@@ -91,7 +88,7 @@ public class TransactionDAO {
 		return transactions;
 	}
 	
-	public synchronized List<Transaction> getAllTransactionsByOwnCategoryId(long ownCategoryId) {
+/*	public synchronized List<Transaction> getAllTransactionsByOwnCategoryId(long ownCategoryId) {
 		List<Transaction> transactions = new ArrayList<Transaction>();
 		for (ArrayList<Transaction> transactionTypes : ALL_TRANSACTIONS.values()) {
 			for (Transaction transaction : transactionTypes) {
@@ -101,17 +98,16 @@ public class TransactionDAO {
 			}
 		}
 		return transactions;
-	}
+	}*/
 
 	public synchronized void insertTransaction(Transaction t) throws SQLException {
-		String query = "INSERT INTO finance_tracker.transactions (type, date, amount, account_id, category_id, own_category_id) VALUES (?, STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), ?, ?, ?, ?)";
+		String query = "INSERT INTO finance_tracker.transactions (type, date, amount, account_id, category_id) VALUES (?, STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), ?, ?, ?)";
 		PreparedStatement statement = CONNECTION.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 		statement.setString(1, t.getType().toString());
 		statement.setTimestamp(2, Timestamp.valueOf(t.getDate().withNano(0)));
 		statement.setBigDecimal(3, t.getAmount());
 		statement.setLong(4, t.getAccount());
 		statement.setLong(5, t.getCategory());
-		statement.setLong(6, t.getOwnCategory());
 		statement.executeUpdate();
 		
 		ResultSet resultSet = statement.getGeneratedKeys();
@@ -127,14 +123,13 @@ public class TransactionDAO {
 	}
 	
 	public synchronized void updateTransaction(Transaction t) throws SQLException {
-		String query = "UPDATE finance_tracker.transactions SET type = ?, date = STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), amount = ?, account_id = ?, category_id = ?, own_category_id = ? WHERE transaction_id = ?";
+		String query = "UPDATE finance_tracker.transactions SET type = ?, date = STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), amount = ?, account_id = ?, category_id = ? WHERE transaction_id = ?";
 		PreparedStatement statement = CONNECTION.prepareStatement(query);
 		statement.setString(1, t.getType().toString());
 		statement.setTimestamp(2, Timestamp.valueOf(t.getDate().withNano(0)));
 		statement.setBigDecimal(3, t.getAmount());
 		statement.setLong(4, t.getAccount());
 		statement.setLong(5, t.getCategory());
-		statement.setLong(6, t.getOwnCategory());
 		statement.setLong(7, t.getTransactionId());
 		statement.executeUpdate();
 		

@@ -6,17 +6,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Arrays;
 import java.util.HashMap;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.tomcat.util.digester.Digester;
 
 import java.util.Map;
 import java.util.Set;
 
 import model.Account;
-import model.OwnCategory;
+import model.Category;
 import model.User;
 
 public class UserDAO {
@@ -46,7 +44,7 @@ public class UserDAO {
 			String lastName = res.getString("last_name");
 			int userId = res.getInt("user_id");
 			Set<Account> accounts = AccountDAO.getInstance().getAllAccountsByUserId(userId);
-			Set<OwnCategory> ownCategories = OwnCategoryDAO.getInstance().getAllOwnCategoriesByUserId(userId);
+			Set<Category> ownCategories = CategoryDAO.getInstance().getAllCategoriesByUserId(userId);
 			
 			User user = new User(userName, password, email, firstName, lastName, accounts, ownCategories);
 			user.setUserId(userId);
@@ -113,6 +111,18 @@ public class UserDAO {
 		}
 		
 		return user;
+	}
+	
+	public synchronized boolean existsUser(String username) throws SQLException {
+		String sql = "SELECT count(*) as count FROM users WHERE username = ?;";
+		
+		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(sql);
+		ps.setString(1, username);
+		
+		ResultSet res = ps.executeQuery();
+		res.next();
+		
+		return res.getInt("count") > 0;
 	}
 	
 	public synchronized void deleteUser(String username) throws SQLException {

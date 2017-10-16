@@ -15,7 +15,6 @@ import java.util.List;
 
 import model.Account;
 import model.Category;
-import model.OwnCategory;
 import model.PlannedPayment;
 import model.Tag;
 import model.TransactionType;
@@ -55,10 +54,8 @@ public class PlannedPaymentDAO {
 			//Account account = AccountDAO.getInstance().getAccountByAccountId(accountId);
 			int categoryId = result.getInt("category_id");
 			//Category category = CategoryDAO.getInstance().getCategoryByCategoryId(categoryId);
-			int ownCategoryId = result.getInt("own_category_id");
-			//OwnCategory ownCategory = OwnCategoryDAO.getInstance().getOwnCategoryByOwnCategoryId(ownCategoryId);
 			HashSet<Tag> tags = TagDAO.getInstance().getTagsByPlannedPaymentId(plannedPaymentId);
-			PlannedPayment payment = new PlannedPayment(name, paymentType, fromDate, amount, description, accountId, categoryId, ownCategoryId, tags);
+			PlannedPayment payment = new PlannedPayment(name, paymentType, fromDate, amount, description, accountId, categoryId, tags);
 			payment.setPlannedPaymentId(plannedPaymentId);
 			ALL_PLANNED_PAYMENTS.put(name, payment);
 			
@@ -83,9 +80,8 @@ public class PlannedPaymentDAO {
 			String description = result.getString("description");
 			int account = result.getInt("account_id");
 			int categoryId = result.getInt("category_id");
-			int ownCategoryId = result.getInt("own_category_id");
 			HashSet<Tag> tags = TagDAO.getInstance().getTagsByPlannedPaymentId(plannedPaymentId);
-			PlannedPayment payment = new PlannedPayment(name, paymentType, fromDate, amount, description, account, categoryId, ownCategoryId, tags);
+			PlannedPayment payment = new PlannedPayment(name, paymentType, fromDate, amount, description, account, categoryId, tags);
 			payment.setPlannedPaymentId(plannedPaymentId);
 			payments.add(payment);
 			
@@ -112,7 +108,7 @@ public class PlannedPaymentDAO {
 		return payments;
 	}
 	
-	public synchronized List<PlannedPayment> getAllPlannedPaymentsByOwnCategoryId(long ownCategoryId) {
+	/*public synchronized List<PlannedPayment> getAllPlannedPaymentsByOwnCategoryId(long ownCategoryId) {
 		//SELECT planned_payment_id, name, type, from_date, amount, description, account_id, category_id, own_category_id FROM finance_tracker.planned_payments WHERE own_category_id = ?
 		List<PlannedPayment> payments = new ArrayList<PlannedPayment>();
 		for (PlannedPayment payment : ALL_PLANNED_PAYMENTS.values()) {
@@ -121,10 +117,10 @@ public class PlannedPaymentDAO {
 			}
 		}
 		return payments;
-	}
+	}*/
 	
 	public synchronized void insertPlannedPayment(PlannedPayment p) throws SQLException {
-		String query = "INSERT INTO finance_tracker.planned_payments (name, type, from_date, amount, description, account_id, category_id, own_category_id) VALUES (?, ?, STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), ?, ?, ?, ?, ?)";
+		String query = "INSERT INTO finance_tracker.planned_payments (name, type, from_date, amount, description, account_id, category_id) VALUES (?, ?, STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), ?, ?, ?, ?)";
 		PreparedStatement statement = CONNECTION.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 		statement.setString(1, p.getName());
 		statement.setString(2, p.getPaymentType().toString());
@@ -133,7 +129,6 @@ public class PlannedPaymentDAO {
 		statement.setString(5, p.getDescription());
 		statement.setLong(6, p.getAccount());
 		statement.setLong(7, p.getCategory());
-		statement.setLong(8, p.getOwnCategory());
 		statement.executeUpdate();
 		
 		ResultSet resultSet = statement.getGeneratedKeys();
@@ -150,7 +145,7 @@ public class PlannedPaymentDAO {
 	}
 	
 	public synchronized void updatePlannedPayment(PlannedPayment p) throws SQLException {
-		String query = "UPDATE finance_tracker.planned_payments SET name = ?, type = ?, from_date = STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), amount = ?, description = ?, account_id = ?, category_id = ?, own_category_id = ? WHERE planned_payment_id = ?";
+		String query = "UPDATE finance_tracker.planned_payments SET name = ?, type = ?, from_date = STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), amount = ?, description = ?, account_id = ?, category_id = ? WHERE planned_payment_id = ?";
 		PreparedStatement statement = CONNECTION.prepareStatement(query);
 		statement.setString(1, p.getName());
 		statement.setString(2, p.getPaymentType().toString());
@@ -159,7 +154,6 @@ public class PlannedPaymentDAO {
 		statement.setString(5, p.getDescription());
 		statement.setLong(6, p.getAccount());
 		statement.setLong(7, p.getCategory());
-		statement.setLong(8, p.getOwnCategory());
 		statement.setLong(9, p.getPlannedPaymentId());
 		statement.executeUpdate();
 		
