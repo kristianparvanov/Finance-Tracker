@@ -13,6 +13,8 @@ import org.apache.commons.codec.digest.DigestUtils;
 import java.util.Map;
 import java.util.Set;
 
+import model.Tag;
+
 import model.Account;
 import model.Category;
 import model.User;
@@ -45,8 +47,9 @@ public class UserDAO {
 			int userId = res.getInt("user_id");
 			Set<Account> accounts = AccountDAO.getInstance().getAllAccountsByUserId(userId);
 			Set<Category> ownCategories = CategoryDAO.getInstance().getAllCategoriesByUserId(userId);
+			Set<Tag> tags = TagDAO.getInstance().getAllTagsByUserId(userId);
 			
-			User user = new User(userName, password, email, firstName, lastName, accounts, ownCategories);
+			User user = new User(userName, password, email, firstName, lastName, accounts, ownCategories, tags);
 			user.setUserId(userId);
 			
 			ALL_USERS.put(userName, user);

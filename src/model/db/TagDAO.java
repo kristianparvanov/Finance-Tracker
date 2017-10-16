@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.HashSet;
+import java.util.Set;
 
 import model.Budget;
 import model.PlannedPayment;
@@ -122,5 +123,25 @@ public class TagDAO {
 		statement.setLong(2, tag.getTagId());
 		statement.executeUpdate();
 		
+	}
+
+	public Set<Tag> getAllTagsByUserId(int userId) throws SQLException {
+		String query = "SELECT tag_id, name FROM tags WHERE user_id = ?;";
+		
+		PreparedStatement statement = CONNECTION.prepareStatement(query);
+		statement.setLong(1, userId);
+		
+		ResultSet result = statement.executeQuery();
+		
+		Set<Tag> tags = new HashSet<>();
+		
+		while(result.next()) {
+			int tagId = result.getInt("tag_id");
+			Tag tag = getTagByTagId(tagId);
+			
+			tags.add(tag);
+		}
+		
+		return tags;
 	}
 }

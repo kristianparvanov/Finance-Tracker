@@ -16,8 +16,9 @@ public class User {
 	private String lastName;
 	private Set<Account> accounts;
 	private Set<Category> ownCategories;
+	private Set<Tag> tags;
 	
-	public User(String username, String password, String email, String firstName, String lastName, Set<Account> accounts, Set<Category> ownCategories) {
+	public User(String username, String password, String email, String firstName, String lastName, Set<Account> accounts, Set<Category> ownCategories, Set<Tag> tags) {
 		this.username = username;
 		this.password = DigestUtils.sha512(password);
 		this.email = email;
@@ -25,11 +26,13 @@ public class User {
 		this.lastName = lastName;
 		this.accounts = accounts;
 		this.ownCategories = ownCategories;
+		this.tags = tags;
 	}
 	
 	public User(String username, String password, String email, String firstName, String lastName) {
-		this(username, password, email, firstName, lastName, new HashSet<>(), new HashSet<>());
+		this(username, password, email, firstName, lastName, new HashSet<>(), new HashSet<>(), new HashSet<>());
 	}
+
 
 	public long getUserId() {
 		return userId;
@@ -63,9 +66,12 @@ public class User {
 		return Collections.unmodifiableSet(ownCategories);
 	}
 
+	public Set<Tag> getTags() {
+		return Collections.unmodifiableSet(tags);
+	}
+
 	public void setUserId(long userID) {
 		this.userId = userID;
 	}
-	
 	
 }
