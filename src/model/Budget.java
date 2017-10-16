@@ -43,6 +43,10 @@ public class Budget {
 		return amount;
 	}
 	
+	public void setAmount(BigDecimal amount) {
+		this.amount = amount;
+	}
+	
 	public LocalDateTime getFromDate() {
 		return fromDate;
 	}

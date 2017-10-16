@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import model.Account;
 import model.Budget;
@@ -106,12 +107,19 @@ public class TransactionDAO {
 			TagDAO.getInstance().insertTagToTransaction(t, tag);
 		}
 		
-//		Budget budget = BudgetDAO.getInstance().budgetExists(t.getDate(), t.getCategory(), t.getAccount());
-//		if (budgetExists != null) {
-//			BudgetHasTransactionDAO.getInstance().insertIntoBudgetHasTransaction(budget.getBudgetId(), t.getTransactionId());
-//			
-//			BudgetDAO.getInstance().updateBudget(budget);
-//		}
+		Set<Budget> budgets =  BudgetDAO.getInstance().getAllBudgetsByDateCategoryAndAccount(t.getDate(), t.getCategory(), t.getAccount());
+		if (!budgets.isEmpty()) {
+			for (Budget budget : budgets) {
+				BudgetsHasTransactionsDAO.getInstance().insertTransactionBudget(budget.getBudgetId(), t.getTransactionId());
+				if (t.getType().equals(TransactionType.EXPENCE)) {
+					budget.setAmount(budget.getAmount().subtract(t.getAmount()));
+				} else 
+				if (t.getType().equals(TransactionType.INCOME)) {
+					budget.setAmount(budget.getAmount().add(t.getAmount()));
+				}
+				BudgetDAO.getInstance().updateBudget(budget);
+			}
+		}
 		
 		ALL_TRANSACTIONS.get(t.getType()).add(t);
 	}
