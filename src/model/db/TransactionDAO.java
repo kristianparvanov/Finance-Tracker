@@ -12,8 +12,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import model.Account;
+import model.Budget;
 import model.Category;
 import model.Tag;
 import model.Transaction;
@@ -55,11 +57,8 @@ public class TransactionDAO {
 			int accountId = result.getInt("account_id");
 			String description = result.getString("description");
 			int categoryId = result.getInt("category_id");
-			//Category category = CategoryDAO.getInstance().getCategoryByCategoryId(categoryId);
 			HashSet<Tag> tags = TagDAO.getInstance().getTagsByTransactionId(transactionId);
 			Transaction t = new Transaction(transactionId, transactionType, description, amount, accountId, categoryId, date, tags);
-			ALL_TRANSACTIONS.get(t.getType()).add(t);
-			//System.out.println(t.toString());
 		}
 	}
 
@@ -110,18 +109,6 @@ public class TransactionDAO {
 		return t;
 	}
 	
-/*	public synchronized List<Transaction> getAllTransactionsByOwnCategoryId(long ownCategoryId) {
-		List<Transaction> transactions = new ArrayList<Transaction>();
-		for (ArrayList<Transaction> transactionTypes : ALL_TRANSACTIONS.values()) {
-			for (Transaction transaction : transactionTypes) {
-				if (transaction.getOwnCategory() == ownCategoryId) {
-					transactions.add(transaction);
-				}
-			}
-		}
-		return transactions;
-	}*/
-
 	public synchronized void insertTransaction(Transaction t) throws SQLException {
 		String query = "INSERT INTO finance_tracker.transactions (type, date, amount, account_id, category_id) VALUES (?, STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), ?, ?, ?)";
 		PreparedStatement statement = CONNECTION.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -137,8 +124,23 @@ public class TransactionDAO {
 		t.setTransactionId(resultSet.getLong(1));
 		
 		for (Tag tag : t.getTags()) {
-			TagDAO.getInstance().insertTagToTags(tag);
+			TagDAO.getInstance().insertTagToTags(tag, tag.getUserId());
 			TagDAO.getInstance().insertTagToTransaction(t, tag);
+		}
+		
+		boolean existsBudget = BudgetDAO.getInstance().existsBudget(t.getDate(), t.getCategory(), t.getAccount());
+		Set<Budget> budgets =  BudgetDAO.getInstance().getAllBudgetsByDateCategoryAndAccount(t.getDate(), t.getCategory(), t.getAccount());
+		if (existsBudget) {
+			for (Budget budget : budgets) {
+				BudgetsHasTransactionsDAO.getInstance().insertTransactionBudget(budget.getBudgetId(), t.getTransactionId());
+				if (t.getType().equals(TransactionType.EXPENCE)) {
+					budget.setAmount(budget.getAmount().subtract(t.getAmount()));
+				} else 
+				if (t.getType().equals(TransactionType.INCOME)) {
+					budget.setAmount(budget.getAmount().add(t.getAmount()));
+				}
+				BudgetDAO.getInstance().updateBudget(budget);
+			}
 		}
 		
 		ALL_TRANSACTIONS.get(t.getType()).add(t);
@@ -159,6 +161,8 @@ public class TransactionDAO {
 	}
 	
 	public synchronized void deleteTransaction(Transaction t) throws SQLException {
+		//delete transaction from mejdinkata s budjetite by transaction id
+		
 		String query = "DELETE FROM finance_tracker.transactions WHERE transaction_id = ?";
 		PreparedStatement statement = CONNECTION.prepareStatement(query);
 		statement.setLong(1, t.getTransactionId());

@@ -74,6 +74,4 @@ public class Transaction {
 				+ account + ", category=" + category + ", date=" + date + ", tags="
 				+ tags + "]\n";
 	}
-	
-	
 }
