@@ -107,8 +107,9 @@ public class TransactionDAO {
 			TagDAO.getInstance().insertTagToTransaction(t, tag);
 		}
 		
+		boolean existsBudget = BudgetDAO.getInstance().existsBudget(t.getDate(), t.getCategory(), t.getAccount());
 		Set<Budget> budgets =  BudgetDAO.getInstance().getAllBudgetsByDateCategoryAndAccount(t.getDate(), t.getCategory(), t.getAccount());
-		if (!budgets.isEmpty()) {
+		if (existsBudget) {
 			for (Budget budget : budgets) {
 				BudgetsHasTransactionsDAO.getInstance().insertTransactionBudget(budget.getBudgetId(), t.getTransactionId());
 				if (t.getType().equals(TransactionType.EXPENCE)) {
