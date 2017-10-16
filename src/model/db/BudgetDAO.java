@@ -167,4 +167,18 @@ public class BudgetDAO {
 	public synchronized void removeBudget(Budget b) {
 		ALL_BUDGETS.remove(b.getName(), b);
 	}
+	
+	public synchronized boolean existsBudget(LocalDateTime date, long categoryId, long accountId) {
+		for (Budget b : ALL_BUDGETS.values()) {
+			if (b.getCategory() == categoryId && b.getAccount() == accountId && isBetweenTwoDates(date, b.getFromDate(), b.getToDate())) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	private boolean isBetweenTwoDates(LocalDateTime date, LocalDateTime from, LocalDateTime to) {
+		return !date.isBefore(from) && date.isAfter(to);
+	}
 }
