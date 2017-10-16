@@ -132,7 +132,7 @@ public class BudgetDAO {
 		b.setBudgetId(resultSet.getLong(1));
 		
 		for (Tag tag : b.getTags()) {
-			TagDAO.getInstance().insertTagToTags(tag);
+			TagDAO.getInstance().insertTagToTags(tag, tag.getUserId());
 			TagDAO.getInstance().insertTagToBudget(b, tag);
 		}
 		

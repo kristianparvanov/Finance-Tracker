@@ -55,7 +55,7 @@ public class TransactionServlet extends HttpServlet {
 		if (!tags.isEmpty()) {
 			String[] tagNames = tags.split(" ");
 			for (String tag : tagNames) {
-				tagsSet.add(new Tag(tag));
+				tagsSet.add(new Tag(tag, userId));
 			}
 		}
 		

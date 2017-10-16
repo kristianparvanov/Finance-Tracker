@@ -1,28 +1,35 @@
 package model;
 
 public class Tag {
-	private int tagId;
+	private long tagId;
 	private String name;
+	private long userId;
 	
-	public Tag(String name) {
+	public Tag(String name, long userId) {
 		this.name = name;
+		this.userId = userId;
 	}
 	
-	public Tag(int tagId, String name) {
+	public Tag(long tagId, String name, long userId) {
 		this.tagId = tagId;
 		this.name = name;
+		this.userId = userId;
 	}
 	
-	public int getTagId() {
+	public long getTagId() {
 		return tagId;
 	}
 	
-	public void setTagId(int tagId) {
+	public void setTagId(long tagId) {
 		this.tagId = tagId;
 	}
 	
 	public String getName() {
 		return name;
+	}
+	
+	public long getUserId() {
+		return userId;
 	}
 	
 	@Override

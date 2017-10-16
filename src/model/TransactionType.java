@@ -1,5 +1,5 @@
 package model;
 
 public enum TransactionType {
-	INCOME, EXPENCE;
+	INCOME, EXPENCE, TRANSFER;
 }

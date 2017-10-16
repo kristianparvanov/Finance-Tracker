@@ -27,29 +27,31 @@ public class TagDAO {
 		return instance;
 	}
 	
-	public Tag getTagByTagId(int tagId) throws SQLException {
-		String query = "SELECT name FROM finance_tracker.tags WHERE finance_tracker.tags.tag_id = ?";
+	public Tag getTagByTagId(long tagId) throws SQLException {
+		String query = "SELECT name, user_id FROM finance_tracker.tags WHERE finance_tracker.tags.tag_id = ?";
 		Tag tag = null;
 		PreparedStatement statement = null;
 		statement = CONNECTION.prepareStatement(query);
-		statement.setInt(1, tagId);
+		statement.setLong(1, tagId);
 		ResultSet result = statement.executeQuery();
 		while (result.next()) {
 			String name = result.getString("name");
-			tag = new Tag(tagId, name);
+			long userId = result.getLong("user_id");
+			tag = new Tag(tagId, name, userId);
 		}
 		return tag;
 	}
 	
-	public void insertTagToTags(Tag tag) throws SQLException {
-		String query = "INSERT INTO finance_tracker.tags (name) VALUES (?)";
+	public synchronized void insertTagToTags(Tag tag, long userId) throws SQLException {
+		String query = "INSERT INTO finance_tracker.tags (name, user_id) VALUES (?, ?)";
 		PreparedStatement statement = CONNECTION.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 		statement.setString(1, tag.getName());
+		statement.setLong(2, userId);
 		statement.executeUpdate();
 		
 		ResultSet resultSet = statement.getGeneratedKeys();
 		resultSet.next();
-		tag.setTagId(resultSet.getInt(1));
+		tag.setTagId(resultSet.getLong(1));
 	}
 	
 	public HashSet<Tag> getTagsByTransactionId(long transactionId) throws SQLException {
@@ -61,7 +63,7 @@ public class TagDAO {
 		statement.setLong(1, transactionId);
 		ResultSet result = statement.executeQuery();
 		while (result.next()) {
-			int tagId = result.getInt("tag_id");
+			long tagId = result.getLong("tag_id");
 			Tag tag = getTagByTagId(tagId);
 			tags.add(tag);
 		}
@@ -85,7 +87,7 @@ public class TagDAO {
 		statement.setLong(1, budgetId);
 		ResultSet result = statement.executeQuery();
 		while (result.next()) {
-			int tagId = result.getInt("tag_id");
+			long tagId = result.getLong("tag_id");
 			Tag tag = getTagByTagId(tagId);
 			tags.add(tag);
 		}
@@ -109,7 +111,7 @@ public class TagDAO {
 		statement.setLong(1, plannedPaymentId);
 		ResultSet result = statement.executeQuery();
 		while (result.next()) {
-			int tagId = result.getInt("tag_id");
+			long tagId = result.getLong("tag_id");
 			Tag tag = getTagByTagId(tagId);
 			tags.add(tag);
 		}
@@ -125,7 +127,7 @@ public class TagDAO {
 		
 	}
 
-	public Set<Tag> getAllTagsByUserId(int userId) throws SQLException {
+	public Set<Tag> getAllTagsByUserId(long userId) throws SQLException {
 		String query = "SELECT tag_id, name FROM tags WHERE user_id = ?;";
 		
 		PreparedStatement statement = CONNECTION.prepareStatement(query);
@@ -136,7 +138,7 @@ public class TagDAO {
 		Set<Tag> tags = new HashSet<>();
 		
 		while(result.next()) {
-			int tagId = result.getInt("tag_id");
+			long tagId = result.getLong("tag_id");
 			Tag tag = getTagByTagId(tagId);
 			
 			tags.add(tag);
