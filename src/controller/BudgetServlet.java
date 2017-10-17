@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import model.Budget;
 import model.Tag;
+import model.User;
 import model.db.BudgetDAO;
 
 @WebServlet("/budget")
@@ -44,11 +45,12 @@ public class BudgetServlet extends HttpServlet {
 		String category = request.getParameter("category");
 		String tags = request.getParameter("tags");
 		
+		User u = (User) request.getSession().getAttribute("user");
 		Set<Tag> tagsSet = new HashSet<>();
 		if (!tags.isEmpty()) {
 			String[] tagNames = tags.split(" ");
 			for (String tag : tagNames) {
-				tagsSet.add(new Tag(tag));
+				tagsSet.add(new Tag(tag, u.getUserId()));
 			}
 		}
 		

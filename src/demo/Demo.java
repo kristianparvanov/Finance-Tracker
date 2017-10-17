@@ -43,12 +43,12 @@ public class Demo {
 		List<PlannedPayment> plannedPayments = new ArrayList<PlannedPayment>();
 		
 		HashSet<Tag> tags = new HashSet<Tag>();
-		Tag kolata = new Tag("kolata");
+		//Tag kolata = new Tag("kolata");
 		//kolata.setTagId(7);
-		tags.add(kolata);
-		Tag brat = new Tag("brat");
+		//tags.add(kolata);
+		//Tag brat = new Tag("brat");
 		//kolata.setTagId(8);
-		tags.add(brat);
+		//tags.add(brat);
 		
 		Category c1 = new Category("cafe", TransactionType.EXPENCE, u1.getUserId(),transactions, budgets, plannedPayments);
 		c1.setCategoryID(1);

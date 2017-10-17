@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import model.PlannedPayment;
 import model.Tag;
 import model.TransactionType;
+import model.User;
 import model.db.PlannedPaymentDAO;
 
 @WebServlet("/planned")
@@ -45,11 +46,12 @@ public class PlannedPaymentServlet extends HttpServlet {
 		String category = request.getParameter("category");
 		String tags = request.getParameter("tags");
 		
+		User u = (User) request.getSession().getAttribute("user");
 		HashSet<Tag> tagsSet = new HashSet<>();
 		if (!tags.isEmpty()) {
 			String[] tagNames = tags.split(" ");
 			for (String tag : tagNames) {
-				tagsSet.add(new Tag(tag));
+				tagsSet.add(new Tag(tag, u.getUserId()));
 			}
 		}
 		

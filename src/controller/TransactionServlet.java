@@ -17,6 +17,7 @@ import model.Account;
 import model.Tag;
 import model.Transaction;
 import model.TransactionType;
+import model.User;
 import model.db.AccountDAO;
 import model.db.TransactionDAO;
 
@@ -52,11 +53,12 @@ public class TransactionServlet extends HttpServlet {
 		String tags = request.getParameter("tags");
 		String description = request.getParameter("description");
 		
+		User u = (User) request.getSession().getAttribute("user");
 		HashSet<Tag> tagsSet = new HashSet<>();
 		if (!tags.isEmpty()) {
 			String[] tagNames = tags.split(" ");
 			for (String tag : tagNames) {
-				tagsSet.add(new Tag(tag, userId));
+				tagsSet.add(new Tag(tag, u.getUserId()));
 			}
 		}
 		
