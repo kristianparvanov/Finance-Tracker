@@ -140,7 +140,7 @@ public class TransactionDAO {
 	}
 	
 	public synchronized void deleteTransaction(Transaction t) throws SQLException {
-		//delete transaction from mejdinkata s budjetite by transaction id
+		BudgetsHasTransactionsDAO.getInstance().deleteTransactionBudgetByTransactionId(t.getTransactionId());
 		
 		String query = "DELETE FROM finance_tracker.transactions WHERE transaction_id = ?";
 		PreparedStatement statement = CONNECTION.prepareStatement(query);
