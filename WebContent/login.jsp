@@ -28,7 +28,7 @@
 	  <div class="login-box-body">
 	    <p class="login-box-msg">Sign in to start your session</p>
 	
-	    <form action="https://adminlte.io/themes/AdminLTE/index2.html" method="post">
+	    <form action="login" method="post">
 	      <div class="form-group has-feedback">
 	        <input type="text" class="form-control" placeholder="Username" name="username">
 	        <span class="glyphicon glyphicon-envelope form-control-feedback"></span>

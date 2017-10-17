@@ -29,7 +29,7 @@
   <div class="register-box-body">
     <p class="login-box-msg">Register a new membership</p>
 
-    <form action="https://adminlte.io/themes/AdminLTE/index.html" method="post">
+    <form action="register" method="post">
       <div class="form-group has-feedback">
         <input type="text" class="form-control" placeholder="Username" name="username">
         <span class="glyphicon glyphicon-user form-control-feedback"></span>
