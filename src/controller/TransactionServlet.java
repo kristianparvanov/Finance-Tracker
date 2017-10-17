@@ -50,6 +50,7 @@ public class TransactionServlet extends HttpServlet {
 		String account = request.getParameter("account");
 		String category = request.getParameter("category");
 		String tags = request.getParameter("tags");
+		String description = request.getParameter("description");
 		
 		HashSet<Tag> tagsSet = new HashSet<>();
 		if (!tags.isEmpty()) {
@@ -59,7 +60,7 @@ public class TransactionServlet extends HttpServlet {
 			}
 		}
 		
-		Transaction t = new Transaction(TransactionType.valueOf(type), BigDecimal.valueOf(Double.valueOf(amount)), Long.parseLong(account), Long.parseLong(category), LocalDateTime.now(), tagsSet);
+		Transaction t = new Transaction(TransactionType.valueOf(type), description, BigDecimal.valueOf(Double.valueOf(amount)), Long.parseLong(account), Long.parseLong(category), LocalDateTime.now(), tagsSet);
 		try {
 			Account acc = AccountDAO.getInstance().getAccountByAccountId(Long.parseLong(account));
 			BigDecimal newValue = BigDecimal.valueOf(Double.valueOf(amount));

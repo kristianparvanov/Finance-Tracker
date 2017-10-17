@@ -9,13 +9,21 @@ import java.util.Set;
 public class Transaction {
 	private long transactionId;
 	private TransactionType type;
+	private String description;
 	private BigDecimal amount;
 	private long account;
 	private long category;
 	private LocalDateTime date;
 	private HashSet<Tag> tags = new HashSet<Tag>();
 	
-	public Transaction(TransactionType type, BigDecimal amount, long account, long category, LocalDateTime date, HashSet<Tag> tags) {
+	public Transaction(long transactionId, TransactionType type, String description, BigDecimal amount, long account, long category,
+			LocalDateTime date, HashSet<Tag> tags) {
+		this(type, description, amount,account, category, date, tags);
+		
+		this.transactionId = transactionId;
+	}
+
+	public Transaction(TransactionType type, String description, BigDecimal amount, long account, long category, LocalDateTime date, HashSet<Tag> tags) {
 		this.type = type;
 		this.amount = amount;
 		this.account = account;
@@ -34,6 +42,10 @@ public class Transaction {
 
 	public TransactionType getType() {
 		return type;
+	}
+	
+	public String getDescription() {
+		return description;
 	}
 	
 	public BigDecimal getAmount() {

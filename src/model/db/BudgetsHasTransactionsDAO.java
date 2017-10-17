@@ -1,7 +1,12 @@
 package model.db;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashSet;
+import java.util.Set;
+
+import model.Transaction;
 
 public class BudgetsHasTransactionsDAO {
 
@@ -40,5 +45,22 @@ public class BudgetsHasTransactionsDAO {
 		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(sql);
 		ps.setLong(1,  budgetId);
 		ps.executeUpdate();
+	}
+
+	public Set<Transaction> getAllTransactionsByBudgetId(long budgetId) throws SQLException {
+		String sql = "SELECT transaction_id FROM budgets_has_transactions WHERE budget_id = ?;";
+		
+		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(sql);
+		ps.setLong(1, budgetId);
+		
+		ResultSet res = ps.executeQuery();
+		
+		Set<Transaction> transactions = new HashSet<>();
+		
+		while(res.next()) {
+			transactions.add(TransactionDAO.getInstance().getTransactionByTransactionId(res.getLong("transaction_id")));
+		}
+		
+		return transactions;
 	}
 }
