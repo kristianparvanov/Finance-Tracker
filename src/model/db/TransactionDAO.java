@@ -161,14 +161,22 @@ public class TransactionDAO {
 	}
 	
 	public synchronized void deleteTransaction(Transaction t) throws SQLException {
-		BudgetsHasTransactionsDAO.getInstance().deleteTransactionBudgetByTransactionId(t.getTransactionId());
-		
-		String query = "DELETE FROM finance_tracker.transactions WHERE transaction_id = ?";
-		PreparedStatement statement = CONNECTION.prepareStatement(query);
-		statement.setLong(1, t.getTransactionId());
-		statement.executeUpdate();
-		
-		ALL_TRANSACTIONS.get(t.getType()).remove(t);
+		try {
+			CONNECTION.setAutoCommit(false);
+			
+			BudgetsHasTransactionsDAO.getInstance().deleteTransactionBudgetByTransactionId(t.getTransactionId());
+			
+			String query = "DELETE FROM finance_tracker.transactions WHERE transaction_id = ?";
+			PreparedStatement statement = CONNECTION.prepareStatement(query);
+			statement.setLong(1, t.getTransactionId());
+			statement.executeUpdate();
+			
+			ALL_TRANSACTIONS.get(t.getType()).remove(t);
+		} catch (SQLException e) {
+			CONNECTION.rollback();
+		} finally {
+			CONNECTION.setAutoCommit(true);
+		}
 	}
 	
 	public synchronized void removeTransaction(Transaction t) {

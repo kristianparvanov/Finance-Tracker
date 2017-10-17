@@ -64,7 +64,7 @@ public class PlannedPaymentDAO {
 	}
 	
 	public synchronized List<PlannedPayment> getAllPlannedPaymentsByAccountId(long accountId) throws SQLException {
-		String query = "SELECT planned_payment_id, name, type, from_date, amount, description, account_id, category_id, own_category_id FROM finance_tracker.planned_payments WHERE account_id = ?";
+		String query = "SELECT planned_payment_id, name, type, from_date, amount, description, account_id, category_id FROM finance_tracker.planned_payments WHERE account_id = ?";
 		List<PlannedPayment> payments = new ArrayList<PlannedPayment>();
 		
 		PreparedStatement statement = DBManager.getInstance().getConnection().prepareStatement(query);
@@ -108,17 +108,6 @@ public class PlannedPaymentDAO {
 		return payments;
 	}
 	
-	/*public synchronized List<PlannedPayment> getAllPlannedPaymentsByOwnCategoryId(long ownCategoryId) {
-		//SELECT planned_payment_id, name, type, from_date, amount, description, account_id, category_id, own_category_id FROM finance_tracker.planned_payments WHERE own_category_id = ?
-		List<PlannedPayment> payments = new ArrayList<PlannedPayment>();
-		for (PlannedPayment payment : ALL_PLANNED_PAYMENTS.values()) {
-			if (payment.getOwnCategory() == ownCategoryId) {
-				payments.add(payment);
-			}
-		}
-		return payments;
-	}*/
-	
 	public synchronized void insertPlannedPayment(PlannedPayment p) throws SQLException {
 		String query = "INSERT INTO finance_tracker.planned_payments (name, type, from_date, amount, description, account_id, category_id) VALUES (?, ?, STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), ?, ?, ?, ?)";
 		PreparedStatement statement = CONNECTION.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -139,7 +128,6 @@ public class PlannedPaymentDAO {
 			TagDAO.getInstance().insertTagToTags(tag, tag.getUserId());
 			TagDAO.getInstance().insertTagToPlannedPayment(p, tag);
 		}
-		
 		
 		ALL_PLANNED_PAYMENTS.put(p.getName(), p);
 	}

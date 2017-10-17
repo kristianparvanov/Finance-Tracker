@@ -88,7 +88,8 @@ public class BudgetDAO {
 	}
 	
 	public synchronized List<Budget> getAllBudgetsByCategoryId(long categoryId) throws SQLException {
-		String sql = "budget_id, name, amount, from_date, to_date, account_id, own_category_id FROM finance_tracker.budgets WHERE category_id = ?;";
+		//String sql = "budget_id, name, amount, from_date, to_date, account_id FROM finance_tracker.budgets WHERE category_id = ?;";
+		String sql = "SELECT budget_id, name, amount, from_date, to_date, account_id FROM finance_tracker.budgets WHERE category_id = ?;";
 		
 		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(sql);
 		ps.setLong(1, categoryId);
