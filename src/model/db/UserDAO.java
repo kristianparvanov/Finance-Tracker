@@ -110,7 +110,7 @@ public class UserDAO {
 		User user = null;
 		
 		if (ALL_USERS.containsKey(username)) {
-			user = ALL_USERS.get(user);
+			user = ALL_USERS.get(username);
 		}
 		
 		return user;

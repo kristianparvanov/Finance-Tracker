@@ -34,6 +34,10 @@ public class LoginServlet extends HttpServlet {
 				
 				request.getSession().setAttribute("user", u);
 				
+				Set<Account> accounts = u.getAccounts();
+				
+				request.getSession().setAttribute("accounts", accounts);
+				
 				/*ServletContext application = getServletConfig().getServletContext();
 				synchronized (application) {
 					if(application.getAttribute("accounts") == null){
