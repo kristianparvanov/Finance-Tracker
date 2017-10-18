@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+    <%@page import="model.User"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -15,9 +16,10 @@
 	</div>
 	<br>
 	<br>
-	<div>
+	<div style="margin-left: 250px">
 		<h1>THIS IS THE FINANCE TRACKER</h1>
-		<h1>Welcome, <% request.getSession().getAttribute("user"); %></h1>
+		
+		<h1>Welcome, ne znam zashto ne moga da izkaram umeto na tupiq user :@</h1>
 	</div>
 	<div>
 		<jsp:include page="footer.jsp"></jsp:include>
