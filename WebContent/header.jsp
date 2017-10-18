@@ -75,7 +75,7 @@
           </li>
           <!-- Control Sidebar Toggle Button -->
           <li>
-            <a href="#" data-toggle="control-sidebar" style="font-size: 18px;"><i class="glyphicon glyphicon-log-out"></i> Log out</a>
+            <a href="logout" style="font-size: 18px;"><i class="glyphicon glyphicon-log-out"></i> Log out</a>
           </li>
         </ul>
       </div>
