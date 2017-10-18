@@ -1,13 +1,15 @@
+<%@page import="java.math.BigDecimal"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
     <%@page import="model.User"%>
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/functions" prefix = "fn" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Finance Tracker Main</title>
+<title>Main | Finance Tracker</title>
 </head>
 <body>
 	<div>
@@ -16,33 +18,44 @@
 	<div>
 		<jsp:include page="header.jsp"></jsp:include>
 	</div>
-	<br>
-	<br>
-	<div style="margin-left: 250px">
-		<% User u = (User) session.getAttribute("user"); %>
-		<h1>Current user: <%= u.getUserName() %></h1>
+	<div class="content-wrapper">
+		 <section class="content-header">
+			<h2>Current balance across all accounts: <%= session.getAttribute("balance") %></h2>
+			<h1>All accounts</h1>
+		</section>
 		<section class="content">
 			<div class="row">
 			<c:forEach items="${sessionScope.accounts }" var="account">
 				<div class="col-lg-3 col-xs-6">
 					<!-- small box -->
-			          <div class="small-box bg-aqua">
+					<c:if test="${fn:contains(account.name, 'card')}">
+			            <div class="small-box bg-yellow">
+	            	</c:if>
+	              	<c:if test="${fn:contains(account.name, 'Cash')}">
+	            		<div class="small-box bg-green">
+	            	</c:if>
+	            	<c:if test="${fn:contains(account.name, 'Bank')}">
+	            		<div class="small-box bg-red">
+	            	</c:if>
+	            	<c:if test="${!fn:contains(account.name, 'card') && !fn:contains(account.name, 'Cash') && !fn:contains(account.name, 'Bank')}">
+	            		<div class="small-box bg-aqua">
+	            	</c:if>
 			            <div class="inner">
-			              <h3><c:out value="${account.amount}"></c:out></h3>
+			              <h3><i class="ion-social-usd" style="font-size: 20px;"> </i><fmt:formatNumber value="${account.amount}" minFractionDigits="2"/></h3>
 			              <p><c:out value="${account.name}"></c:out></p>
 			            </div>
 			            <div class="icon">
 			            	<c:if test="${fn:contains(account.name, 'card')}">
-			            		<i class="ion ion-card"></i>
+			            	<div style="margin-top: 10px">	<i class="ion ion-card"></i></div>
 			            	</c:if>
 			              	<c:if test="${fn:contains(account.name, 'Cash')}">
-			            		<i class="ion ion-cash"></i>
+			            		<div style="margin-top: 10px"><i class="ion ion-cash"></i></div>
 			            	</c:if>
 			            	<c:if test="${fn:contains(account.name, 'Bank')}">
-			            		<i class="ion ion-social-usd"></i>
+			            		<div style="margin-top: 10px"><i class="ion ion-social-usd"></i></div>
 			            	</c:if>
 			            	<c:if test="${!fn:contains(account.name, 'card') && !fn:contains(account.name, 'Cash') && !fn:contains(account.name, 'Bank')}">
-			            		<i class="ion ion-pie-graph"></i>
+			            		<div style="margin-top: 10px"><i class="ion ion-pie-graph"></i></div>
 			            	</c:if>
 			            </div>
 			            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
@@ -58,9 +71,9 @@
 			              <p>Add new Account</p>
 			            </div>
 			            <div class="icon">
-			              <i class="ion ion-plus"></i>
+			             <div style="margin-top: 10px"> <i class="ion ion-plus"></i></div>
 			            </div>
-			            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+			            <a href="#" class="small-box-footer">Get started <i class="fa fa-arrow-circle-right"></i></a>
 			          </div>
 				</div>
 			</div>

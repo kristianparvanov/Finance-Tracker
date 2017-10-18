@@ -1,7 +1,9 @@
 package controller;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.text.NumberFormat;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -37,6 +39,13 @@ public class LoginServlet extends HttpServlet {
 				Set<Account> accounts = u.getAccounts();
 				
 				request.getSession().setAttribute("accounts", accounts);
+				
+				BigDecimal allBalance = BigDecimal.valueOf(0);
+				for (Account account : accounts) {
+					allBalance = allBalance.add(account.getAmount());
+				}
+				String balance = NumberFormat.getCurrencyInstance().format(allBalance);
+				request.getSession().setAttribute("balance", balance);
 				
 				/*ServletContext application = getServletConfig().getServletContext();
 				synchronized (application) {

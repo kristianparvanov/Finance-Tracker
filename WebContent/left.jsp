@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
- <title>Left</title>
+ <title>Left | Finance Tracker</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <!-- Bootstrap 3.3.7 -->
@@ -29,13 +29,13 @@
     <section class="sidebar">
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu" data-widget="tree">
-        <li class="header">MAIN NAVIGATION</li>
-        <li><a href="https://adminlte.io/docs"><i class="fa fa-credit-card"></i> <span>Accounts</span></a></li>
-        <li><a href="https://adminlte.io/docs"><i class="fa fa-dollar"></i> <span>Planned Payments</span></a></li>
-        <li><a href="https://adminlte.io/docs"><i class="fa fa-money"></i> <span>Budgets</span></a></li>
+        <li class="header" style="font-size: 16px">MAIN NAVIGATION</li>
+        <li><a href="https://adminlte.io/docs"><i class="fa fa-credit-card"></i> <span style="font-size: 18px">Accounts</span></a></li>
+        <li><a href="https://adminlte.io/docs"><i class="fa fa-dollar"></i> <span style="font-size: 18px">Planned Payments</span></a></li>
+        <li><a href="https://adminlte.io/docs"><i class="fa fa-money"></i> <span style="font-size: 18px">Budgets</span></a></li>
         <li class="treeview">
           <a href="#">
-            <i class="fa fa-dashboard"></i> <span>Spravki</span>
+            <i class="fa fa-dashboard"></i> <span style="font-size: 18px">Spravki</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
@@ -46,7 +46,7 @@
           </ul>
         </li><li class="treeview">
           <a href="#">
-            <i class="fa fa-pie-chart"></i> <span>Charts</span>
+            <i class="fa fa-pie-chart"></i> <span style="font-size: 18px">Charts</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
@@ -56,8 +56,8 @@
             <li><a href="../../index2.html"><i class="fa fa-circle-o"></i> Chart 2</a></li>
           </ul>
         </li>
-        <li><a href="https://adminlte.io/docs"><i class="fa fa-book"></i> <span>Reports</span></a></li>
-        <li><a href="https://adminlte.io/docs"><i class="fa fa-question-circle"></i> <span>About</span></a></li>
+        <li><a href="https://adminlte.io/docs"><i class="fa fa-book"></i> <span style="font-size: 18px">Reports</span></a></li>
+        <li><a href="https://adminlte.io/docs"><i class="fa fa-question-circle"></i> <span style="font-size: 18px">About</span></a></li>
       </ul>
     </section>
     <!-- /.sidebar -->

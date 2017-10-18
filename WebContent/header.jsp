@@ -1,3 +1,4 @@
+<%@page import="model.User"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -5,7 +6,7 @@
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
- <title>Header</title>
+ <title>Header | Finance Tracker</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <!-- Bootstrap 3.3.7 -->
@@ -45,10 +46,10 @@
       <div class="collapse navbar-collapse pull-left">
         <ul class="nav navbar-nav">
           <!-- Messages: style can be found in dropdown.less-->
-          	<li><a href="#">Link</a></li>
-            <li><a href="#">Link</a></li>
+          	<li><a href="#" style="font-size: 18px;">Link</a></li>
+            <li><a href="#" style="font-size: 18px;">Link</a></li>
             <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <span class="caret"></span></a>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="font-size: 18px;">Dropdown <span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
                 <li><a href="#">Action</a></li>
                 <li><a href="#">Another action</a></li>
@@ -59,51 +60,22 @@
                 <li><a href="#">One more separated link</a></li>
               </ul>
             </li>
+        </ul>
+        </div>
+            
+        <div class="collapse navbar-collapse pull-right">
+        <ul class="nav navbar-nav">
           <!-- User Account: style can be found in dropdown.less -->
-          <li class="dropdown user user-menu">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <img src="../../dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
-              <span class="hidden-xs"><% request.getSession().getAttribute("user"); %></span>
+          <li>
+            <a href="#" style="font-size: 18px;">
+            <i class="ion ion-person"></i>
+              <% User u = (User) request.getSession().getAttribute("user"); %>
+              <span><%= u.getFirstName() %></span>
             </a>
-            <ul class="dropdown-menu">
-              <!-- User image -->
-              <li class="user-header">
-                <img src="../../dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
-
-                <p>
-                  Alexander Pierce - Web Developer
-                  <small>Member since Nov. 2012</small>
-                </p>
-              </li>
-              <!-- Menu Body -->
-              <li class="user-body">
-                <div class="row">
-                  <div class="col-xs-4 text-center">
-                    <a href="#">Followers</a>
-                  </div>
-                  <div class="col-xs-4 text-center">
-                    <a href="#">Sales</a>
-                  </div>
-                  <div class="col-xs-4 text-center">
-                    <a href="#">Friends</a>
-                  </div>
-                </div>
-                <!-- /.row -->
-              </li>
-              <!-- Menu Footer-->
-              <li class="user-footer">
-                <div class="pull-left">
-                  <a href="#" class="btn btn-default btn-flat">Profile</a>
-                </div>
-                <div class="pull-right">
-                  <a href="#" class="btn btn-default btn-flat">Sign out</a>
-                </div>
-              </li>
-            </ul>
           </li>
           <!-- Control Sidebar Toggle Button -->
           <li>
-            <a href="#" data-toggle="control-sidebar">Log out</a>
+            <a href="#" data-toggle="control-sidebar" style="font-size: 18px;"><i class="glyphicon glyphicon-log-out"></i> Log out</a>
           </li>
         </ul>
       </div>
