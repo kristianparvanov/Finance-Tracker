@@ -41,6 +41,9 @@
 			            	<c:if test="${fn:contains(account.name, 'Bank')}">
 			            		<i class="ion ion-social-usd"></i>
 			            	</c:if>
+			            	<c:if test="${!fn:contains(account.name, 'card') && !fn:contains(account.name, 'Cash') && !fn:contains(account.name, 'Bank')}">
+			            		<i class="ion ion-pie-graph"></i>
+			            	</c:if>
 			            </div>
 			            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
 			          </div>
