@@ -30,9 +30,9 @@
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu" data-widget="tree">
         <li class="header">MAIN NAVIGATION</li>
-        <li><a href="https://adminlte.io/docs"><i class="fa fa-book"></i> <span>Accounts</span></a></li>
-        <li><a href="https://adminlte.io/docs"><i class="fa fa-book"></i> <span>Planned Payments</span></a></li>
-        <li><a href="https://adminlte.io/docs"><i class="fa fa-book"></i> <span>Budgets</span></a></li>
+        <li><a href="https://adminlte.io/docs"><i class="fa fa-credit-card"></i> <span>Accounts</span></a></li>
+        <li><a href="https://adminlte.io/docs"><i class="fa fa-dollar"></i> <span>Planned Payments</span></a></li>
+        <li><a href="https://adminlte.io/docs"><i class="fa fa-money"></i> <span>Budgets</span></a></li>
         <li class="treeview">
           <a href="#">
             <i class="fa fa-dashboard"></i> <span>Spravki</span>
@@ -46,7 +46,7 @@
           </ul>
         </li><li class="treeview">
           <a href="#">
-            <i class="fa fa-dashboard"></i> <span>Charts</span>
+            <i class="fa fa-pie-chart"></i> <span>Charts</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
@@ -57,6 +57,7 @@
           </ul>
         </li>
         <li><a href="https://adminlte.io/docs"><i class="fa fa-book"></i> <span>Reports</span></a></li>
+        <li><a href="https://adminlte.io/docs"><i class="fa fa-question-circle"></i> <span>About</span></a></li>
       </ul>
     </section>
     <!-- /.sidebar -->
