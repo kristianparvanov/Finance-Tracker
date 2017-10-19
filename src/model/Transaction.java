@@ -12,6 +12,7 @@ public class Transaction {
 	private String description;
 	private BigDecimal amount;
 	private long account;
+	private String categoryName;
 	private long category;
 	private LocalDateTime date;
 	private HashSet<Tag> tags = new HashSet<Tag>();
@@ -54,6 +55,14 @@ public class Transaction {
 	
 	public long getAccount() {
 		return account;
+	}
+	
+	public String getCategoryName() {
+		return categoryName;
+	}
+	
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
 	}
 	
 	public long getCategory() {

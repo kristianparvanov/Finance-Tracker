@@ -3,6 +3,7 @@ package controller;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
@@ -27,19 +28,27 @@ public class TransactionServlet extends HttpServlet {
 
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		List<Transaction> trans = null;
+		List<Transaction> transactions = null;
+		BigDecimal accountBalance = null;
 		try {
-			trans = TransactionDAO.getInstance().getAllTransactionsByAccountId(Integer.valueOf(request.getParameter("id")));
-			
+			long accountId = Long.valueOf(request.getParameter("accountId"));
+			transactions = TransactionDAO.getInstance().getAllTransactionsByAccountId(accountId);
+			accountBalance = AccountDAO.getInstance().getAmountByAccountId(accountId);
 		} catch (SQLException e) {
 			System.out.println("neshto katastrofalno se slu4i");
 			e.printStackTrace();
 		}
-		for (Transaction transaction : trans) {
-			response.getWriter().append("<h4>" + transaction.toString() + "</h4>");
-		}
 		
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		String balance = NumberFormat.getCurrencyInstance().format(accountBalance);
+		request.getSession().setAttribute("balance", balance);
+		request.getSession().setAttribute("transactions", transactions);
+		request.getRequestDispatcher("transactions.jsp").forward(request, response);
+		
+//		for (Transaction transaction : trans) {
+//			response.getWriter().append("<h4>" + transaction.toString() + "</h4>");
+//		}
+//		
+//		response.getWriter().append("Served at: ").append(request.getContextPath());
 		//response.sendRedirect("result.html");
 	}
 
@@ -66,7 +75,7 @@ public class TransactionServlet extends HttpServlet {
 		try {
 			Account acc = AccountDAO.getInstance().getAccountByAccountId(Long.parseLong(account));
 			BigDecimal newValue = BigDecimal.valueOf(Double.valueOf(amount));
-			BigDecimal oldValue = AccountDAO.getInstance().getAmountByAccountId((int)acc.getAccaountId());
+			BigDecimal oldValue = AccountDAO.getInstance().getAmountByAccountId((int)acc.getAccountId());
 			if (type.equals("EXPENCE")) {
 				AccountDAO.getInstance().updateAccountAmount(acc, (oldValue.subtract(newValue)));
 			} else 

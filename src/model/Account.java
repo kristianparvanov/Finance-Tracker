@@ -51,7 +51,7 @@ public class Account {
 		return Collections.unmodifiableList(plannedPayments);
 	}
 	
-	public long getAccaountId() {
+	public long getAccountId() {
 		return accaountID;
 	}
 

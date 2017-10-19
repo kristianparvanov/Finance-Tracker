@@ -58,7 +58,10 @@ public class TransactionDAO {
 			String description = result.getString("description");
 			int categoryId = result.getInt("category_id");
 			HashSet<Tag> tags = TagDAO.getInstance().getTagsByTransactionId(transactionId);
+			String categoryName = CategoryDAO.getInstance().getCategoryNameByCategoryId(categoryId);
 			Transaction t = new Transaction(transactionId, transactionType, description, amount, accountId, categoryId, date, tags);
+			t.setCategoryName(categoryName);
+			ALL_TRANSACTIONS.get(t.getType()).add(t);
 		}
 	}
 
@@ -122,28 +125,38 @@ public class TransactionDAO {
 		ResultSet resultSet = statement.getGeneratedKeys();
 		resultSet.next();
 		t.setTransactionId(resultSet.getLong(1));
-		
-		for (Tag tag : t.getTags()) {
-			TagDAO.getInstance().insertTagToTags(tag, tag.getUserId());
-			TagDAO.getInstance().insertTagToTransaction(t, tag);
-		}
-		
-		boolean existsBudget = BudgetDAO.getInstance().existsBudget(t.getDate(), t.getCategory(), t.getAccount());
-		Set<Budget> budgets =  BudgetDAO.getInstance().getAllBudgetsByDateCategoryAndAccount(t.getDate(), t.getCategory(), t.getAccount());
-		if (existsBudget) {
-			for (Budget budget : budgets) {
-				BudgetsHasTransactionsDAO.getInstance().insertTransactionBudget(budget.getBudgetId(), t.getTransactionId());
-				if (t.getType().equals(TransactionType.EXPENCE)) {
-					budget.setAmount(budget.getAmount().subtract(t.getAmount()));
-				} else 
-				if (t.getType().equals(TransactionType.INCOME)) {
-					budget.setAmount(budget.getAmount().add(t.getAmount()));
-				}
-				BudgetDAO.getInstance().updateBudget(budget);
+		try {
+			CONNECTION.setAutoCommit(false);
+			
+			
+			
+			for (Tag tag : t.getTags()) {
+				TagDAO.getInstance().insertTagToTags(tag, tag.getUserId());
+				TagDAO.getInstance().insertTagToTransaction(t, tag);
 			}
+			
+			boolean existsBudget = BudgetDAO.getInstance().existsBudget(t.getDate(), t.getCategory(), t.getAccount());
+			Set<Budget> budgets =  BudgetDAO.getInstance().getAllBudgetsByDateCategoryAndAccount(t.getDate(), t.getCategory(), t.getAccount());
+			if (existsBudget) {
+				for (Budget budget : budgets) {
+					BudgetsHasTransactionsDAO.getInstance().insertTransactionBudget(budget.getBudgetId(), t.getTransactionId());
+					if (t.getType().equals(TransactionType.EXPENCE)) {
+						budget.setAmount(budget.getAmount().subtract(t.getAmount()));
+					} else 
+					if (t.getType().equals(TransactionType.INCOME)) {
+						budget.setAmount(budget.getAmount().add(t.getAmount()));
+					}
+					BudgetDAO.getInstance().updateBudget(budget);
+				}
+			}
+			
+			ALL_TRANSACTIONS.get(t.getType()).add(t);
+			CONNECTION.commit();
+		} catch (SQLException e) {
+			CONNECTION.rollback();
+		} finally {
+			CONNECTION.setAutoCommit(true);
 		}
-		
-		ALL_TRANSACTIONS.get(t.getType()).add(t);
 	}
 	
 	public synchronized void updateTransaction(Transaction t) throws SQLException {
@@ -163,7 +176,6 @@ public class TransactionDAO {
 	public synchronized void deleteTransaction(Transaction t) throws SQLException {
 		try {
 			CONNECTION.setAutoCommit(false);
-			
 			BudgetsHasTransactionsDAO.getInstance().deleteTransactionBudgetByTransactionId(t.getTransactionId());
 			
 			String query = "DELETE FROM finance_tracker.transactions WHERE transaction_id = ?";
@@ -172,6 +184,7 @@ public class TransactionDAO {
 			statement.executeUpdate();
 			
 			ALL_TRANSACTIONS.get(t.getType()).remove(t);
+			CONNECTION.commit();
 		} catch (SQLException e) {
 			CONNECTION.rollback();
 		} finally {

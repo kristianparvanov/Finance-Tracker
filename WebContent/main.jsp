@@ -20,7 +20,7 @@
 	</div>
 	<div class="content-wrapper">
 		 <section class="content-header">
-			<h2>Current balance across all accounts: <%= session.getAttribute("balance") %></h2>
+			<h2>Current balance across all accounts: <c:out value="${sessionScope.balance}"></c:out></h2>
 			<h1>All accounts</h1>
 		</section>
 		<section class="content">
@@ -58,7 +58,7 @@
 			            		<div style="margin-top: 10px"><i class="ion ion-pie-graph"></i></div>
 			            	</c:if>
 			            </div>
-			            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+			            <a href="transaction?accountId=${account.accountId}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
 			          </div>
 				</div>
 			</c:forEach>

@@ -121,7 +121,7 @@ public class AccountDAO {
 		
 		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(sql);
 		ps.setBigDecimal(1, newAmount);
-		ps.setLong(2, acc.getAccaountId());
+		ps.setLong(2, acc.getAccountId());
 		ps.executeUpdate();
 	}
 	
@@ -130,11 +130,11 @@ public class AccountDAO {
 		updateAccountAmount(otherAcc, otherAcc.getAmount().add(amount));
 	}
 	
-	public synchronized BigDecimal getAmountByAccountId(int accountId) throws SQLException {
+	public synchronized BigDecimal getAmountByAccountId(long accountId) throws SQLException {
 		String sql = "SELECT amount FROM accounts WHERE account_id = ?;";
 		
 		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(sql);
-		ps.setInt(1, accountId);
+		ps.setLong(1, accountId);
 
 		ResultSet res = ps.executeQuery();
 		res.next();

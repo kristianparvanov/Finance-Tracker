@@ -50,6 +50,17 @@ public class CategoryDAO {
 		//ALL_CATEGORIES.add(c);
 	}
 	
+	public synchronized String getCategoryNameByCategoryId(long categoryId) throws SQLException {
+		String query = "SELECT name FROM finance_tracker.categories WHERE category_id = ?";
+		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(query);
+		ps.setLong(1, categoryId);
+		
+		ResultSet res = ps.executeQuery();
+		res.next();
+		String name = res.getString("name");
+		return name;
+	}
+	
 	public synchronized Category getCategoryByCategoryId(int categoryId) throws SQLException {
 		String sql = "SELECT name, type FROM categories WHERE category_id = ?;";
 		

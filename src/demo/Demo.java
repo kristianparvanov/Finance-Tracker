@@ -53,9 +53,9 @@ public class Demo {
 		Category c1 = new Category("cafe", TransactionType.EXPENCE, u1.getUserId(),transactions, budgets, plannedPayments);
 		c1.setCategoryID(1);
 		
-		Transaction t1 = new Transaction(TransactionType.INCOME, "baba", BigDecimal.valueOf(7000), a1.getAccaountId(), c1.getCategoryId(), LocalDateTime.now(), tags);
-		PlannedPayment p1 = new PlannedPayment("CARS", TransactionType.EXPENCE, LocalDateTime.of(2017, 11, 12, 15, 37, 25), BigDecimal.valueOf(250), "nosa4a", a1.getAccaountId(), c1.getCategoryId(), tags);
-		Budget b1 = new Budget("gazovata", BigDecimal.valueOf(200), LocalDateTime.of(2017, 10, 12, 15, 37, 25), LocalDateTime.of(2017, 10, 14, 15, 37, 25), a1.getAccaountId(), c1.getCategoryId(), tags, null);
+		Transaction t1 = new Transaction(TransactionType.INCOME, "baba", BigDecimal.valueOf(7000), a1.getAccountId(), c1.getCategoryId(), LocalDateTime.now(), tags);
+		PlannedPayment p1 = new PlannedPayment("CARS", TransactionType.EXPENCE, LocalDateTime.of(2017, 11, 12, 15, 37, 25), BigDecimal.valueOf(250), "nosa4a", a1.getAccountId(), c1.getCategoryId(), tags);
+		Budget b1 = new Budget("gazovata", BigDecimal.valueOf(200), LocalDateTime.of(2017, 10, 12, 15, 37, 25), LocalDateTime.of(2017, 10, 14, 15, 37, 25), a1.getAccountId(), c1.getCategoryId(), tags, null);
 		
 		try {
 			//UserDAO.getInstance().insertUser(new User("Kristian", "123", "kris@40", "Kristian", "purvanov"));
