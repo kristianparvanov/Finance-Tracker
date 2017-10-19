@@ -1,2 +1,0 @@
-blago-budget, transaction, plannedPayment
-kris-user, category, account

@@ -73,7 +73,7 @@
 			            <div class="icon">
 			             <div style="margin-top: 10px"> <i class="ion ion-plus"></i></div>
 			            </div>
-			            <a href="#" class="small-box-footer">Get started <i class="fa fa-arrow-circle-right"></i></a>
+			            <a href="addAccount" class="small-box-footer">Get started <i class="fa fa-arrow-circle-right"></i></a>
 			          </div>
 				</div>
 			</div>

@@ -45,7 +45,7 @@
 	    </form>
 	    <br>
 	    <a href="https://adminlte.io/themes/AdminLTE/pages/examples/login.html#">I forgot my password</a><br>
-   		<a href="https://adminlte.io/themes/AdminLTE/pages/examples/register.html" class="text-center">Register a new membership</a>
+   		<a href="register.jsp" class="text-center">Register a new membership</a>
 	   </div>
 	 </div>
 </body>

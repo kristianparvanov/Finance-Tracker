@@ -23,17 +23,26 @@
 			<h1>All transactions</h1>
 		</section>
 		<section class="content">
+			<c:if test="${empty sessionScope.transactions }">
+				<h3><i class="ion ion-information-circled"></i>  No records yet</h3>
+				<h4>Track your expenses and income</h4>
+			</c:if>
+			<div style="margin-bottom: 25px">
+				<button type="button" class="btn btn-block btn-primary" style="width: 200px">Add new record</button>
+			</div>
 			<c:forEach items="${sessionScope.transactions }" var="transaction">
 				<div>
-		            <div class="info-box">
-			            <div class="info-box-content">
-			              <h3>Amount: <i class="ion-social-usd" style="font-size: 20px;"> </i><fmt:formatNumber value="${transaction.amount}" minFractionDigits="2"/></h3>
-			              <h4>Type: <c:out value="${transaction.type}"></c:out></h4>
-			              <h4>Description: <c:out value="${transaction.description }"></c:out></h4>
-			              <h4>Category: <c:out value="${transaction.categoryName}"></c:out></h4>
-			              <h4>Date: <fmt:parseDate value="${transaction.date}" pattern="yyyy-MM-dd" /></h4>
+					<a href="editTransaction?transactionId=${transaction.transactionId}">
+			            <div class="info-box">
+				            <div class="info-box-content">
+				              <h3>Amount: <i class="ion-social-usd" style="font-size: 20px;"> </i><fmt:formatNumber value="${transaction.amount}" minFractionDigits="2"/></h3>
+				              <h4>Type: <c:out value="${transaction.type}"></c:out></h4>
+				              <h4>Description: <c:out value="${transaction.description }"></c:out></h4>
+				              <h4>Category: <c:out value="${transaction.categoryName}"></c:out></h4>
+				              <h4>Date: <fmt:parseDate value="${transaction.date}" pattern="yyyy-MM-dd" /></h4>
+				            </div>
 			            </div>
-		            </div>
+		            </a>
 		        </div> 
 			</c:forEach>
 	 	</section>
@@ -41,5 +50,18 @@
 	<div>
 		<jsp:include page="footer.jsp"></jsp:include>
 	</div>
+	
+<!-- jQuery 3 -->
+<script src="./static/jquery.min.js"></script>
+<!-- Bootstrap 3.3.7 -->
+<script src="./static/bootstrap.min.js"></script>
+<!-- SlimScroll -->
+<script src="./static/jquery.slimscroll.min.js"></script>
+<!-- FastClick -->
+<script src="./static/fastclick.js"></script>
+<!-- AdminLTE App -->
+<script src="./static/adminlte.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="./static/demo.js"></script>
 </body>
 </html>

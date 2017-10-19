@@ -12,13 +12,13 @@ public class Account {
 	private long accaountID;
 	private String name;
 	private BigDecimal amount;
-	private int userID;
+	private long userID;
 	private List<Transaction> transactions;
 	private List<Budget> budgets;
 	private List<PlannedPayment> plannedPayments;
 	
 	
-	public Account(String name, BigDecimal amount, int userID, List<Transaction> transactions, List<Budget> budgets, List<PlannedPayment> plannedPayments) {
+	public Account(String name, BigDecimal amount, long userID, List<Transaction> transactions, List<Budget> budgets, List<PlannedPayment> plannedPayments) {
 		this.name = name;
 		this.amount = amount;
 		this.userID = userID;
@@ -27,7 +27,7 @@ public class Account {
 		this.plannedPayments = plannedPayments;
 	}
 	
-	public Account(String name, BigDecimal amount, int userID) {
+	public Account(String name, BigDecimal amount, long userID) {
 		this(name, amount, userID, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
 	}
 
@@ -73,7 +73,7 @@ public class Account {
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((plannedPayments == null) ? 0 : plannedPayments.hashCode());
 		result = prime * result + ((transactions == null) ? 0 : transactions.hashCode());
-		result = prime * result + userID;
+		result = (int) (prime * result + userID);
 		return result;
 	}
 

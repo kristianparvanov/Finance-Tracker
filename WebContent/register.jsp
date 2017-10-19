@@ -61,7 +61,7 @@
       </div>
     </form>
     <br>
-    I am already registered. <a href="https://adminlte.io/themes/AdminLTE/pages/examples/login.html" class="text-center">Log me in</a>
+    I am already registered. <a href="login.jsp" class="text-center">Log me in</a>
   </div>
 </div>
 </body></html>
