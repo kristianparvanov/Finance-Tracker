@@ -54,8 +54,8 @@ public class TransactionDAO {
 			TransactionType transactionType = TransactionType.valueOf(type);
 			LocalDateTime date = result.getTimestamp("date").toLocalDateTime();
 			BigDecimal amount = result.getBigDecimal("amount");
-			int accountId = result.getInt("account_id");
 			String description = result.getString("description");
+			int accountId = result.getInt("account_id");
 			int categoryId = result.getInt("category_id");
 			HashSet<Tag> tags = TagDAO.getInstance().getTagsByTransactionId(transactionId);
 			String categoryName = CategoryDAO.getInstance().getCategoryNameByCategoryId(categoryId);

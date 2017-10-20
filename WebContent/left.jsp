@@ -20,9 +20,8 @@
   <!-- Google Font -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
-<body class="hold-transition skin-blue fixed sidebar-mini">
+<body class="hold-transition skin-blue-light fixed sidebar-mini">
 <div class="wrapper">
-
   <!-- Left side column. contains the sidebar -->
   <aside class="main-sidebar">
     <!-- sidebar: style can be found in sidebar.less -->
@@ -62,7 +61,7 @@
     </section>
     <!-- /.sidebar -->
   </aside>
-
+</div>
 <!-- jQuery 3 -->
 <script src="./static/jquery.min.js"></script>
 <!-- Bootstrap 3.3.7 -->
@@ -75,5 +74,10 @@
 <script src="./static/adminlte.min.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="./static/demo.js"></script>
+<script type="text/javascript">
+$(function () {
+	$('ul').tree(options)
+});
+</script>
 </body>
 </html>

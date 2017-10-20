@@ -26,6 +26,7 @@ public class Transaction {
 
 	public Transaction(TransactionType type, String description, BigDecimal amount, long account, long category, LocalDateTime date, HashSet<Tag> tags) {
 		this.type = type;
+		this.description = description;
 		this.amount = amount;
 		this.account = account;
 		this.category = category;

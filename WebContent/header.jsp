@@ -22,7 +22,7 @@
   <!-- Google Font -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
-<body class="hold-transition skin-blue layout-top-nav">
+<body class="hold-transition skin-blue-light layout-top-nav">
 <div class="wrapper">
 
  <header class="main-header">
@@ -81,15 +81,7 @@
       </div>
     </nav>
   </header>
-  
- <!-- <div class="content-wrapper">-->
-    <!-- <div class="container" style="height: 500px">-->
-     
-    <!-- /.container -->
-  <!-- </div>-->
-  
-<!-- </div>-->
-
+  </div>
 <!-- jQuery 3 -->
 <script src="./static/jquery.min.js"></script>
 <!-- Bootstrap 3.3.7 -->

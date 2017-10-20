@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-<%@page import="java.math.BigDecimal"%>
+<%@ page import="java.math.BigDecimal"%>
+<%@ page import="model.TransactionType" %>
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/functions" prefix = "fn" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -27,19 +28,49 @@
 				<h3><i class="ion ion-information-circled"></i>  No records yet</h3>
 				<h4>Track your expenses and income</h4>
 			</c:if>
+			
 			<div style="margin-bottom: 25px">
-				<button type="button" class="btn btn-block btn-primary" style="width: 200px">Add new record</button>
+				<div class="row">
+					<div class="col-sm-3">
+						<a href="addTransaction.jsp" type="button" class="btn btn-block btn-primary btn-lg">Add new record</a>
+					</div>
+					<div class="col-sm-3">
+						<a href="main.jsp" type="button" class="btn btn-block btn-default btn-lg">Back</a>
+					</div>
+				</div>
 			</div>
+			
 			<c:forEach items="${sessionScope.transactions }" var="transaction">
 				<div>
 					<a href="editTransaction?transactionId=${transaction.transactionId}">
-			            <div class="info-box">
+			            <div class="info-box" style="width: auto;">
 				            <div class="info-box-content">
-				              <h3>Amount: <i class="ion-social-usd" style="font-size: 20px;"> </i><fmt:formatNumber value="${transaction.amount}" minFractionDigits="2"/></h3>
-				              <h4>Type: <c:out value="${transaction.type}"></c:out></h4>
-				              <h4>Description: <c:out value="${transaction.description }"></c:out></h4>
-				              <h4>Category: <c:out value="${transaction.categoryName}"></c:out></h4>
-				              <h4>Date: <fmt:parseDate value="${transaction.date}" pattern="yyyy-MM-dd" /></h4>
+				             <div class="row">
+				              	<div class="col-sm-4">
+						             <c:choose>
+						              <c:when test="${transaction.type eq 'INCOME'}">
+						              	<h3 style="color: green;">Amount: + <i class="ion-social-usd" style="font-size: 20px;"> </i><fmt:formatNumber value="${transaction.amount}" minFractionDigits="2"/></h3>
+						              </c:when>
+						              <c:when test="${transaction.type eq 'EXPENCE'}">
+						              	<h3 style="color: red;">Amount: - <i class="ion-social-usd" style="font-size: 20px;"> </i><fmt:formatNumber value="${transaction.amount}" minFractionDigits="2"/></h3>
+						              </c:when>
+						              <c:otherwise>
+		       							 <h3>Amount: <i class="ion-social-usd" style="font-size: 20px;"> </i><fmt:formatNumber value="${transaction.amount}" minFractionDigits="2"/></h3>
+		    						  </c:otherwise>
+		    						  </c:choose>
+		    						  </div>
+		    						  <div class="col-sm-4">
+					              	  	 <h3>Category: <c:out value="${transaction.categoryName}"></c:out></h3>
+				              	  	 </div>
+				              </div>
+				              <div class="row">
+				              	  <div class="col-sm-4">
+						              <h4>Description: <c:out value="${transaction.description }"></c:out></h4>
+						          </div>
+						          <div class="col-sm-4">
+						              <h4>Date: <fmt:parseDate value="${transaction.date}" pattern="yyyy-MM-dd" /></h4>
+					              </div>
+				              </div>
 				            </div>
 			            </div>
 		            </a>

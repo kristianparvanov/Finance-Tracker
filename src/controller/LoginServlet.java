@@ -25,6 +25,14 @@ import model.db.UserDAO;
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		User u = (User) req.getSession().getAttribute("user");
+		Set<Account> accounts = u.getAccounts();
+		req.getSession().setAttribute("accounts", accounts);
+		req.getRequestDispatcher("main.jsp").forward(req, resp);
+	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String username = request.getParameter("username");

@@ -35,7 +35,8 @@ public class AddAccountServlet extends HttpServlet {
 			System.out.println("Could not add account to database");
 			e.printStackTrace();
 		}
-		request.getRequestDispatcher("main.jsp").forward(request, response);
+		response.sendRedirect("login");
+		//request.getRequestDispatcher("main.jsp").forward(request, response);
 	}
 
 }
