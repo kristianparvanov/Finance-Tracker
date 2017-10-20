@@ -118,4 +118,25 @@ public class CategoryDAO {
 		return true;
 	}
 
+	public Category getCategoryByCategoryName(String categoryName) throws SQLException {
+		String query = "SELECT category_id, name, type, user_id FROM finance_tracker.categories WHERE name = ?";
+		PreparedStatement statement = DBManager.getInstance().getConnection().prepareStatement(query);
+		statement.setString(1, categoryName);
+		
+		ResultSet resultSet = statement.executeQuery();
+		resultSet.next();
+		
+		long categoryId = resultSet.getLong("category_id");
+		String name = resultSet.getString("name");
+		TransactionType type = TransactionType.valueOf(resultSet.getString("type"));
+		Long userId = new Long(resultSet.getLong("user_id"));
+		List<Transaction> transactions = TransactionDAO.getInstance().getAllTransactionsByCategoryId(categoryId);
+		List<Budget> budgets = BudgetDAO.getInstance().getAllBudgetsByCategoryId(categoryId);
+		List<PlannedPayment> plannedPayments = PlannedPaymentDAO.getInstance().getAllPlannedPaymentsByCategoryId(categoryId);
+		
+		Category category = new Category(name, type, userId, transactions, budgets, plannedPayments);
+		category.setCategoryID(categoryId);
+		
+		return category;
+	}
 }

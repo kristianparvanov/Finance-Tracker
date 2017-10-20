@@ -1,7 +1,7 @@
 <%@page import="model.User"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE>
 <html>
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -24,10 +24,9 @@
 </head>
 <body class="hold-transition skin-blue-light layout-top-nav">
 <div class="wrapper">
-
  <header class="main-header">
     <!-- Logo -->
-    <a href="../../index2.html" class="logo">
+    <a href="main.jsp" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
       <span class="logo-mini"><b>F</b>TR</span>
       <!-- logo for regular state and mobile devices -->
@@ -87,7 +86,7 @@
 <!-- Bootstrap 3.3.7 -->
 <script src="./static/bootstrap.min.js"></script>
 <!-- SlimScroll -->
-<script src="./static/jquery.slimscroll.min.js"></script>
+<script src="./static/jquery.slimscroll.js"></script>
 <!-- FastClick -->
 <script src="./static/fastclick.js"></script>
 <!-- AdminLTE App -->

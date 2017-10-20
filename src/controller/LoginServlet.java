@@ -29,7 +29,12 @@ public class LoginServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		User u = (User) req.getSession().getAttribute("user");
-		Set<Account> accounts = u.getAccounts();
+		Set<Account> accounts = null;
+		try {
+			accounts = AccountDAO.getInstance().getAllAccountsByUserId(u.getUserId());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		req.getSession().setAttribute("accounts", accounts);
 		req.getRequestDispatcher("main.jsp").forward(req, resp);
 	}

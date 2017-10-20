@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -29,7 +29,7 @@
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu" data-widget="tree">
         <li class="header" style="font-size: 16px">MAIN NAVIGATION</li>
-        <li><a href="https://adminlte.io/docs"><i class="fa fa-credit-card"></i> <span style="font-size: 18px">Accounts</span></a></li>
+        <li><a href="main.jsp"><i class="fa fa-credit-card"></i> <span style="font-size: 18px">Accounts</span></a></li>
         <li><a href="https://adminlte.io/docs"><i class="fa fa-dollar"></i> <span style="font-size: 18px">Planned Payments</span></a></li>
         <li><a href="https://adminlte.io/docs"><i class="fa fa-money"></i> <span style="font-size: 18px">Budgets</span></a></li>
         <li class="treeview">
@@ -43,7 +43,8 @@
             <li><a href="../../index.html"><i class="fa fa-circle-o"></i> Spravka 1</a></li>
             <li><a href="../../index2.html"><i class="fa fa-circle-o"></i> Spravka 2</a></li>
           </ul>
-        </li><li class="treeview">
+        </li>
+        <li class="treeview">
           <a href="#">
             <i class="fa fa-pie-chart"></i> <span style="font-size: 18px">Charts</span>
             <span class="pull-right-container">
@@ -55,8 +56,22 @@
             <li><a href="../../index2.html"><i class="fa fa-circle-o"></i> Chart 2</a></li>
           </ul>
         </li>
+        
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-dashboard"></i> <span>Dashboard</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu" style="display: none;">
+            <li><a href="../../index.html"><i class="fa fa-circle-o"></i> Dashboard v1</a></li>
+            <li><a href="../../index2.html"><i class="fa fa-circle-o"></i> Dashboard v2</a></li>
+          </ul>
+        </li>
+        
         <li><a href="https://adminlte.io/docs"><i class="fa fa-book"></i> <span style="font-size: 18px">Reports</span></a></li>
-        <li><a href="https://adminlte.io/docs"><i class="fa fa-question-circle"></i> <span style="font-size: 18px">About</span></a></li>
+        <li><a href="about.jsp"><i class="fa fa-question-circle"></i> <span style="font-size: 18px">About</span></a></li>
       </ul>
     </section>
     <!-- /.sidebar -->
@@ -67,17 +82,12 @@
 <!-- Bootstrap 3.3.7 -->
 <script src="./static/bootstrap.min.js"></script>
 <!-- SlimScroll -->
-<script src="./static/jquery.slimscroll.min.js"></script>
+<script src="./static/jquery.slimscroll.js"></script>
 <!-- FastClick -->
 <script src="./static/fastclick.js"></script>
 <!-- AdminLTE App -->
 <script src="./static/adminlte.min.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="./static/demo.js"></script>
-<script type="text/javascript">
-$(function () {
-	$('ul').tree(options)
-});
-</script>
 </body>
 </html>

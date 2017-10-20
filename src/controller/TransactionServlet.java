@@ -26,20 +26,22 @@ import model.db.TransactionDAO;
 public class TransactionServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		List<Transaction> transactions = null;
 		BigDecimal accountBalance = null;
+		String accountName = null;
 		try {
 			long accountId = Long.valueOf(request.getParameter("accountId"));
 			transactions = TransactionDAO.getInstance().getAllTransactionsByAccountId(accountId);
 			accountBalance = AccountDAO.getInstance().getAmountByAccountId(accountId);
+			accountName = AccountDAO.getInstance().getAccountNameByAccountId(accountId);
 		} catch (SQLException e) {
 			System.out.println("neshto katastrofalno se slu4i");
 			e.printStackTrace();
 		}
 		
 		String balance = NumberFormat.getCurrencyInstance().format(accountBalance);
+		request.getSession().setAttribute("accountName", accountName);
 		request.getSession().setAttribute("balance", balance);
 		request.getSession().setAttribute("transactions", transactions);
 		request.getRequestDispatcher("transactions.jsp").forward(request, response);

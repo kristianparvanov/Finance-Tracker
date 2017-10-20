@@ -66,18 +66,18 @@ public class AccountDAO {
 		return res.getLong("account_id");
 	}
 	
-	public synchronized Set<Account> getAllAccountsByUserId(int userId) throws SQLException {
+	public synchronized Set<Account> getAllAccountsByUserId(long userId) throws SQLException {
 		Set<Account> accounts = new HashSet<>();
 		
 		String sql = "SELECT account_id, name, amount FROM accounts WHERE user_id = ?;";
 		
 		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(sql);
-		ps.setInt(1, userId);
+		ps.setLong(1, userId);
 		
 		ResultSet res = ps.executeQuery();
 		
 		while(res.next()) {
-			int accountId = res.getInt("account_id");
+			long accountId = res.getInt("account_id");
 			String name = res.getString("name");
 			BigDecimal amount = new BigDecimal(res.getDouble("amount"));
 			List<Transaction> transactions = TransactionDAO.getInstance().getAllTransactionsByAccountId(accountId);
@@ -152,5 +152,37 @@ public class AccountDAO {
 		}
 		
 		return true;
+	}
+
+	public Account getAccountByAccountName(String accountName) throws SQLException {
+		String query = "SELECT account_id, name, amount, user_id FROM finance_tracker.accounts WHERE accounts.name = ?";
+		PreparedStatement statement = DBManager.getInstance().getConnection().prepareStatement(query);
+		statement.setString(1, accountName);
+		
+		ResultSet res = statement.executeQuery();
+		res.next();
+		
+		long accountId = res.getLong("account_id");
+		String name = res.getString("name");
+		BigDecimal amount = res.getBigDecimal("amount");
+		long userId = res.getLong("user_id");
+		List<Transaction> transactions = TransactionDAO.getInstance().getAllTransactionsByAccountId(accountId);
+		List<Budget> budgets = BudgetDAO.getInstance().getAllBudgetsByAccountId(accountId);
+		List<PlannedPayment> plannedPayments = PlannedPaymentDAO.getInstance().getAllPlannedPaymentsByAccountId(accountId);
+		
+		Account account = new Account(name, amount, userId, transactions, budgets, plannedPayments);
+		account.setAccaountID(accountId);
+		
+		return account;
+	}
+	
+	public String getAccountNameByAccountId(long accountId) throws SQLException {
+		String query = "SELECT name FROM accounts WHERE accounts.account_id = ?";
+		PreparedStatement statement = DBManager.getInstance().getConnection().prepareStatement(query);
+		statement.setLong(1, accountId);
+		
+		ResultSet res = statement.executeQuery();
+		res.next();
+		return res.getString("name");
 	}
 }

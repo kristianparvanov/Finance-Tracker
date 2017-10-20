@@ -20,13 +20,15 @@
 	</div>
 	<div class="content-wrapper">
 		<section class="content-header">
-			<h2>Current balance <c:out value="${sessionScope.balance}"></c:out></h2>
+			<h2><b><c:out value="${sessionScope.accountName}"></c:out></b></h2>
+			<br>
+			<h1>Current balance <c:out value="${sessionScope.balance}"></c:out></h1>
 			<h1>All transactions</h1>
 		</section>
 		<section class="content">
 			<c:if test="${empty sessionScope.transactions }">
 				<h3><i class="ion ion-information-circled"></i>  No records yet</h3>
-				<h4>Track your expenses and income</h4>
+				<h4>Track your expenses and income. Start by adding a new record.</h4>
 			</c:if>
 			
 			<div style="margin-bottom: 25px">

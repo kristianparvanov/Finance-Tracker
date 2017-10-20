@@ -32,19 +32,21 @@
 		              <div class="box-body">
 		              	<div class="form-group">
 			                <label>Type</label>
-			                <select class="form-control select2" style="width: 100%;" data-placeholder="Select a type">
+			                <select class="form-control select2" style="width: 100%;" data-placeholder="Select a type" name="type" >
+			                  <option>INCOME</option>
+			                  <option>EXPENCE</option>
 			                  <option>Alabama</option>
 			                  <option>Alaska</option>
 			                  <option>California</option>
 			                  <option>Delaware</option>
-			                  <option>Tennessee</option>
+			                  <option>Tennessee</option> 
 			                  <option>Texas</option>
 			                  <option>Washington</option>
 			                </select>
 			            </div>
 		                <div class="form-group">
 			                <label>Account</label>
-			                <select class="form-control select2" style="width: 100%;" data-placeholder="Select an account">
+			                <select class="form-control select2" style="width: 100%;" data-placeholder="Select an account" name="account">
 			                  <option>Alabama</option>
 			                  <option>Alaska</option>
 			                  <option>California</option>
@@ -56,7 +58,7 @@
 			            </div>
 		                 <div class="form-group">
 			                <label>Category</label>
-			                <select class="form-control select2" style="width: 100%;" data-placeholder="Select a category">
+			                <select class="form-control select2" style="width: 100%;" data-placeholder="Select a category" name="category">
 			                  <option>Alabama</option>
 			                  <option>Alaska</option>
 			                  <option>California</option>
@@ -72,7 +74,7 @@
 		                </div>
 		                <div class="form-group">
 			                <label>Tags</label>
-			                <select class="form-control select2" multiple="multiple" data-placeholder="Select tags" style="width: 100%;">
+			                <select class="form-control select2" multiple="multiple" data-placeholder="Select tags" style="width: 100%;" name="tags">
 			                  <option>Alabama</option>
 			                  <option>Alaska</option>
 			                  <option>California</option>
@@ -84,7 +86,7 @@
 			            </div>
 		                <div class="form-group">
                   			<label>Description</label>
-                 			<textarea class="form-control" rows="3" placeholder="Enter transaction description here"></textarea>
+                 			<textarea class="form-control" rows="3" placeholder="Enter transaction description here" name="description"></textarea>
                			</div>
                		  </div>
                		  <div class="box-footer">

@@ -113,13 +113,14 @@ public class TransactionDAO {
 	}
 	
 	public synchronized void insertTransaction(Transaction t) throws SQLException {
-		String query = "INSERT INTO finance_tracker.transactions (type, date, amount, account_id, category_id) VALUES (?, STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), ?, ?, ?)";
+		String query = "INSERT INTO finance_tracker.transactions (type, date, amount, description, account_id, category_id) VALUES (?, STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), ?, ?, ?, ?)";
 		PreparedStatement statement = CONNECTION.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 		statement.setString(1, t.getType().toString());
 		statement.setTimestamp(2, Timestamp.valueOf(t.getDate().withNano(0)));
 		statement.setBigDecimal(3, t.getAmount());
-		statement.setLong(4, t.getAccount());
-		statement.setLong(5, t.getCategory());
+		statement.setString(4, t.getDescription());
+		statement.setLong(5, t.getAccount());
+		statement.setLong(6, t.getCategory());
 		statement.executeUpdate();
 		
 		ResultSet resultSet = statement.getGeneratedKeys();
@@ -127,8 +128,6 @@ public class TransactionDAO {
 		t.setTransactionId(resultSet.getLong(1));
 		try {
 			CONNECTION.setAutoCommit(false);
-			
-			
 			
 			for (Tag tag : t.getTags()) {
 				TagDAO.getInstance().insertTagToTags(tag, tag.getUserId());
