@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -14,9 +15,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import model.Account;
 import model.Budget;
 import model.Tag;
+import model.Transaction;
 import model.User;
+import model.db.AccountDAO;
 import model.db.BudgetDAO;
 
 @WebServlet("/budget")
@@ -24,16 +28,38 @@ public class BudgetServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		List<Budget> budgets = null;
-//		Long accountId = (Long) request.getAttribute("id");
+		User u = (User) request.getSession().getAttribute("user");
+		
+		Set<Budget> budgets = null;
+		BigDecimal percent = new BigDecimal(0.0);
+		BigDecimal transactionsAmount = new BigDecimal(0.0);
+		
+		HashMap<Budget, BigDecimal> map = new HashMap<>();
+		
+		
 		try {
-			budgets = BudgetDAO.getInstance().getAllBudgetsByAccountId(Integer.valueOf(request.getParameter("id")));
+			budgets = BudgetDAO.getInstance().getAllBudgetsByUserId(u.getUserId());
+			
+			for (Budget budget : budgets) {
+				transactionsAmount = new BigDecimal(0.0);
+				
+				for (Transaction transaction : budget.getTransactions()) {
+					transactionsAmount = transactionsAmount.add(transaction.getAmount());
+				}
+				transactionsAmount = BigDecimal.valueOf(45);
+				percent = transactionsAmount.divide(budget.getAmount()).multiply(BigDecimal.valueOf(100));
+				
+				map.put(budget, percent);
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		for (Budget budget : budgets) {
-			response.getWriter().append("<h4>" + budget.toString() + "</h4>");
-		}
+		
+		
+		
+		request.getSession().setAttribute("budgets", map);
+		
+		request.getRequestDispatcher("budgets.jsp").forward(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

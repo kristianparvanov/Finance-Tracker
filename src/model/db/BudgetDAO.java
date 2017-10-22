@@ -232,4 +232,32 @@ public class BudgetDAO {
 	private boolean isBetweenTwoDates(LocalDateTime date, LocalDateTime from, LocalDateTime to) {
 		return !date.isBefore(from) && !date.isAfter(to);
 	}
+
+	public Set<Budget> getAllBudgetsByUserId(long userId) throws SQLException {
+		String sql = "SELECT b.budget_id, b.name, b.amount, b.from_date, b.to_date, b.account_id, b.category_id FROM budgets b JOIN accounts a ON a.account_id = b.account_id AND user_id = ?;";
+		
+		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(sql);
+		ps.setLong(1, userId);
+		
+		ResultSet res = ps.executeQuery();
+		Set<Budget> budgets = new HashSet<>();
+		
+		while(res.next()) {
+			long budgetId = res.getLong("budget_id");
+			String name = res.getString("name");
+			BigDecimal amount = res.getBigDecimal("amount");
+			LocalDateTime fromDate = res.getTimestamp("from_date").toLocalDateTime();
+			LocalDateTime toDate = res.getTimestamp("to_date").toLocalDateTime();
+			long accountId = res.getLong("account_id");
+			long categoryId = res.getLong("category_id");
+			Set<Tag> tags = TagDAO.getInstance().getTagsByBudgetId(budgetId);
+			Set<Transaction> transactions = BudgetsHasTransactionsDAO.getInstance().getAllTransactionsByBudgetId(budgetId);
+			
+			Budget b = new Budget(budgetId, name, amount, fromDate, toDate, accountId, categoryId, tags, transactions);
+			
+			budgets.add(b);
+		}
+		
+		return budgets;
+	}
 }

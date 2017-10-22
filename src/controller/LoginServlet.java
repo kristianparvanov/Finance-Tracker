@@ -58,22 +58,9 @@ public class LoginServlet extends HttpServlet {
 					allBalance = allBalance.add(account.getAmount());
 				}
 				String balance = NumberFormat.getCurrencyInstance().format(allBalance);
+				
 				request.getSession().setAttribute("balance", balance);
 				
-				/*ServletContext application = getServletConfig().getServletContext();
-				synchronized (application) {
-					if(application.getAttribute("accounts") == null){
-						Set<Account> accounts = AccountDAO.getInstance().getAllAccountsByUserId((int)u.getUserId());
-						application.setAttribute("accounts", accounts);
-					}
-				}
-				synchronized (application) {
-					if(application.getAttribute("products") == null){
-						Set<Tag> tags = TagDAO.getInstance().getAllTagsByUserId((int)u.getUserId());
-						application.setAttribute("products", tags);
-					}
-				}*/
-			
 				request.getRequestDispatcher("main.jsp").forward(request, response);
 			}
 			else{
