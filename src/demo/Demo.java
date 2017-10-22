@@ -82,6 +82,7 @@ public class Demo {
 			
 			//budget
 			//BudgetDAO.getInstance().getAllBudgets();
+			BudgetDAO.getInstance().insertBudget(new Budget("piinie", BigDecimal.valueOf(100), LocalDateTime.of(2017, 10, 15, 15, 37, 25), LocalDateTime.of(2017, 12, 17, 15, 37, 25), 6, 5, tags, null));
 			//BudgetDAO.getInstance().insertBudget(b1);
 			
 			//account
@@ -90,7 +91,7 @@ public class Demo {
 			//AccountDAO.getInstance().insertAccount(a1);
 			//AccountDAO.getInstance().insertAccount(a2);
 			
-			AccountDAO.getInstance().makeTransferToOtherAccount(a1, a2, BigDecimal.valueOf(50.0));
+			//AccountDAO.getInstance().makeTransferToOtherAccount(a1, a2, BigDecimal.valueOf(50.0));
 			
 			//category
 			//CategoryDAO.getInstance().insertCategory(new Category("kurvi", TransactionType.EXPENCE, transactions, budgets, plannedPayments));

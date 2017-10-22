@@ -37,7 +37,7 @@
 						<a href="addTransaction.jsp" type="button" class="btn btn-block btn-primary btn-lg">Add new record</a>
 					</div>
 					<div class="col-sm-3">
-						<a href="main.jsp" type="button" class="btn btn-block btn-default btn-lg">Back</a>
+						<a href="login" type="button" class="btn btn-block btn-default btn-lg">Back</a>
 					</div>
 				</div>
 			</div>

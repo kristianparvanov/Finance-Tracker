@@ -35,6 +35,15 @@ public class LoginServlet extends HttpServlet {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
+		BigDecimal allBalance = BigDecimal.valueOf(0);
+		for (Account account : accounts) {
+			allBalance = allBalance.add(account.getAmount());
+		}
+		String balance = NumberFormat.getCurrencyInstance().format(allBalance);
+		
+		req.getSession().setAttribute("balance", balance);
+		
 		req.getSession().setAttribute("accounts", accounts);
 		req.getRequestDispatcher("main.jsp").forward(req, resp);
 	}

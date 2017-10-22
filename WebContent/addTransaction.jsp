@@ -77,7 +77,7 @@
                		  <div class="box-footer">
 		                <button type="submit" class="btn btn-primary">Save</button>
 		                <a href="#" class="btn btn-danger">Delete</a>
-		                <a href="main.jsp" class="btn btn-default">Cancel</a>
+		                <a href="login" class="btn btn-default">Cancel</a>
 		              </div>
 		            </form>
 	          	</div>

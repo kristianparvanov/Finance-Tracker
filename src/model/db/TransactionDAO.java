@@ -139,6 +139,9 @@ public class TransactionDAO {
 			if (existsBudget) {
 				for (Budget budget : budgets) {
 					BudgetsHasTransactionsDAO.getInstance().insertTransactionBudget(budget.getBudgetId(), t.getTransactionId());
+//					if (t.getType().equals(TransactionType.EXPENCE)) {
+//						budget.setAmount(budget.getAmount().add(t.getAmount()));
+//					}
 					if (t.getType().equals(TransactionType.EXPENCE)) {
 						budget.setAmount(budget.getAmount().subtract(t.getAmount()));
 					} else 
@@ -153,6 +156,7 @@ public class TransactionDAO {
 			CONNECTION.commit();
 		} catch (SQLException e) {
 			CONNECTION.rollback();
+			throw new SQLException();
 		} finally {
 			CONNECTION.setAutoCommit(true);
 		}
