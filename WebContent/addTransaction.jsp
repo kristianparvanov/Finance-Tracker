@@ -33,39 +33,24 @@
 		              	<div class="form-group">
 			                <label>Type</label>
 			                <select class="form-control select2" style="width: 100%;" data-placeholder="Select a type" name="type" >
-			                  <option>INCOME</option>
 			                  <option>EXPENCE</option>
-			                  <option>Alabama</option>
-			                  <option>Alaska</option>
-			                  <option>California</option>
-			                  <option>Delaware</option>
-			                  <option>Tennessee</option> 
-			                  <option>Texas</option>
-			                  <option>Washington</option>
+			                  <option>INCOME</option>
 			                </select>
 			            </div>
 		                <div class="form-group">
 			                <label>Account</label>
 			                <select class="form-control select2" style="width: 100%;" data-placeholder="Select an account" name="account">
-			                  <option>Alabama</option>
-			                  <option>Alaska</option>
-			                  <option>California</option>
-			                  <option>Delaware</option>
-			                  <option>Tennessee</option>
-			                  <option>Texas</option>
-			                  <option>Washington</option>
+			                  <c:forEach items="${sessionScope.accounts }" var="account">
+			                	  <option><c:out value="${account.name}"></c:out></option>
+			                  </c:forEach>
 			                </select>
 			            </div>
 		                 <div class="form-group">
 			                <label>Category</label>
 			                <select class="form-control select2" style="width: 100%;" data-placeholder="Select a category" name="category">
-			                  <option>Alabama</option>
-			                  <option>Alaska</option>
-			                  <option>California</option>
-			                  <option>Delaware</option>
-			                  <option>Tennessee</option>
-			                  <option>Texas</option>
-			                  <option>Washington</option>
+			                  <c:forEach items="${sessionScope.categories }" var="category">
+			                	  <option><c:out value="${category.name}"></c:out></option>
+			                  </c:forEach>
 			                </select>
 			            </div>
 		                <div class="form-group">

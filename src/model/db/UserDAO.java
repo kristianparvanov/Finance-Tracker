@@ -44,7 +44,7 @@ public class UserDAO {
 			String email = res.getString("email");
 			String firstName = res.getString("first_name");
 			String lastName = res.getString("last_name");
-			int userId = res.getInt("user_id");
+			Long userId = Long.valueOf(res.getLong("user_id"));
 			Set<Account> accounts = AccountDAO.getInstance().getAllAccountsByUserId(userId);
 			Set<Category> ownCategories = CategoryDAO.getInstance().getAllCategoriesByUserId(userId);
 			Set<Tag> tags = TagDAO.getInstance().getAllTagsByUserId(userId);

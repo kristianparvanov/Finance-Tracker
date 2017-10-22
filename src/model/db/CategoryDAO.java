@@ -82,14 +82,23 @@ public class CategoryDAO {
 		return category;
 	}
 	
-	public synchronized Set<Category> getAllCategoriesByUserId(int userId) throws SQLException {
-		String sql = "SELECT category_id, name, type FROM categories WHERE user_id = ?;";
-		
-		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(sql);
-		ps.setInt(1, userId);
+	public synchronized Set<Category> getAllCategoriesByUserId(Long ... userIdParams) throws SQLException {
+		Long userId = null;
+		for (long l : userIdParams) {
+			userId = l;
+		}
+		String sql = "";
+		PreparedStatement ps = null;
+		if (userId == null) {
+			sql = "SELECT category_id, name, type FROM categories WHERE user_id IS NULL;";
+			ps = DBManager.getInstance().getConnection().prepareStatement(sql);
+		} else {
+			sql = "SELECT category_id, name, type FROM categories WHERE user_id = ?;";
+			ps = DBManager.getInstance().getConnection().prepareStatement(sql);
+			ps.setLong(1, userId);
+		}
 		
 		Set<Category> categories = new HashSet<>();
-		
 		ResultSet res = ps.executeQuery();
 		
 		while(res.next()) {
@@ -107,7 +116,7 @@ public class CategoryDAO {
 	}
 	
 	public synchronized boolean isValidOwnCategory(User user, String name) throws SQLException {
-		Set<Category> ownCategories = getAllCategoriesByUserId((int)user.getUserId());
+		Set<Category> ownCategories = getAllCategoriesByUserId(user.getUserId());
 		
 		for (Category ownCategory : ownCategories) {
 			if (ownCategory.getName().equals(name)) {
