@@ -126,8 +126,17 @@ public class AccountDAO {
 	}
 	
 	public synchronized void makeTransferToOtherAccount(Account currentAcc, Account otherAcc, BigDecimal amount) throws SQLException {
-		updateAccountAmount(currentAcc, currentAcc.getAmount().subtract(amount));
-		updateAccountAmount(otherAcc, otherAcc.getAmount().add(amount));
+		DBManager.getInstance().getConnection().setAutoCommit(false);
+		try {
+			updateAccountAmount(currentAcc, currentAcc.getAmount().subtract(amount));
+			updateAccountAmount(otherAcc, otherAcc.getAmount().add(amount));
+			DBManager.getInstance().getConnection().commit();
+		} catch (Exception e) {
+			DBManager.getInstance().getConnection().rollback();
+			throw new SQLException();
+		} finally {
+			DBManager.getInstance().getConnection().setAutoCommit(true);
+		}
 	}
 	
 	public synchronized BigDecimal getAmountByAccountId(long accountId) throws SQLException {

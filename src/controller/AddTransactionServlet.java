@@ -41,9 +41,12 @@ public class AddTransactionServlet extends HttpServlet {
 		User u = (User) request.getSession().getAttribute("user");
 		
 		HashSet<Tag> tagsSet = new HashSet<>();
-		for (String tagName : tags) {
-			tagsSet.add(new Tag(tagName, u.getUserId()));
+		if (tags != null) {
+			for (String tagName : tags) {
+				tagsSet.add(new Tag(tagName, u.getUserId()));
+			}
 		}
+		
 		Account acc = null;
 		try {
 			acc = AccountDAO.getInstance().getAccountByAccountName(account);
@@ -64,8 +67,8 @@ public class AddTransactionServlet extends HttpServlet {
 		}
 		request.setAttribute("user", u);
 		request.setAttribute("accountId", acc.getAccountId());
-//		response.sendRedirect("transaction");
 		
+		//response.sendRedirect("transaction");
 		request.getRequestDispatcher("transactions.jsp").forward(request, response);
 	}
 }

@@ -23,6 +23,7 @@ import model.TransactionType;
 import model.User;
 import model.db.AccountDAO;
 import model.db.CategoryDAO;
+import model.db.TagDAO;
 import model.db.TransactionDAO;
 
 @WebServlet("/transaction")
@@ -38,8 +39,10 @@ public class TransactionServlet extends HttpServlet {
 		Set<Category> ownCategories = new HashSet<Category>();
 		Set<Category> categories = new HashSet<Category>();
 		Set<Account> accounts = new HashSet<Account>();
+		Set<Tag> tags = new HashSet<Tag>();
 		try {
 			long accountId = Long.valueOf(request.getParameter("accountId"));
+			request.getSession().setAttribute("accountId", accountId);
 			transactions = TransactionDAO.getInstance().getAllTransactionsByAccountId(accountId);
 			accountBalance = AccountDAO.getInstance().getAmountByAccountId(accountId);
 			accountName = AccountDAO.getInstance().getAccountNameByAccountId(accountId);
@@ -48,6 +51,7 @@ public class TransactionServlet extends HttpServlet {
 			accounts = AccountDAO.getInstance().getAllAccountsByUserId(user.getUserId());
 			allCategories.addAll(categories);
 			allCategories.addAll(ownCategories);
+			tags = TagDAO.getInstance().getAllTagsByUserId(user.getUserId());
 		} catch (SQLException e) {
 			System.out.println("neshto katastrofalno se slu4i");
 			e.printStackTrace();
@@ -58,6 +62,7 @@ public class TransactionServlet extends HttpServlet {
 		request.getSession().setAttribute("accounts", accounts);
 		request.getSession().setAttribute("accountName", accountName);
 		request.getSession().setAttribute("balance", balance);
+		request.getSession().setAttribute("tags", tags);
 		request.getSession().setAttribute("transactions", transactions);
 		
 		request.getRequestDispatcher("transactions.jsp").forward(request, response);

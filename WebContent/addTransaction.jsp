@@ -60,13 +60,9 @@
 		                <div class="form-group">
 			                <label>Tags</label>
 			                <select class="form-control select2" multiple="multiple" data-placeholder="Select tags" style="width: 100%;" name="tags">
-			                  <option>Alabama</option>
-			                  <option>Alaska</option>
-			                  <option>California</option>
-			                  <option>Delaware</option>
-			                  <option>Tennessee</option>
-			                  <option>Texas</option>
-			                  <option>Washington</option>
+			                  <c:forEach items="${sessionScope.tags }" var="tag">
+			                	  <option><c:out value="${tag.name}"></c:out></option>
+			                  </c:forEach>
 			                </select>
 			            </div>
 		                <div class="form-group">
@@ -76,8 +72,7 @@
                		  </div>
                		  <div class="box-footer">
 		                <button type="submit" class="btn btn-primary">Save</button>
-		                <a href="#" class="btn btn-danger">Delete</a>
-		                <a href="login" class="btn btn-default">Cancel</a>
+		                <a href="transaction?accountId=${sessionScope.accountId}" class="btn btn-default">Cancel</a>
 		              </div>
 		            </form>
 	          	</div>

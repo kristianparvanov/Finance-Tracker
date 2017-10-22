@@ -159,13 +159,14 @@ public class TransactionDAO {
 	}
 	
 	public synchronized void updateTransaction(Transaction t) throws SQLException {
-		String query = "UPDATE finance_tracker.transactions SET type = ?, date = STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), amount = ?, account_id = ?, category_id = ? WHERE transaction_id = ?";
+		String query = "UPDATE finance_tracker.transactions SET type = ?, date = STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), amount = ?, description = ?, account_id = ?, category_id = ? WHERE transaction_id = ?";
 		PreparedStatement statement = CONNECTION.prepareStatement(query);
 		statement.setString(1, t.getType().toString());
 		statement.setTimestamp(2, Timestamp.valueOf(t.getDate().withNano(0)));
 		statement.setBigDecimal(3, t.getAmount());
-		statement.setLong(4, t.getAccount());
-		statement.setLong(5, t.getCategory());
+		statement.setString(4, t.getDescription());
+		statement.setLong(5, t.getAccount());
+		statement.setLong(6, t.getCategory());
 		statement.setLong(7, t.getTransactionId());
 		statement.executeUpdate();
 		
