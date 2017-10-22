@@ -46,8 +46,6 @@ public class CategoryDAO {
 		res.next();
 		
 		c.setCategoryID(res.getLong(1));
-		
-		//ALL_CATEGORIES.add(c);
 	}
 	
 	public synchronized String getCategoryNameByCategoryId(long categoryId) throws SQLException {

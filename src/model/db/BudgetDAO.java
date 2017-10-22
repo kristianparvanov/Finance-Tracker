@@ -187,14 +187,24 @@ public class BudgetDAO {
 	}
 	
 	public synchronized void deleteBudget(Budget b) throws SQLException {
-		for (Transaction t : b.getTransactions()) {
-			BudgetsHasTransactionsDAO.getInstance().deleteTransactionBudgetByTransactionId(t.getTransactionId());
-		}
+		CONNECTION.setAutoCommit(false);
 		
-		String query = "DELETE FROM finance_tracker.budgets WHERE budget_id = ?";
-		PreparedStatement statement = CONNECTION.prepareStatement(query);
-		statement.setLong(1, b.getBudgetId());
-		statement.executeUpdate();
+		try {
+			for (Transaction t : b.getTransactions()) {
+				BudgetsHasTransactionsDAO.getInstance().deleteTransactionBudgetByTransactionId(t.getTransactionId());
+			}
+			
+			String query = "DELETE FROM finance_tracker.budgets WHERE budget_id = ?";
+			PreparedStatement statement = CONNECTION.prepareStatement(query);
+			statement.setLong(1, b.getBudgetId());
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			CONNECTION.rollback();
+			
+			throw new SQLException();
+		} finally {
+			CONNECTION.setAutoCommit(true);
+		}
 	}
 	
 	public synchronized boolean existsBudget(LocalDateTime date, long categoryId, long accountId) throws SQLException {
