@@ -223,7 +223,7 @@ public class TransactionDAO {
 		
 		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(sql);
 		ps.setLong(1, categoryId);
-		ps.setLong(2, categoryId);
+		ps.setLong(2, accountId);
 		
 		ResultSet res = ps.executeQuery();
 		

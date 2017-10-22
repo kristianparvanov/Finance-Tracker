@@ -139,14 +139,23 @@ public class BudgetDAO {
 			
 			b.setBudgetId(resultSet.getLong(1));
 			
-			if (TransactionDAO.getInstance().existsTransaction(b.getFromDate(), b.getToDate(), b.getCategoryId(), b.getAccountId())) {
+			boolean exits = TransactionDAO.getInstance().existsTransaction(b.getFromDate(), b.getToDate(), b.getCategoryId(), b.getAccountId());
+			
+			if (exits) {
 				Set<Transaction> transactions = TransactionDAO.getInstance().getAllTransactionsForBudget(b.getFromDate(), b.getToDate(), b.getCategoryId(), b.getAccountId());
 			
+				BigDecimal amount = new BigDecimal(0.0);
+				
 				for (Transaction transaction : transactions) {
 					BudgetsHasTransactionsDAO.getInstance().insertTransactionBudget(b.getBudgetId(), transaction.getTransactionId());
+					
+					amount = amount.add(transaction.getAmount());
 				}
 				
+				b.setAmount(amount);
 				b.setTransactions(transactions);
+				
+				updateBudget(b);
 			}
 			
 			for (Tag tag : b.getTags()) {
