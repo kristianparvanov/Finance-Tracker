@@ -13,10 +13,10 @@ public class Category {
 	private List<Budget> budgets;
 	private List<PlannedPayment> plannedPayments;
 	
-	public Category(String name, TransactionType type , long userId, List<Transaction> transactions, List<Budget> budgets, List<PlannedPayment> plannedPayments) {
+	public Category(String name, TransactionType type , Long userId, List<Transaction> transactions, List<Budget> budgets, List<PlannedPayment> plannedPayments) {
 		this.name = name;
 		this.type = type;
-		this.userId = new Long(userId);
+		this.userId = userId;
 		this.transactions = transactions;
 		this.budgets = budgets;
 		this.plannedPayments = plannedPayments;
