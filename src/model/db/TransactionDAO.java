@@ -40,10 +40,6 @@ public class TransactionDAO {
 	}
 	
 	public synchronized void getAllTransactions() throws SQLException {
-//		if (!ALL_TRANSACTIONS.isEmpty()) {
-//			System.out.println(ALL_TRANSACTIONS);
-//			return;
-//		}
 		String query = "SELECT transaction_id, type, date, description, amount, account_id, category_id FROM finance_tracker.transactions";
 		PreparedStatement statement = null;
 		statement = CONNECTION.prepareStatement(query);
@@ -135,7 +131,6 @@ public class TransactionDAO {
 			}
 			
 			boolean existsBudget = BudgetDAO.getInstance().existsBudget(t.getDate(), t.getCategory(), t.getAccount());
-			System.out.println(existsBudget);
 			Set<Budget> budgets =  BudgetDAO.getInstance().getAllBudgetsByDateCategoryAndAccount(t.getDate(), t.getCategory(), t.getAccount());
 			if (existsBudget) {
 				for (Budget budget : budgets) {
@@ -144,7 +139,6 @@ public class TransactionDAO {
 						budget.setAmount(budget.getAmount().add(t.getAmount()));
 					}
 					BudgetDAO.getInstance().updateBudget(budget);
-					System.out.println("aliluq");
 				}
 			}
 			
@@ -187,6 +181,8 @@ public class TransactionDAO {
 			CONNECTION.commit();
 		} catch (SQLException e) {
 			CONNECTION.rollback();
+			
+			throw new SQLException();
 		} finally {
 			CONNECTION.setAutoCommit(true);
 		}
@@ -194,5 +190,59 @@ public class TransactionDAO {
 	
 	public synchronized void removeTransaction(Transaction t) {
 		ALL_TRANSACTIONS.get(t.getType()).remove(t);
+	}
+
+	public boolean existsTransaction(LocalDateTime fromDate, LocalDateTime toDate, long categoryId, long accountId) throws SQLException {
+		String sql = "SELECT type, date, account_id, category_id FROM transactions WHERE category_id = ? AND account_id = ?;";
+		
+		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(sql);
+		ps.setLong(1, categoryId);
+		ps.setLong(2, accountId);
+		
+		ResultSet res = ps.executeQuery();
+		
+		while (res.next()) {
+			TransactionType type = TransactionType.valueOf(res.getString("type"));
+			LocalDateTime date = res.getTimestamp("date").toLocalDateTime();
+			
+			if (type.equals(TransactionType.EXPENCE) && isBetweenTwoDates(date, fromDate, toDate)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
+	private boolean isBetweenTwoDates(LocalDateTime date, LocalDateTime from, LocalDateTime to) {
+		return !date.isBefore(from) && !date.isAfter(to);
+	}
+
+	public Set<Transaction> getAllTransactionsForBudget(LocalDateTime fromDate, LocalDateTime toDate, long categoryId,
+			long accountId) throws SQLException {
+		String sql = "SELECT transaction_id, type, date, description, amount, account_id, category_id FROM transactions WHERE category_id = ? AND account_id = ?;";
+		
+		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(sql);
+		ps.setLong(1, categoryId);
+		ps.setLong(2, categoryId);
+		
+		ResultSet res = ps.executeQuery();
+		
+		Set<Transaction> transactions = new HashSet<>();
+		
+		while(res.next()) {
+			long transactionId = res.getLong("transaction_id");
+			TransactionType type = TransactionType.valueOf(res.getString("type"));
+			LocalDateTime date = res.getTimestamp("date").toLocalDateTime();
+			String description = res.getString("description");
+			BigDecimal amount = res.getBigDecimal("amount");
+			
+			if (type.equals(TransactionType.EXPENCE) && isBetweenTwoDates(date, fromDate, toDate)) {
+				Transaction t = new Transaction(transactionId, type, description, amount, accountId, categoryId, date, null);
+				
+				transactions.add(t);
+			}
+		}
+		
+		return transactions;
 	}
 }

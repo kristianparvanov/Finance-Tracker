@@ -9,6 +9,7 @@ import java.util.Set;
 public class Budget {
 	private long budgetId;
 	private String name;
+	private BigDecimal initialAmount;
 	private BigDecimal amount;
 	private LocalDateTime fromDate;
 	private LocalDateTime toDate;
@@ -17,23 +18,34 @@ public class Budget {
 	private Set<Tag> tags = new HashSet<Tag>();
 	private Set<Transaction> transactions = new HashSet<Transaction>();
 	
-	public Budget(long budgetId, String name, BigDecimal amount, LocalDateTime fromDate, LocalDateTime toDate,
+	public Budget(long budgetId, String name, BigDecimal initialAmount, BigDecimal amount, LocalDateTime fromDate, LocalDateTime toDate,
 			long accountId, long categoryId, Set<Tag> tags, Set<Transaction> transactions) {
-		this(name, amount, fromDate, toDate, accountId, categoryId, tags, transactions);
+		this(name, initialAmount, amount, fromDate, toDate, accountId, categoryId, tags, transactions);
 		
 		this.budgetId = budgetId;
 	}
 	
-	public Budget(long budgetId, String name, BigDecimal amount, LocalDateTime fromDate, LocalDateTime toDate,
+	public Budget(long budgetId, String name, BigDecimal initialAmount, LocalDateTime fromDate, LocalDateTime toDate,
+			long accountId, long categoryId) {
+		this(budgetId, name, initialAmount, BigDecimal.valueOf(0), fromDate, toDate, accountId, categoryId, new HashSet<>(), new HashSet<>());
+	}
+	
+	public Budget(String name, BigDecimal initialAmount, LocalDateTime fromDate, LocalDateTime toDate,
 			long accountId, long categoryId, Set<Tag> tags) {
-		this(name, amount, fromDate, toDate, accountId, categoryId, tags, new HashSet<>());
+		this(name, initialAmount, BigDecimal.valueOf(0), fromDate, toDate, accountId, categoryId, tags, new HashSet<>());
+	}
+	
+	public Budget(long budgetId, String name, BigDecimal initialAmount, BigDecimal amount, LocalDateTime fromDate, LocalDateTime toDate,
+			long accountId, long categoryId, Set<Tag> tags) {
+		this(name, initialAmount, amount, fromDate, toDate, accountId, categoryId, tags, new HashSet<>());
 		
 		this.budgetId = budgetId;
 	}
 
-	public Budget(String name, BigDecimal amount, LocalDateTime fromDate, LocalDateTime toDate,
+	public Budget(String name, BigDecimal initialAmount, BigDecimal amount, LocalDateTime fromDate, LocalDateTime toDate,
 			long accountId, long categoryId, Set<Tag> tags, Set<Transaction> transactions) {
 		this.name = name;
+		this.initialAmount = initialAmount;
 		this.amount = amount;
 		this.fromDate = fromDate;
 		this.toDate = toDate;
@@ -53,6 +65,10 @@ public class Budget {
 	
 	public String getName() {
 		return name;
+	}
+	
+	public BigDecimal getInitialAmount() {
+		return initialAmount;
 	}
 	
 	public BigDecimal getAmount() {

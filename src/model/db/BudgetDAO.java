@@ -36,7 +36,7 @@ public class BudgetDAO {
 	}
 	
 	public synchronized void getAllBudgets() throws SQLException {
-		String query = "SELECT budget_id, name, amount, from_date, to_date, account_id, category_id FROM finance_tracker.budgets";
+		String query = "SELECT budget_id, name, initial_amount, amount, from_date, to_date, account_id, category_id FROM finance_tracker.budgets";
 		
 		PreparedStatement statement = DBManager.getInstance().getConnection().prepareStatement(query);
 		
@@ -45,6 +45,7 @@ public class BudgetDAO {
 		while(result.next()) {
 			long budgetId = result.getLong("budget_id");
 			String name = result.getString("name");
+			BigDecimal initialAmount = result.getBigDecimal("initial_amount");
 			BigDecimal amount = result.getBigDecimal("amount");
 			LocalDateTime fromDate = result.getTimestamp("from_date").toLocalDateTime();
 			LocalDateTime toDate = result.getTimestamp("to_date").toLocalDateTime();
@@ -53,14 +54,14 @@ public class BudgetDAO {
 			HashSet<Tag> tags = TagDAO.getInstance().getTagsByBudgetId(budgetId);
 			
 			Set<Transaction> transactions = BudgetsHasTransactionsDAO.getInstance().getAllTransactionsByBudgetId(budgetId);
-			Budget budget = new Budget(budgetId, name, amount, fromDate, toDate, accountId, categoryId, tags, transactions);
+			Budget budget = new Budget(budgetId, name, initialAmount, amount, fromDate, toDate, accountId, categoryId, tags, transactions);
 			
 			System.out.println(budget);
 		}
 	}
 	
 	public synchronized List<Budget> getAllBudgetsByAccountId(long accountId) throws SQLException {
-		String query = "SELECT budget_id, name, amount, from_date, to_date, category_id FROM finance_tracker.budgets WHERE account_id = ?";
+		String query = "SELECT budget_id, name, initial_amount, amount, from_date, to_date, category_id FROM finance_tracker.budgets WHERE account_id = ?";
 		
 		PreparedStatement statement = DBManager.getInstance().getConnection().prepareStatement(query);
 		statement.setLong(1, accountId);
@@ -72,6 +73,7 @@ public class BudgetDAO {
 		while(result.next()) {
 			long budgetId = result.getLong("budget_id");
 			String name = result.getString("name");
+			BigDecimal initialAmount = result.getBigDecimal("initial_amount");
 			BigDecimal amount = result.getBigDecimal("amount");
 			LocalDateTime fromDate = result.getTimestamp("from_date").toLocalDateTime();
 			LocalDateTime toDate = result.getTimestamp("to_date").toLocalDateTime();
@@ -79,7 +81,7 @@ public class BudgetDAO {
 			HashSet<Tag> tags = TagDAO.getInstance().getTagsByBudgetId(budgetId);
 			Set<Transaction> transactions = BudgetsHasTransactionsDAO.getInstance().getAllTransactionsByBudgetId(budgetId);
 			
-			Budget budget = new Budget(budgetId, name, amount, fromDate, toDate, accountId, categoryId, tags, transactions);
+			Budget budget = new Budget(budgetId, name, initialAmount, amount, fromDate, toDate, accountId, categoryId, tags, transactions);
 			
 			budgets.add(budget);
 		}
@@ -88,8 +90,7 @@ public class BudgetDAO {
 	}
 	
 	public synchronized List<Budget> getAllBudgetsByCategoryId(long categoryId) throws SQLException {
-		//String sql = "budget_id, name, amount, from_date, to_date, account_id FROM finance_tracker.budgets WHERE category_id = ?;";
-		String sql = "SELECT budget_id, name, amount, from_date, to_date, account_id FROM finance_tracker.budgets WHERE category_id = ?;";
+		String sql = "SELECT budget_id, name, initial_amount, amount, from_date, to_date, account_id FROM finance_tracker.budgets WHERE category_id = ?;";
 		
 		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(sql);
 		ps.setLong(1, categoryId);
@@ -101,6 +102,7 @@ public class BudgetDAO {
 		while(res.next()) {
 			long budgetId = res.getLong("budget_id");
 			String name = res.getString("name");
+			BigDecimal initialAmount = res.getBigDecimal("initial_amount");
 			BigDecimal amount = res.getBigDecimal("amount");
 			LocalDateTime fromDate = res.getTimestamp("from_date").toLocalDateTime();
 			LocalDateTime toDate = res.getTimestamp("to_date").toLocalDateTime();
@@ -108,7 +110,7 @@ public class BudgetDAO {
 			HashSet<Tag> tags = TagDAO.getInstance().getTagsByBudgetId(budgetId);
 			Set<Transaction> transactions = BudgetsHasTransactionsDAO.getInstance().getAllTransactionsByBudgetId(budgetId);
 			
-			Budget budget = new Budget(budgetId, name, amount, fromDate, toDate, accountId, categoryId, tags, transactions);
+			Budget budget = new Budget(budgetId, name, initialAmount, amount, fromDate, toDate, accountId, categoryId, tags, transactions);
 			
 			budgets.add(budget);
 		}
@@ -116,55 +118,62 @@ public class BudgetDAO {
 		return budgets;
 	}
 	
-	public synchronized void insertBudget(Budget b) throws SQLException {
-		Set<Transaction> transactions = BudgetsHasTransactionsDAO.getInstance().getAllTransactionsByBudgetId(b.getBudgetId());
+	public synchronized void insertBudget(Budget b) throws SQLException {		
+		CONNECTION.setAutoCommit(false);
 		
-		for (Transaction t : transactions) {
-			if (t.getType().equals(TransactionType.EXPENCE)) {
-				b.setAmount(b.getAmount().subtract(t.getAmount()));
-			} else 
-			if (t.getType().equals(TransactionType.INCOME)) {
-				b.setAmount(b.getAmount().add(t.getAmount()));
+		try {
+			String sql = "INSERT INTO budgets (name, initial_amount, amount, from_date, to_date, account_id, category_id) VALUES (?, ?, ?, STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), ?, ?)";
+			
+			PreparedStatement ps = CONNECTION.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			ps.setString(1, b.getName());
+			ps.setBigDecimal(2, b.getInitialAmount());
+			ps.setBigDecimal(3, b.getAmount());
+			ps.setTimestamp(4, Timestamp.valueOf(b.getFromDate().withNano(0)));
+			ps.setTimestamp(5, Timestamp.valueOf(b.getToDate().withNano(0)));
+			ps.setLong(6, b.getAccountId());
+			ps.setLong(7, b.getCategoryId());
+			ps.executeUpdate();
+			
+			ResultSet resultSet = ps.getGeneratedKeys();
+			resultSet.next();
+			
+			b.setBudgetId(resultSet.getLong(1));
+			
+			if (TransactionDAO.getInstance().existsTransaction(b.getFromDate(), b.getToDate(), b.getCategoryId(), b.getAccountId())) {
+				Set<Transaction> transactions = TransactionDAO.getInstance().getAllTransactionsForBudget(b.getFromDate(), b.getToDate(), b.getCategoryId(), b.getAccountId());
+			
+				for (Transaction transaction : transactions) {
+					BudgetsHasTransactionsDAO.getInstance().insertTransactionBudget(b.getBudgetId(), transaction.getTransactionId());
+				}
+				
+				b.setTransactions(transactions);
 			}
-		}
-		
-		String sql = "INSERT INTO finance_tracker.budgets (name, amount, from_date, to_date, account_id, category_id) VALUES (?, ?, STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), ?, ?)";
-		
-		PreparedStatement ps = CONNECTION.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-		ps.setString(1, b.getName());
-		ps.setBigDecimal(2, b.getAmount());
-		ps.setTimestamp(3, Timestamp.valueOf(b.getFromDate().withNano(0)));
-		ps.setTimestamp(4, Timestamp.valueOf(b.getToDate().withNano(0)));
-		ps.setLong(5, b.getAccountId());
-		ps.setLong(6, b.getCategoryId());
-		ps.executeUpdate();
-		
-		ResultSet resultSet = ps.getGeneratedKeys();
-		resultSet.next();
-		
-		b.setBudgetId(resultSet.getLong(1));
-		
-		for (Transaction t : transactions) {
-			BudgetsHasTransactionsDAO.getInstance().insertTransactionBudget(b.getBudgetId(), t.getTransactionId());
-		}
-		
-		for (Tag tag : b.getTags()) {
-			TagDAO.getInstance().insertTagToTags(tag, tag.getUserId());
-			TagDAO.getInstance().insertTagToBudget(b, tag);
+			
+			for (Tag tag : b.getTags()) {
+				TagDAO.getInstance().insertTagToTags(tag, tag.getUserId());
+				TagDAO.getInstance().insertTagToBudget(b, tag);
+			}
+		} catch(SQLException e) {
+			CONNECTION.rollback();
+			
+			throw new SQLException();
+		} finally {
+			CONNECTION.setAutoCommit(true);
 		}
 	}
 	
 	public synchronized void updateBudget(Budget b) throws SQLException {
-		String sql = "UPDATE finance_tracker.budgets SET name = ?, amount = ?, from_date = STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), to_date = STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), account_id = ?, category_id = ? WHERE budget_id = ?";
+		String sql = "UPDATE finance_tracker.budgets SET name = ?, initial_amount = ?, amount = ?, from_date = STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), to_date = STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), account_id = ?, category_id = ? WHERE budget_id = ?";
 		
 		PreparedStatement ps = CONNECTION.prepareStatement(sql);
 		ps.setString(1, b.getName());
-		ps.setBigDecimal(2, b.getAmount());
-		ps.setTimestamp(3, Timestamp.valueOf(b.getFromDate().withNano(0)));
-		ps.setTimestamp(4, Timestamp.valueOf(b.getToDate().withNano(0)));
-		ps.setLong(5, b.getAccountId());
-		ps.setLong(6, b.getCategoryId());
-		ps.setLong(7, b.getBudgetId());
+		ps.setBigDecimal(2, b.getInitialAmount());
+		ps.setBigDecimal(3, b.getAmount());
+		ps.setTimestamp(4, Timestamp.valueOf(b.getFromDate().withNano(0)));
+		ps.setTimestamp(5, Timestamp.valueOf(b.getToDate().withNano(0)));
+		ps.setLong(6, b.getAccountId());
+		ps.setLong(7, b.getCategoryId());
+		ps.setLong(8, b.getBudgetId());
 		ps.executeUpdate();
 	}
 	
@@ -184,7 +193,7 @@ public class BudgetDAO {
 		
 		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(sql);
 		ps.setLong(1, categoryId);
-		ps.setLong(2, categoryId);
+		ps.setLong(2, accountId);
 		
 		ResultSet res = ps.executeQuery();
 		
@@ -201,11 +210,11 @@ public class BudgetDAO {
 	}
 	
 	public Set<Budget> getAllBudgetsByDateCategoryAndAccount(LocalDateTime date, long categoryId, long accountId) throws SQLException {
-		String sql = "SELECT budget_id, name, amount, from_date, to_date, account_id, category_id FROM budgets WHERE category_id = ? AND account_id = ?;";
+		String sql = "SELECT budget_id, name, initial_amount, amount, from_date, to_date, account_id, category_id FROM budgets WHERE category_id = ? AND account_id = ?;";
 		
 		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(sql);
 		ps.setLong(1, categoryId);
-		ps.setLong(2, categoryId);
+		ps.setLong(2, accountId);
 		
 		ResultSet res = ps.executeQuery();
 		Set<Budget> budgets = new HashSet<>();
@@ -213,13 +222,14 @@ public class BudgetDAO {
 		while (res.next()) {
 			long budgetId = res.getLong("budget_id");
 			String name = res.getString("name");
+			BigDecimal initialAmount = res.getBigDecimal("initial_amount");
 			BigDecimal amount = res.getBigDecimal("amount");
 			LocalDateTime fromDate = res.getTimestamp("from_date").toLocalDateTime();
 			LocalDateTime toDate = res.getTimestamp("to_date").toLocalDateTime();
 			Set<Tag> tags = TagDAO.getInstance().getTagsByBudgetId(budgetId);
 			Set<Transaction> transactions = BudgetsHasTransactionsDAO.getInstance().getAllTransactionsByBudgetId(budgetId);
 			
-			Budget b = new Budget(budgetId, name, amount, fromDate, toDate, accountId, categoryId, tags, transactions);
+			Budget b = new Budget(budgetId, name, initialAmount, amount, fromDate, toDate, accountId, categoryId, tags, transactions);
 			
 			if (isBetweenTwoDates(date, fromDate, toDate)) {
 				budgets.add(b);
@@ -234,7 +244,7 @@ public class BudgetDAO {
 	}
 
 	public Set<Budget> getAllBudgetsByUserId(long userId) throws SQLException {
-		String sql = "SELECT b.budget_id, b.name, b.amount, b.from_date, b.to_date, b.account_id, b.category_id FROM budgets b JOIN accounts a ON a.account_id = b.account_id AND user_id = ?;";
+		String sql = "SELECT b.budget_id, b.name, b.initial_amount, b.amount, b.from_date, b.to_date, b.account_id, b.category_id FROM budgets b JOIN accounts a ON a.account_id = b.account_id AND user_id = ?;";
 		
 		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(sql);
 		ps.setLong(1, userId);
@@ -245,6 +255,7 @@ public class BudgetDAO {
 		while(res.next()) {
 			long budgetId = res.getLong("budget_id");
 			String name = res.getString("name");
+			BigDecimal initialAmount = res.getBigDecimal("initial_amount");
 			BigDecimal amount = res.getBigDecimal("amount");
 			LocalDateTime fromDate = res.getTimestamp("from_date").toLocalDateTime();
 			LocalDateTime toDate = res.getTimestamp("to_date").toLocalDateTime();
@@ -253,7 +264,7 @@ public class BudgetDAO {
 			Set<Tag> tags = TagDAO.getInstance().getTagsByBudgetId(budgetId);
 			Set<Transaction> transactions = BudgetsHasTransactionsDAO.getInstance().getAllTransactionsByBudgetId(budgetId);
 			
-			Budget b = new Budget(budgetId, name, amount, fromDate, toDate, accountId, categoryId, tags, transactions);
+			Budget b = new Budget(budgetId, name, initialAmount, amount, fromDate, toDate, accountId, categoryId, tags, transactions);
 			
 			budgets.add(b);
 		}
