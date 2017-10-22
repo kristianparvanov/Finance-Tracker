@@ -162,8 +162,8 @@ public class BudgetDAO {
 		ps.setBigDecimal(2, b.getAmount());
 		ps.setTimestamp(3, Timestamp.valueOf(b.getFromDate().withNano(0)));
 		ps.setTimestamp(4, Timestamp.valueOf(b.getToDate().withNano(0)));
-		ps.setLong(4, b.getAccountId());
-		ps.setLong(5, b.getCategoryId());
+		ps.setLong(5, b.getAccountId());
+		ps.setLong(6, b.getCategoryId());
 		ps.setLong(7, b.getBudgetId());
 		ps.executeUpdate();
 	}

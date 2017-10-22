@@ -81,9 +81,12 @@ public class Demo {
 			//PlannedPaymentDAO.getInstance().insertPlannedPayment(p1);
 			
 			//budget
+			Budget b2 = new Budget("PLAZA", BigDecimal.valueOf(100), LocalDateTime.of(2017, 10, 15, 15, 37, 25), LocalDateTime.of(2017, 12, 17, 15, 37, 25), 6, 6, tags, null);
+			b2.setBudgetId(5);
 			//BudgetDAO.getInstance().getAllBudgets();
-			BudgetDAO.getInstance().insertBudget(new Budget("piinie", BigDecimal.valueOf(100), LocalDateTime.of(2017, 10, 15, 15, 37, 25), LocalDateTime.of(2017, 12, 17, 15, 37, 25), 6, 5, tags, null));
+			//BudgetDAO.getInstance().insertBudget(new Budget("asd", BigDecimal.valueOf(100), LocalDateTime.of(2017, 10, 15, 15, 37, 25), LocalDateTime.of(2017, 12, 17, 15, 37, 25), 6, 6, tags, null));
 			//BudgetDAO.getInstance().insertBudget(b1);
+			BudgetDAO.getInstance().updateBudget(b2);
 			
 			//account
 			//AccountDAO.getInstance().insertAccount(new Account("Debit card", BigDecimal.valueOf(25000), u1));
