@@ -109,27 +109,36 @@ public class PlannedPaymentDAO {
 	}
 	
 	public synchronized void insertPlannedPayment(PlannedPayment p) throws SQLException {
-		String query = "INSERT INTO finance_tracker.planned_payments (name, type, from_date, amount, description, account_id, category_id) VALUES (?, ?, STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), ?, ?, ?, ?)";
-		PreparedStatement statement = CONNECTION.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-		statement.setString(1, p.getName());
-		statement.setString(2, p.getPaymentType().toString());
-		statement.setTimestamp(3, Timestamp.valueOf(p.getFromDate().withNano(0)));
-		statement.setBigDecimal(4, p.getAmount());
-		statement.setString(5, p.getDescription());
-		statement.setLong(6, p.getAccount());
-		statement.setLong(7, p.getCategory());
-		statement.executeUpdate();
+		CONNECTION.setAutoCommit(false);
 		
-		ResultSet resultSet = statement.getGeneratedKeys();
-		resultSet.next();
-		p.setPlannedPaymentId(resultSet.getLong(1));
-		
-		for (Tag tag : p.getTags()) {
-			TagDAO.getInstance().insertTagToTags(tag, tag.getUserId());
-			TagDAO.getInstance().insertTagToPlannedPayment(p, tag);
+		try {
+			String query = "INSERT INTO finance_tracker.planned_payments (name, type, from_date, amount, description, account_id, category_id) VALUES (?, ?, STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), ?, ?, ?, ?)";
+			PreparedStatement statement = CONNECTION.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+			statement.setString(1, p.getName());
+			statement.setString(2, p.getPaymentType().toString());
+			statement.setTimestamp(3, Timestamp.valueOf(p.getFromDate().withNano(0)));
+			statement.setBigDecimal(4, p.getAmount());
+			statement.setString(5, p.getDescription());
+			statement.setLong(6, p.getAccount());
+			statement.setLong(7, p.getCategory());
+			statement.executeUpdate();
+			
+			ResultSet resultSet = statement.getGeneratedKeys();
+			resultSet.next();
+			p.setPlannedPaymentId(resultSet.getLong(1));
+			
+			for (Tag tag : p.getTags()) {
+				TagDAO.getInstance().insertTagToTags(tag, tag.getUserId());
+				TagDAO.getInstance().insertTagToPlannedPayment(p, tag);
+			}
+			
+			ALL_PLANNED_PAYMENTS.put(p.getName(), p);
+		} catch (SQLException e) {
+			CONNECTION.rollback();
+			throw new SQLException();
+		} finally {
+			CONNECTION.setAutoCommit(true);
 		}
-		
-		ALL_PLANNED_PAYMENTS.put(p.getName(), p);
 	}
 	
 	public synchronized void updatePlannedPayment(PlannedPayment p) throws SQLException {

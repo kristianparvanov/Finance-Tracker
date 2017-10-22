@@ -139,14 +139,23 @@ public class BudgetDAO {
 			
 			b.setBudgetId(resultSet.getLong(1));
 			
-			if (TransactionDAO.getInstance().existsTransaction(b.getFromDate(), b.getToDate(), b.getCategoryId(), b.getAccountId())) {
+			boolean exits = TransactionDAO.getInstance().existsTransaction(b.getFromDate(), b.getToDate(), b.getCategoryId(), b.getAccountId());
+			
+			if (exits) {
 				Set<Transaction> transactions = TransactionDAO.getInstance().getAllTransactionsForBudget(b.getFromDate(), b.getToDate(), b.getCategoryId(), b.getAccountId());
 			
+				BigDecimal amount = new BigDecimal(0.0);
+				
 				for (Transaction transaction : transactions) {
 					BudgetsHasTransactionsDAO.getInstance().insertTransactionBudget(b.getBudgetId(), transaction.getTransactionId());
+					
+					amount = amount.add(transaction.getAmount());
 				}
 				
+				b.setAmount(amount);
 				b.setTransactions(transactions);
+				
+				updateBudget(b);
 			}
 			
 			for (Tag tag : b.getTags()) {
@@ -178,14 +187,24 @@ public class BudgetDAO {
 	}
 	
 	public synchronized void deleteBudget(Budget b) throws SQLException {
-		for (Transaction t : b.getTransactions()) {
-			BudgetsHasTransactionsDAO.getInstance().deleteTransactionBudgetByTransactionId(t.getTransactionId());
-		}
+		CONNECTION.setAutoCommit(false);
 		
-		String query = "DELETE FROM finance_tracker.budgets WHERE budget_id = ?";
-		PreparedStatement statement = CONNECTION.prepareStatement(query);
-		statement.setLong(1, b.getBudgetId());
-		statement.executeUpdate();
+		try {
+			for (Transaction t : b.getTransactions()) {
+				BudgetsHasTransactionsDAO.getInstance().deleteTransactionBudgetByTransactionId(t.getTransactionId());
+			}
+			
+			String query = "DELETE FROM finance_tracker.budgets WHERE budget_id = ?";
+			PreparedStatement statement = CONNECTION.prepareStatement(query);
+			statement.setLong(1, b.getBudgetId());
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			CONNECTION.rollback();
+			
+			throw new SQLException();
+		} finally {
+			CONNECTION.setAutoCommit(true);
+		}
 	}
 	
 	public synchronized boolean existsBudget(LocalDateTime date, long categoryId, long accountId) throws SQLException {
