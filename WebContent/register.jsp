@@ -20,14 +20,14 @@
   <!-- Google Font -->
   <link rel="stylesheet" href="./static/css">
 </head>
-<body class="hold-transition register-page">
+<body class="hold-transition register-page" style="background-image:  url(img/infinity3.jpg)">
 <div class="register-box">
   <div class="register-logo">
-    <b>Finance</b>Tracker
+    <h1 style="color: white; text-shadow: 0px 0px 10px black;"><b>Finance</b>Tracker</h1>
   </div>
 
-  <div class="register-box-body">
-    <p class="login-box-msg">Register a new membership</p>
+  <div class="register-box-body" style="box-shadow: 0px 0px 15px black">
+    <p class="login-box-msg" style="font-size: 18px">Register a new membership</p>
 
     <form action="register" method="post">
       <div class="form-group has-feedback">
@@ -40,7 +40,7 @@
       </div>
       <div class="form-group has-feedback">
         <input type="password" class="form-control" placeholder="Retype password" name="repeatPassword">
-        <span class="glyphicon glyphicon-search form-control-feedback"></span>
+        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
       </div>
       <div class="form-group has-feedback">
         <input type="email" class="form-control" placeholder="Email" name="email">

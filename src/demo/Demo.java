@@ -55,9 +55,9 @@ public class Demo {
 		
 		Transaction t1 = new Transaction(TransactionType.INCOME, "baba", BigDecimal.valueOf(7000), a1.getAccountId(), c1.getCategoryId(), LocalDateTime.now(), tags);
 		PlannedPayment p1 = new PlannedPayment("CARS", TransactionType.EXPENCE, LocalDateTime.of(2017, 11, 12, 15, 37, 25), BigDecimal.valueOf(250), "nosa4a", a1.getAccountId(), c1.getCategoryId(), tags);
-		Budget b1 = new Budget("gazovata", BigDecimal.valueOf(200), LocalDateTime.of(2017, 10, 12, 15, 37, 25), LocalDateTime.of(2017, 10, 14, 15, 37, 25), a1.getAccountId(), c1.getCategoryId(), tags, null);
+		//Budget b1 = new Budget("gazovata", BigDecimal.valueOf(200), LocalDateTime.of(2017, 10, 12, 15, 37, 25), LocalDateTime.of(2017, 10, 14, 15, 37, 25), a1.getAccountId(), c1.getCategoryId(), tags, null);
 		
-		try {
+		//try {
 			//UserDAO.getInstance().insertUser(new User("Kristian", "123", "kris@40", "Kristian", "purvanov"));
 			//!!System.out.println(UserDAO.getInstance().isValidLogin("Kristian", "123"));
 			
@@ -81,12 +81,12 @@ public class Demo {
 			//PlannedPaymentDAO.getInstance().insertPlannedPayment(p1);
 			
 			//budget
-			Budget b2 = new Budget("PLAZA", BigDecimal.valueOf(100), LocalDateTime.of(2017, 10, 15, 15, 37, 25), LocalDateTime.of(2017, 12, 17, 15, 37, 25), 6, 6, tags, null);
-			b2.setBudgetId(5);
+			//Budget b2 = new Budget("PLAZA", BigDecimal.valueOf(100), LocalDateTime.of(2017, 10, 15, 15, 37, 25), LocalDateTime.of(2017, 12, 17, 15, 37, 25), 6, 6, tags, null);
+			//b2.setBudgetId(5);
 			//BudgetDAO.getInstance().getAllBudgets();
 			//BudgetDAO.getInstance().insertBudget(new Budget("asd", BigDecimal.valueOf(100), LocalDateTime.of(2017, 10, 15, 15, 37, 25), LocalDateTime.of(2017, 12, 17, 15, 37, 25), 6, 6, tags, null));
 			//BudgetDAO.getInstance().insertBudget(b1);
-			BudgetDAO.getInstance().updateBudget(b2);
+			//BudgetDAO.getInstance().updateBudget(b2);
 			
 			//account
 			//AccountDAO.getInstance().insertAccount(new Account("Debit card", BigDecimal.valueOf(25000), u1));
@@ -104,9 +104,9 @@ public class Demo {
 //			System.out.println(AccountDAO.getInstance().getAllAccountsByUserId((int)u1.getUserId()));
 //			System.out.println(AccountDAO.getInstance().getAccountByAccountId((int)u1.getUserId()));
 //			AccountDAO.getInstance().makeTransferToOtherAccount(a2, a1, BigDecimal.valueOf(414));
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
 		
 	}
 }
