@@ -117,42 +117,47 @@ public class BudgetDAO {
 		
 		return budgets;
 	}
-	// TODO
-	public synchronized void insertBudget(Budget b) throws SQLException {
-		Set<Transaction> transactions = BudgetsHasTransactionsDAO.getInstance().getAllTransactionsByBudgetId(b.getBudgetId());
+	
+	public synchronized void insertBudget(Budget b) throws SQLException {		
+		CONNECTION.setAutoCommit(false);
 		
-		for (Transaction t : transactions) {
-			if (t.getType().equals(TransactionType.EXPENCE)) {
-				b.setAmount(b.getAmount().subtract(t.getAmount()));
-			} else 
-			if (t.getType().equals(TransactionType.INCOME)) {
-				b.setAmount(b.getAmount().add(t.getAmount()));
+		try {
+			String sql = "INSERT INTO budgets (name, amount, from_date, to_date, account_id, category_id) VALUES (?, ?, STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), ?, ?)";
+			
+			PreparedStatement ps = CONNECTION.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			ps.setString(1, b.getName());
+			ps.setBigDecimal(2, b.getAmount());
+			ps.setTimestamp(3, Timestamp.valueOf(b.getFromDate().withNano(0)));
+			ps.setTimestamp(4, Timestamp.valueOf(b.getToDate().withNano(0)));
+			ps.setLong(5, b.getAccountId());
+			ps.setLong(6, b.getCategoryId());
+			ps.executeUpdate();
+			
+			ResultSet resultSet = ps.getGeneratedKeys();
+			resultSet.next();
+			
+			b.setBudgetId(resultSet.getLong(1));
+			
+			if (TransactionDAO.getInstance().existsTransaction(b.getFromDate(), b.getToDate(), b.getCategoryId(), b.getAccountId())) {
+				Set<Transaction> transactions = TransactionDAO.getInstance().getAllTransactionsForBudget(b.getFromDate(), b.getToDate(), b.getCategoryId(), b.getAccountId());
+			
+				for (Transaction transaction : transactions) {
+					BudgetsHasTransactionsDAO.getInstance().insertTransactionBudget(b.getBudgetId(), transaction.getTransactionId());
+				}
+				
+				b.setTransactions(transactions);
 			}
-		}
-		
-		String sql = "INSERT INTO finance_tracker.budgets (name, amount, from_date, to_date, account_id, category_id) VALUES (?, ?, STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), ?, ?)";
-		
-		PreparedStatement ps = CONNECTION.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-		ps.setString(1, b.getName());
-		ps.setBigDecimal(2, b.getAmount());
-		ps.setTimestamp(3, Timestamp.valueOf(b.getFromDate().withNano(0)));
-		ps.setTimestamp(4, Timestamp.valueOf(b.getToDate().withNano(0)));
-		ps.setLong(5, b.getAccountId());
-		ps.setLong(6, b.getCategoryId());
-		ps.executeUpdate();
-		
-		ResultSet resultSet = ps.getGeneratedKeys();
-		resultSet.next();
-		
-		b.setBudgetId(resultSet.getLong(1));
-		
-		for (Transaction t : transactions) {
-			BudgetsHasTransactionsDAO.getInstance().insertTransactionBudget(b.getBudgetId(), t.getTransactionId());
-		}
-		
-		for (Tag tag : b.getTags()) {
-			TagDAO.getInstance().insertTagToTags(tag, tag.getUserId());
-			TagDAO.getInstance().insertTagToBudget(b, tag);
+			
+			for (Tag tag : b.getTags()) {
+				TagDAO.getInstance().insertTagToTags(tag, tag.getUserId());
+				TagDAO.getInstance().insertTagToBudget(b, tag);
+			}
+		} catch(SQLException e) {
+			CONNECTION.rollback();
+			
+			throw new SQLException();
+		} finally {
+			CONNECTION.setAutoCommit(true);
 		}
 	}
 	
@@ -187,7 +192,7 @@ public class BudgetDAO {
 		
 		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(sql);
 		ps.setLong(1, categoryId);
-		ps.setLong(2, categoryId);
+		ps.setLong(2, accountId);
 		
 		ResultSet res = ps.executeQuery();
 		
