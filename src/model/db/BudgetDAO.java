@@ -122,15 +122,16 @@ public class BudgetDAO {
 		CONNECTION.setAutoCommit(false);
 		
 		try {
-			String sql = "INSERT INTO budgets (name, amount, from_date, to_date, account_id, category_id) VALUES (?, ?, STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), ?, ?)";
+			String sql = "INSERT INTO budgets (name, initial_amount, amount, from_date, to_date, account_id, category_id) VALUES (?, ?, ?, STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), ?, ?)";
 			
 			PreparedStatement ps = CONNECTION.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			ps.setString(1, b.getName());
-			ps.setBigDecimal(2, b.getAmount());
-			ps.setTimestamp(3, Timestamp.valueOf(b.getFromDate().withNano(0)));
-			ps.setTimestamp(4, Timestamp.valueOf(b.getToDate().withNano(0)));
-			ps.setLong(5, b.getAccountId());
-			ps.setLong(6, b.getCategoryId());
+			ps.setBigDecimal(2, b.getInitialAmount());
+			ps.setBigDecimal(3, b.getAmount());
+			ps.setTimestamp(4, Timestamp.valueOf(b.getFromDate().withNano(0)));
+			ps.setTimestamp(5, Timestamp.valueOf(b.getToDate().withNano(0)));
+			ps.setLong(6, b.getAccountId());
+			ps.setLong(7, b.getCategoryId());
 			ps.executeUpdate();
 			
 			ResultSet resultSet = ps.getGeneratedKeys();
@@ -213,7 +214,7 @@ public class BudgetDAO {
 		
 		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(sql);
 		ps.setLong(1, categoryId);
-		ps.setLong(2, categoryId);
+		ps.setLong(2, accountId);
 		
 		ResultSet res = ps.executeQuery();
 		Set<Budget> budgets = new HashSet<>();

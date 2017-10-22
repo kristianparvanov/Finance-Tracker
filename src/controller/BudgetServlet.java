@@ -32,27 +32,19 @@ public class BudgetServlet extends HttpServlet {
 		
 		Set<Budget> budgets = null;
 		BigDecimal percent = new BigDecimal(0.0);
-		BigDecimal transactionsAmount = new BigDecimal(0.0);
 		
 		HashMap<Budget, BigDecimal> map = new HashMap<>();
-		
 		
 		try {
 			budgets = BudgetDAO.getInstance().getAllBudgetsByUserId(u.getUserId());
 			
 			for (Budget budget : budgets) {
-				transactionsAmount = new BigDecimal(0.0);
-				
-				for (Transaction transaction : budget.getTransactions()) {
-					transactionsAmount = transactionsAmount.add(transaction.getAmount());
-				}
-				transactionsAmount = BigDecimal.valueOf(45);
-				percent = transactionsAmount.divide(budget.getAmount()).multiply(BigDecimal.valueOf(100));
+				percent = budget.getAmount().divide(budget.getInitialAmount()).multiply(BigDecimal.valueOf(100));
 				
 				map.put(budget, percent);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println("Izgurmqhme li?");
 		}
 		
 		
@@ -64,7 +56,7 @@ public class BudgetServlet extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String name = request.getParameter("name");
-		String amount = request.getParameter("amount");
+		String initialAmount = request.getParameter("initialAmount");
 		String from = request.getParameter("from");
 		String to = request.getParameter("to");
 		String account = request.getParameter("account");
@@ -81,7 +73,7 @@ public class BudgetServlet extends HttpServlet {
 		}
 		
 		//TODO TRANSACTIONS??????
-		Budget b = new Budget(name, BigDecimal.valueOf(Double.valueOf(amount)), LocalDateTime.parse(from), LocalDateTime.parse(to), Long.parseLong(account), Long.parseLong(category), tagsSet, null);
+		Budget b = new Budget(name, BigDecimal.valueOf(Double.valueOf(initialAmount)), LocalDateTime.parse(from), LocalDateTime.parse(to), Long.parseLong(account), Long.parseLong(category), tagsSet);
 		try {
 			BudgetDAO.getInstance().insertBudget(b);
 		} catch (SQLException e) {

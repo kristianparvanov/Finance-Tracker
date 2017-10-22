@@ -45,6 +45,7 @@ public class Budget {
 	public Budget(String name, BigDecimal initialAmount, BigDecimal amount, LocalDateTime fromDate, LocalDateTime toDate,
 			long accountId, long categoryId, Set<Tag> tags, Set<Transaction> transactions) {
 		this.name = name;
+		this.initialAmount = initialAmount;
 		this.amount = amount;
 		this.fromDate = fromDate;
 		this.toDate = toDate;

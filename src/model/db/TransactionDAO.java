@@ -131,7 +131,6 @@ public class TransactionDAO {
 			}
 			
 			boolean existsBudget = BudgetDAO.getInstance().existsBudget(t.getDate(), t.getCategory(), t.getAccount());
-			System.out.println(existsBudget);
 			Set<Budget> budgets =  BudgetDAO.getInstance().getAllBudgetsByDateCategoryAndAccount(t.getDate(), t.getCategory(), t.getAccount());
 			if (existsBudget) {
 				for (Budget budget : budgets) {
@@ -140,7 +139,6 @@ public class TransactionDAO {
 						budget.setAmount(budget.getAmount().add(t.getAmount()));
 					}
 					BudgetDAO.getInstance().updateBudget(budget);
-					System.out.println("aliluq");
 				}
 			}
 			
