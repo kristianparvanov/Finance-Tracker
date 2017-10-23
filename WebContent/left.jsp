@@ -34,11 +34,11 @@
 					<li class="header" style="font-size: 16px">MAIN NAVIGATION</li>
 					<li><a href="main.jsp"><i class="fa fa-credit-card"></i> <span
 							style="font-size: 18px">Accounts</span></a></li>
-					<li><a href="https://adminlte.io/docs"><i
+					<li><a href="#"><i
 							class="fa fa-dollar"></i> <span style="font-size: 18px">Planned
 								Payments</span></a></li>
-					<li><a href="budget"><i
-							class="fa fa-money"></i> <span style="font-size: 18px">Budgets</span></a></li>
+					<li><a href="budget"><i class="fa fa-money"></i> <span
+							style="font-size: 18px">Budgets</span></a></li>
 					<li class="treeview"><a href="#"> <i
 							class="fa fa-dashboard"></i> <span style="font-size: 18px">Spravki</span>
 							<span class="pull-right-container"> <i
@@ -64,21 +64,8 @@
 									class="fa fa-circle-o"></i> Chart 2</a></li>
 						</ul></li>
 
-					<li class="treeview"><a href="#"> <i
-							class="fa fa-dashboard"></i> <span>Dashboard</span> <span
-							class="pull-right-container"> <i
-								class="fa fa-angle-left pull-right"></i>
-						</span>
-					</a>
-						<ul class="treeview-menu" style="display: none;">
-							<li><a href="../../index.html"><i class="fa fa-circle-o"></i>
-									Dashboard v1</a></li>
-							<li><a href="../../index2.html"><i
-									class="fa fa-circle-o"></i> Dashboard v2</a></li>
-						</ul></li>
-
-					<li><a href="https://adminlte.io/docs"><i
-							class="fa fa-book"></i> <span style="font-size: 18px">Reports</span></a></li>
+					<li><a href="#"><i class="fa fa-book"></i> <span
+							style="font-size: 18px">Reports</span></a></li>
 					<li><a href="about.jsp"><i class="fa fa-question-circle"></i>
 							<span style="font-size: 18px">About</span></a></li>
 				</ul>

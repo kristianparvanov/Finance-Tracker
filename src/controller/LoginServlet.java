@@ -57,7 +57,11 @@ public class LoginServlet extends HttpServlet {
 		
 		List<BigDecimal> allTransactionsValues = new ArrayList<BigDecimal>();
 		for (Transaction t : allTransactions) {
-			allTransactionsValues.add(t.getAmount());
+			if (t.getType().equals(TransactionType.EXPENCE)) {
+				allTransactionsValues.add(t.getAmount().negate());
+			} else {
+				allTransactionsValues.add(t.getAmount());
+			}
 		}
 		
 		req.getSession().setAttribute("balance", balance);

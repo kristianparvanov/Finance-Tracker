@@ -78,10 +78,12 @@ public class TransactionServlet extends HttpServlet {
 		
 		User u = (User) request.getSession().getAttribute("user");
 		HashSet<Tag> tagsSet = new HashSet<>();
-		if (!tags.isEmpty()) {
-			String[] tagNames = tags.split(" ");
-			for (String tag : tagNames) {
-				tagsSet.add(new Tag(tag, u.getUserId()));
+		if (tags != null) {
+			if (!tags.isEmpty()) {
+				String[] tagNames = tags.split(" ");
+				for (String tag : tagNames) {
+					tagsSet.add(new Tag(tag, u.getUserId()));
+				}
 			}
 		}
 		

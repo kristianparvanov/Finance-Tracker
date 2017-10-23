@@ -37,10 +37,13 @@
 						<a href="addTransaction.jsp" type="button" class="btn btn-block btn-primary btn-lg"><i class="ion ion-plus"></i> Add new record</a>
 					</div>
 					<div class="col-sm-3">
-						<a href="login" type="button" class="btn btn-block btn-default btn-lg"><i class="ion ion-arrow-left-a"></i> Back</a>
+						<a href="login" type="button" class="btn btn-block btn-default btn-lg"><i class="ion ion-android-arrow-back"></i> Back</a>
 					</div>
 					<div class="col-sm-3">
 						<a href="transfer?accountId=${sessionScope.accountId}" type="button" class="btn btn-block btn-default btn-lg"><i class="ion ion-arrow-swap"></i> Transfer</a>
+					</div>
+					<div class="col-sm-3">
+						<a href="#" type="button" class="btn btn-block btn-danger btn-lg"><i class="ion ion-android-delete"></i> Delete Account</a>
 					</div>
 				</div>
 			</div>

@@ -82,74 +82,74 @@
 			</div>
 			
 			<div>
-				 <c:set var="transactions" value="${ sessionScope.transactionsValues }" />
-				 <div style="width:100%; height: 100%">
+				<c:set var="transactions" value="${ sessionScope.transactionsValues }" />
+				<div style="width:100%; height: 100%">
 			        <canvas id="canvas"></canvas>
 			    </div>
 				<script>
-				var values = '${transactions}';
-				
-				values = values.replace(/[\[\]']+/g,'')
-				
-				var allTrans = [];
-				$.each(values.split(","), function(i,e){
-					allTrans.push(e);
-				});
-				
-				var MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-			    var config = {
-			        type: 'line',
-			        data: {
-			            labels: allTrans,
-			            datasets: [{
-			                label: "My First dataset",
-			                backgroundColor: window.chartColors.red,
-			                borderColor: window.chartColors.red,
-			                data: allTrans,
-			                fill: false,
-			            }]
-			        },
-			        options: {
-			            responsive: true,
-			            title:{
-			                display:true,
-			                text:'Chart.js Line Chart'
-			            },
-			            tooltips: {
-			                mode: 'index',
-			                intersect: false,
-			            },
-			            hover: {
-			                mode: 'nearest',
-			                intersect: true
-			            },
-			            scales: {
-			                xAxes: [{
-			                    display: true,
-			                    scaleLabel: {
-			                        display: true,
-			                        labelString: 'Month'
-			                    }
-			                }],
-			                yAxes: [{
-			                    display: true,
-			                    scaleLabel: {
-			                        display: true,
-			                        labelString: 'Value'
-			                    }
-			                }]
-			            }
-			        }
-			    };
-			    
-			    window.onload = function() {
-			        var ctx = document.getElementById("canvas").getContext("2d");
-			        window.myLine = new Chart(ctx, config);
-			    };
+					var presets = window.chartColors;
+					var utils = Samples.utils;
+					var values = '${transactions}';
+					
+					values = values.replace(/[\[\]']+/g,'')
+					
+					var allTrans = [];
+					$.each(values.split(","), function(i,e){
+						allTrans.push(e);
+					});
+					
+					var MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+				    var config = {
+				        type: 'line',
+				        data: {
+				            labels: allTrans,
+				            datasets: [{
+				                label: "All transactions",
+				                backgroundColor: utils.transparentize(presets.blue),
+				                borderColor: window.chartColors.blue,
+				                data: allTrans,
+				                fill: true,
+				            }]
+				        },
+				        options: {
+				            responsive: true,
+				            title:{
+				                display:true,
+				                text:'Balance chart'
+				            },
+				            tooltips: {
+				                mode: 'index',
+				                intersect: false,
+				            },
+				            hover: {
+				                mode: 'nearest',
+				                intersect: true
+				            },
+				            scales: {
+				                xAxes: [{
+				                    display: true,
+				                    scaleLabel: {
+				                        display: true,
+				                        labelString: 'Month'
+				                    }
+				                }],
+				                yAxes: [{
+				                    display: true,
+				                    scaleLabel: {
+				                        display: true,
+				                        labelString: 'Value'
+				                    }
+				                }]
+				            }
+				        }
+				    };
+				    
+				    window.onload = function() {
+				        var ctx = document.getElementById("canvas").getContext("2d");
+				        window.myLine = new Chart(ctx, config);
+				    };
 				</script>
-				
-				</div>
-			
+			</div>
 	 	</section>
 	</div>
 	
@@ -159,6 +159,8 @@
 	
 <!-- jQuery 3 -->
 <script src="./static/jquery.min.js"></script>
+<!-- chartJS utils -->
+<script src="./static/utils.js"></script>
 <!-- Bootstrap 3.3.7 -->
 <script src="./static/bootstrap.min.js"></script>
 <!-- SlimScroll -->
