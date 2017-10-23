@@ -21,10 +21,10 @@
   <link rel="stylesheet" href="./static/css">
 </head>
 
-<body class="hold-transition login-page" style="background-image:  url(img/infinity3.jpg)">
+<body class="hold-transition login-page" style="background-image:  url(img/infinity3.jpg); overflow:hidden;">
 	<div class="login-box">
 	  <div class="login-logo">
-	    <h1 style="color: white; text-shadow: 0px 0px 10px black;"><b>Finance</b>Tracker</h1>
+	    <h1 style="color: white; text-shadow: 0px 0px 15px black;"><b>Finance</b>Tracker</h1>
 	  </div>
 	  <div class="login-box-body" style="box-shadow: 0px 0px 15px black">
 	    <p class="login-box-msg" style="font-size: 18px">Sign in to start your session</p>

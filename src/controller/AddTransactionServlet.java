@@ -69,6 +69,6 @@ public class AddTransactionServlet extends HttpServlet {
 		request.setAttribute("accountId", acc.getAccountId());
 		
 		//response.sendRedirect("transaction");
-		request.getRequestDispatcher("transactions.jsp").forward(request, response);
+		request.getRequestDispatcher("transaction").forward(request, response);
 	}
 }

@@ -34,6 +34,12 @@ public class Transaction {
 		this.tags = tags;
 	}
 	
+	public Transaction(TransactionType type, BigDecimal amount, LocalDateTime date) {
+		this.type = type;
+		this.amount = amount;
+		this.date = date;
+	}
+	
 	public long getTransactionId() {
 		return transactionId;
 	}

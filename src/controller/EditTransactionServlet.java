@@ -101,6 +101,7 @@ public class EditTransactionServlet extends HttpServlet {
 			if (type.equals("INCOME")) {
 				AccountDAO.getInstance().updateAccountAmount(acc, (oldValue.add(newValue)));
 			}
+			TransactionDAO.getInstance().removeTransaction(transactionId);
 			TransactionDAO.getInstance().updateTransaction(t);
 		} catch (SQLException e) {
 			System.out.println("neshto katastrofalno se slu4i");
@@ -109,7 +110,7 @@ public class EditTransactionServlet extends HttpServlet {
 		request.setAttribute("user", u);
 		request.setAttribute("accountId", acc.getAccountId());
 		
-		//response.sendRedirect("transaction");
+		//response.sendRedirect("transactions.jsp");
 		request.getRequestDispatcher("transactions.jsp").forward(request, response);
 	}
 }

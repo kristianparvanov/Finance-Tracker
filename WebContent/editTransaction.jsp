@@ -79,10 +79,23 @@
 			                </select>
 			                <c:set var="tags" value="${ sessionScope.editTransactionTags }" />
 				            <script type="text/javascript">
-					            $(document).ready(function() {
-					            	var values = '${tags}';
-	                				document.getElementById("multy").value = values;
-					            })
+				           		var values="Test,Prof,Off";
+				           		var values = 'Alaska'
+				            	var values = '${tags}';
+				            	
+				            	values = values.replace(/[\[\]']+/g,'')
+				            	
+				            	alert(values);
+                				$.each(values.split(","), function(i,e){
+                					alert(e);
+                				    $("#multy option[value='" + e + "']").prop('selected', true);
+                				});
+                				
+                				options = document.querySelectorAll('#multy option');
+
+                			    values.split(',').forEach(function(v) {
+                			      Array.from(options).find(c => c.value == v).selected = true;
+                			    });
 							</script>
 			            </div>
 		                <div class="form-group">

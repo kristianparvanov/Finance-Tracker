@@ -10,6 +10,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Main | Finance Tracker</title>
+<script src="./static/Chart.bundle.js"></script>
+<script src="./static/utils.js"></script>
 </head>
 <body>
 	<div>
@@ -23,6 +25,7 @@
 			<h2>Current balance across all accounts: <c:out value="${sessionScope.balance}"></c:out></h2>
 			<h1>All accounts</h1>
 		</section>
+		
 		<section class="content">
 			<div class="row">
 			<c:forEach items="${sessionScope.accounts }" var="account">
@@ -77,8 +80,79 @@
 			          </div>
 				</div>
 			</div>
+			
+			<div>
+				 <c:set var="transactions" value="${ sessionScope.transactionsValues }" />
+				 <div style="width:100%; height: 100%">
+			        <canvas id="canvas"></canvas>
+			    </div>
+				<script>
+				var values = '${transactions}';
+				
+				values = values.replace(/[\[\]']+/g,'')
+				
+				var allTrans = [];
+				$.each(values.split(","), function(i,e){
+					allTrans.push(e);
+				});
+				
+				var MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+			    var config = {
+			        type: 'line',
+			        data: {
+			            labels: allTrans,
+			            datasets: [{
+			                label: "My First dataset",
+			                backgroundColor: window.chartColors.red,
+			                borderColor: window.chartColors.red,
+			                data: allTrans,
+			                fill: false,
+			            }]
+			        },
+			        options: {
+			            responsive: true,
+			            title:{
+			                display:true,
+			                text:'Chart.js Line Chart'
+			            },
+			            tooltips: {
+			                mode: 'index',
+			                intersect: false,
+			            },
+			            hover: {
+			                mode: 'nearest',
+			                intersect: true
+			            },
+			            scales: {
+			                xAxes: [{
+			                    display: true,
+			                    scaleLabel: {
+			                        display: true,
+			                        labelString: 'Month'
+			                    }
+			                }],
+			                yAxes: [{
+			                    display: true,
+			                    scaleLabel: {
+			                        display: true,
+			                        labelString: 'Value'
+			                    }
+			                }]
+			            }
+			        }
+			    };
+			    
+			    window.onload = function() {
+			        var ctx = document.getElementById("canvas").getContext("2d");
+			        window.myLine = new Chart(ctx, config);
+			    };
+				</script>
+				
+				</div>
+			
 	 	</section>
 	</div>
+	
 	<div>
 		<jsp:include page="footer.jsp"></jsp:include>
 	</div>

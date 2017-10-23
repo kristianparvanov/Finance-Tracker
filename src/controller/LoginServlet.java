@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.servlet.ServletContext;
@@ -17,8 +19,11 @@ import javax.servlet.http.HttpServletResponse;
 import model.User;
 import model.Account;
 import model.Tag;
+import model.Transaction;
+import model.TransactionType;
 import model.db.AccountDAO;
 import model.db.TagDAO;
+import model.db.TransactionDAO;
 import model.db.UserDAO;
 
 
@@ -42,8 +47,21 @@ public class LoginServlet extends HttpServlet {
 		}
 		String balance = NumberFormat.getCurrencyInstance().format(allBalance);
 		
-		req.getSession().setAttribute("balance", balance);
+		List<Transaction> allTransactions = null;
+		try {
+			allTransactions = TransactionDAO.getInstance().getAllTransactionsByUserId(u.getUserId());
+		} catch (SQLException e) {
+			System.out.println("Could not get all transactions for this user");
+			e.printStackTrace();
+		}
 		
+		List<BigDecimal> allTransactionsValues = new ArrayList<BigDecimal>();
+		for (Transaction t : allTransactions) {
+			allTransactionsValues.add(t.getAmount());
+		}
+		
+		req.getSession().setAttribute("balance", balance);
+		req.getSession().setAttribute("transactionsValues", allTransactionsValues);
 		req.getSession().setAttribute("accounts", accounts);
 		req.getRequestDispatcher("main.jsp").forward(req, resp);
 	}
@@ -68,8 +86,25 @@ public class LoginServlet extends HttpServlet {
 				}
 				String balance = NumberFormat.getCurrencyInstance().format(allBalance);
 				
-				request.getSession().setAttribute("balance", balance);
+				List<Transaction> allTransactions = null;
+				try {
+					allTransactions = TransactionDAO.getInstance().getAllTransactionsByUserId(u.getUserId());
+				} catch (SQLException e) {
+					System.out.println("Could not get all transactions for this user");
+					e.printStackTrace();
+				}
 				
+				List<BigDecimal> allTransactionsValues = new ArrayList<BigDecimal>();
+				for (Transaction t : allTransactions) {
+					if (t.getType().equals(TransactionType.EXPENCE)) {
+						allTransactionsValues.add(t.getAmount().negate());
+					} else {
+						allTransactionsValues.add(t.getAmount());
+					}
+				}
+				
+				request.getSession().setAttribute("transactionsValues", allTransactionsValues);
+				request.getSession().setAttribute("balance", balance);
 				request.getRequestDispatcher("main.jsp").forward(request, response);
 			}
 			else{

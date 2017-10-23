@@ -65,7 +65,7 @@ public class TransactionDAO {
 		List<Transaction> transactions = new ArrayList<Transaction>();
 		for (ArrayList<Transaction> transactionTypes : ALL_TRANSACTIONS.values()) {
 			for (Transaction transaction : transactionTypes) {
-				if (transaction.getAccount() == accountId) {
+				if (transaction.getAccount() == accountId) { 
 					transactions.add(transaction);
 				}
 			}
@@ -188,8 +188,15 @@ public class TransactionDAO {
 		}
 	}
 	
-	public synchronized void removeTransaction(Transaction t) {
-		ALL_TRANSACTIONS.get(t.getType()).remove(t);
+	public synchronized void removeTransaction(long transactionId) {
+		for (ArrayList<Transaction> transactionTypes : ALL_TRANSACTIONS.values()) {
+			for (Transaction transaction : transactionTypes) {
+				if (transaction.getTransactionId() == transactionId) {
+					ALL_TRANSACTIONS.get(transaction.getType()).remove(transaction);
+					return;
+				}
+			}
+		}
 	}
 
 	public boolean existsTransaction(LocalDateTime fromDate, LocalDateTime toDate, long categoryId, long accountId) throws SQLException {
@@ -243,6 +250,23 @@ public class TransactionDAO {
 			}
 		}
 		
+		return transactions;
+	}
+
+	public List<Transaction> getAllTransactionsByUserId(long userId) throws SQLException {
+		List<Transaction> transactions = new ArrayList<Transaction>();
+		String query = "SELECT t.type, t.amount, t.date FROM finance_tracker.transactions t JOIN  finance_tracker.accounts a ON t.account_id = a.account_id WHERE a.user_id = ?";
+		PreparedStatement statement = CONNECTION.prepareStatement(query);
+		statement.setLong(1, userId);
+		
+		ResultSet result = statement.executeQuery();
+		while (result.next()) {
+			String type = result.getString("type");
+			BigDecimal amount = result.getBigDecimal("amount");
+			LocalDateTime date = result.getTimestamp("date").toLocalDateTime();
+			Transaction t = new Transaction(TransactionType.valueOf(type), amount, date);
+			transactions.add(t);
+		}
 		return transactions;
 	}
 }

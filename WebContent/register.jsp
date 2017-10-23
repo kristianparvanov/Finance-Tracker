@@ -20,10 +20,10 @@
   <!-- Google Font -->
   <link rel="stylesheet" href="./static/css">
 </head>
-<body class="hold-transition register-page" style="background-image:  url(img/infinity3.jpg)">
+<body class="hold-transition register-page" style="background-image:  url(img/infinity3.jpg); overflow:hidden;">
 <div class="register-box">
   <div class="register-logo">
-    <h1 style="color: white; text-shadow: 0px 0px 10px black;"><b>Finance</b>Tracker</h1>
+    <h1 style="color: white; text-shadow: 0px 0px 15px black;"><b>Finance</b>Tracker</h1>
   </div>
 
   <div class="register-box-body" style="box-shadow: 0px 0px 15px black">
