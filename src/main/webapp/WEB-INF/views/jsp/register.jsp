@@ -8,17 +8,17 @@
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <!-- Bootstrap 3.3.7 -->
-  <link rel="stylesheet" href="./static/bootstrap.min.css">
+  <link rel="stylesheet" href="css/bootstrap.min.css">
   <!-- Font Awesome -->
-  <link rel="stylesheet" href="./static/font-awesome.min.css">
+  <link rel="stylesheet" href="css/font-awesome.min.css">
   <!-- Ionicons -->
-  <link rel="stylesheet" href="./static/ionicons.min.css">
+  <link rel="stylesheet" href="css/ionicons.min.css">
   <!-- Theme style -->
-  <link rel="stylesheet" href="./static/AdminLTE.min.css">
+  <link rel="stylesheet" href="css/AdminLTE.min.css">
   <!-- iCheck -->
-  <link rel="stylesheet" href="./static/blue.css">
+  <link rel="stylesheet" href="css/blue.css">
   <!-- Google Font -->
-  <link rel="stylesheet" href="./static/css">
+  <link rel="stylesheet" href="css/css">
 </head>
 <body class="hold-transition register-page" style="background-image:  url(img/infinity3.jpg); overflow:hidden;">
 <div class="register-box">
@@ -61,7 +61,7 @@
       </div>
     </form>
     <br>
-    I am already registered. <a href="login.jsp" class="text-center">Log me in</a>
+    I am already registered. <a href="login" class="text-center">Log me in</a>
   </div>
 </div>
 </body></html>

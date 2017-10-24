@@ -56,9 +56,33 @@ public class UserController {
 		}
 	}
 	
-	@RequestMapping(value="/about", method=RequestMethod.GET)
-	public String about() {
-		return "about";
+	@RequestMapping(value="/register", method=RequestMethod.POST)
+	public String register(HttpServletRequest request, HttpSession session, Model viewModel) {
+		String username = request.getParameter("username");
+		String password = request.getParameter("password");
+		String repeatPassword = request.getParameter("repeatPassword");
+		String email = request.getParameter("email");
+		String firstName = request.getParameter("firstName");
+		String lastName = request.getParameter("lastName");
+		
+		if(!password.equals(repeatPassword)){
+			request.setAttribute("error", "passwords missmatch");
+			return "register";
+		}
+		
+		try {
+			if (!UserDAO.getInstance().existsUser(username)) {
+				User u = new User(username, password, email, firstName, lastName);
+				
+				UserDAO.getInstance().insertUser(u);
+				request.getSession().setAttribute("user", u);
+				return "main";
+			}
+		} catch (SQLException e) {
+			request.setAttribute("error", "database problem : " + e.getMessage());
+			return "login";
+		}
+		return "login";
 	}
 	
 	@RequestMapping(value="/main", method=RequestMethod.GET)
@@ -93,5 +117,26 @@ public class UserController {
 		viewModel.addAttribute("transactionsValues", allTransactionsValues);
 		viewModel.addAttribute("balance", balance);
 		return "main";
+	}
+	
+	@RequestMapping(value="/login", method=RequestMethod.GET)
+	public String getLogin() {
+		return "login";
+	}
+	
+	@RequestMapping(value="/register", method=RequestMethod.GET)
+	public String getRegister() {
+		return "register";
+	}
+	
+	@RequestMapping(value="/about", method=RequestMethod.GET)
+	public String about() {
+		return "about";
+	}
+	
+	@RequestMapping(value="/logout", method=RequestMethod.GET)
+	public String logout(HttpSession session) {
+		session.invalidate();
+		return "forward:index";
 	}
 }

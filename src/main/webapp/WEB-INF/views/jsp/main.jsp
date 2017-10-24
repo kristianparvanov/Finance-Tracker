@@ -10,8 +10,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Main | Finance Tracker</title>
-<script src="./static/Chart.bundle.js"></script>
-<script src="./static/utils.js"></script>
+<script src="js/Chart.bundle.js"></script>
+<script src="js/utils.js"></script>
 </head>
 <body>
 	<div>
@@ -49,40 +49,40 @@
 			            </div>
 			            <div class="icon">
 			            	<c:if test="${fn:contains(account.name, 'card')}">
-			            	<div style="margin-top: 10px">	<i class="ion ion-card"></i></div>
+			            	<div><i class="ion ion-card"></i></div>
 			            	</c:if>
 			              	<c:if test="${fn:contains(account.name, 'Cash')}">
-			            		<div style="margin-top: 10px"><i class="ion ion-cash"></i></div>
+			            		<div><i class="ion ion-cash"></i></div>
 			            	</c:if>
 			            	<c:if test="${fn:contains(account.name, 'Bank')}">
-			            		<div style="margin-top: 10px"><i class="ion ion-social-usd"></i></div>
+			            		<div><i class="ion ion-social-usd"></i></div>
 			            	</c:if>
 			            	<c:if test="${!fn:contains(account.name, 'card') && !fn:contains(account.name, 'Cash') && !fn:contains(account.name, 'Bank')}">
-			            		<div style="margin-top: 10px"><i class="ion ion-pie-graph"></i></div>
+			            		<div><i class="ion ion-pie-graph"></i></div>
 			            	</c:if>
 			            </div>
-			            <a href="transaction?accountId=${account.accountId}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+			            <a href="transaction/accountId=${account.accountId}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
 			          </div>
 				</div>
 			</c:forEach>
 			
 			<div class="col-lg-3 col-xs-6">
-					<!-- small box -->
-			          <div class="small-box bg-aqua">
-			            <div class="inner">
-			              <h3>Add</h3>
-			              <p>Add new Account</p>
-			            </div>
-			            <div class="icon">
-			             <div style="margin-top: 10px"> <i class="ion ion-plus"></i></div>
-			            </div>
-			            <a href="addAccount" class="small-box-footer">Get started <i class="fa fa-arrow-circle-right"></i></a>
+				<!-- small box -->
+		          <div class="small-box bg-aqua">
+		            <div class="inner">
+		              <h3>Add</h3>
+		              <p>Add new Account</p>
+		            </div>
+		            <div class="icon">
+		             <div> <i class="ion ion-plus"></i></div>
+		            </div>
+		            <a href="addAccount" class="small-box-footer">Get started <i class="fa fa-arrow-circle-right"></i></a>
 			          </div>
 				</div>
 			</div>
 			
 			<div>
-				<c:set var="transactions" value="${ sessionScope.transactionsValues }" />
+				<c:set var="transactions" value="${ transactionsValues }" />
 				<div style="width:100%; height: 100%">
 			        <canvas id="canvas"></canvas>
 			    </div>

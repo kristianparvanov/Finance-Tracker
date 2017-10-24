@@ -32,7 +32,7 @@
 				<!-- sidebar menu: : style can be found in sidebar.less -->
 				<ul class="sidebar-menu" data-widget="tree">
 					<li class="header" style="font-size: 16px">MAIN NAVIGATION</li>
-					<li><a href="main.jsp"><i class="fa fa-credit-card"></i> <span
+					<li><a href="index"><i class="fa fa-credit-card"></i> <span
 							style="font-size: 18px">Accounts</span></a></li>
 					<li><a href="#"><i class="fa fa-dollar"></i> <span
 							style="font-size: 18px">Planned Payments</span></a></li>
