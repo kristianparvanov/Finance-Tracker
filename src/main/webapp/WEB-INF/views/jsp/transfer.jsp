@@ -34,8 +34,8 @@
 		                <div class="form-group">
 			                <label>From Account</label>
 			                <select class="form-control select2" style="width: 100%;" data-placeholder="Select an account" name="fromAccount">
-			                <option selected="selected"><c:out value="${ sessionScope.firstAccount.name }"></c:out></option>
-			                  <c:forEach items="${sessionScope.accounts }" var="account">
+			                <option selected="selected"><c:out value="${ firstAccount.name }"></c:out></option>
+			                  <c:forEach items="${ userAccounts }" var="account">
 			                	 <option><c:out value="${account.name}"></c:out></option>
 			                  </c:forEach>
 			                </select>
@@ -43,7 +43,7 @@
 		                 <div class="form-group">
 			                <label>To Account</label>
 			                <select class="form-control select2" style="width: 100%;" data-placeholder="Select an account" name="toAccount">
-			                  <c:forEach items="${sessionScope.accounts }" var="account">
+			                  <c:forEach items="${ userAccounts }" var="account">
 			                	 <option><c:out value="${account.name}"></c:out></option>
 			                  </c:forEach>
 			                </select>
@@ -51,7 +51,7 @@
                		  </div>
                		  <div class="box-footer">
 		                <button type="submit" class="btn btn-primary">Execute</button>
-		                <a href="transaction?accountId=${sessionScope.accountId}" class="btn btn-default">Cancel</a>
+		                 <a href="/FinanceTracker/account/${sessionScope.accountId}" class="btn btn-default">Cancel</a>
 		              </div>
 		            </form>
 	          	</div>
@@ -63,16 +63,16 @@
 	</div>
 	
 <!-- jQuery 3 -->
-<script src="./static/jquery.min.js"></script>
-<!-- Bootstrap 3.3.7 -->
-<script src="./static/bootstrap.min.js"></script>
-<!-- SlimScroll -->
-<script src="./static/jquery.slimscroll.min.js"></script>
-<!-- FastClick -->
-<script src="./static/fastclick.js"></script>
-<!-- AdminLTE App -->
-<script src="./static/adminlte.min.js"></script>
-<!-- AdminLTE for demo purposes -->
-<script src="./static/demo.js"></script>
+ 	<script src="<c:url value="/js/jquery.min.js" />"  type ="text/javascript"></script>
+	<!-- Bootstrap 3.3.7 -->
+ 	<script src="<c:url value="/js/bootstrap.min.js" />"  type ="text/javascript"></script>
+	<!-- SlimScroll -->
+ 	<script src="<c:url value="/js/jquery.slimscroll.min.js" />"  type ="text/javascript"></script>
+	<!-- FastClick -->
+ 	<script src="<c:url value="/js/fastclick.js" />"  type ="text/javascript"></script>
+	<!-- AdminLTE App -->
+	 <script src="<c:url value="/js/adminlte.min.js" />"  type ="text/javascript"></script>
+	<!-- AdminLTE for demo purposes -->
+	<script src="<c:url value="/js/demo.js" />"  type ="text/javascript"></script>
 </body>
 </html>

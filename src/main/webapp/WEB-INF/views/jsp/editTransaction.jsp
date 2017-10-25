@@ -11,9 +11,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Edit Transaction | Finance Tracker</title>
 <!-- Select2 -->
-<link rel="stylesheet" href="./static/select2.min.css">
+<link href="<c:url value="/css/select2.min.css" />" rel="stylesheet" type="text/css">
 <!-- bootstrap datepicker -->
-<link rel="stylesheet" href="./static/bootstrap-datepicker.min.css">
+<link href="<c:url value="/css//bootstrap-datepicker.min.css" />" rel="stylesheet" type="text/css">
 </head>
 <body>
 	<div>
@@ -34,7 +34,7 @@
 		              	<div class="form-group">
 			                <label>Type</label>
 			                <select class="form-control select2" style="width: 100%;" data-placeholder="Select a type" name="type" >
-			                  <option selected="selected"><c:out value="${ sessionScope.editTransactionType }"></c:out></option>
+			                  <option selected="selected"><c:out value="${ editTransactionType }"></c:out></option>
 			                  <option>EXPENCE</option>
 			                  <option>INCOME</option>
 			                </select>
@@ -42,7 +42,7 @@
 		                <div class="form-group">
 			                <label>Account</label>
 			                <select class="form-control select2" style="width: 100%;" data-placeholder="Select an account" name="account">
-			                <option selected="selected"><c:out value="${ sessionScope.editTransactionAccount }"></c:out></option>
+			                <option selected="selected"><c:out value="${ editTransactionAccount }"></c:out></option>
 			                  <c:forEach items="${sessionScope.accounts }" var="account">
 			                	 <option><c:out value="${account.name}"></c:out></option>
 			                  </c:forEach>
@@ -51,15 +51,15 @@
 		                 <div class="form-group">
 			                <label>Category</label>
 			                <select class="form-control select2" style="width: 100%;" data-placeholder="Select a category" name="category">
-			                <option selected="selected"><c:out value="${ sessionScope.editTransactionCategory }"></c:out></option>
-			                  <c:forEach items="${sessionScope.categories }" var="category">
+			                <option selected="selected"><c:out value="${ editTransactionCategory }"></c:out></option>
+			                  <c:forEach items="${categories }" var="category">
 			                	  <option><c:out value="${category.name}"></c:out></option>
 			                  </c:forEach>
 			                </select>
 			            </div>
 		                <div class="form-group">
 		                  <label>Amount</label>
-		                  <input type="text" class="form-control" placeholder="Amount" name="amount" value="${ sessionScope.editTransactionAmount }">
+		                  <input type="text" class="form-control" placeholder="Amount" name="amount" value="${ editTransactionAmount }">
 		                </div>
 		                <div class="form-group">
 		                  <label>Date</label>
@@ -67,17 +67,17 @@
 	                  			<div class="input-group-addon">
 	                    			<i class="fa fa-calendar"></i>
 	                  			</div>
-                  		 		<input type="text" class="form-control pull-right" id="datepicker" value="${ sessionScope.editTransactionDate }" name="date">
+                  		 		<input type="text" class="form-control pull-right" id="datepicker" value="${ editTransactionDate }" name="date">
                 			</div>
 		                </div>
 		                <div class="form-group">
 			                <label>Tags</label>
 			                <select id="multy" class="form-control select2" multiple="multiple" data-placeholder="Select tags" style="width: 100%;" name="tags">
-				                <c:forEach items="${sessionScope.tags }" var="tag">
+				                <c:forEach items="${tags }" var="tag">
 				                	<option><c:out value="${tag.name}"></c:out></option>
 				                </c:forEach>
 			                </select>
-			                <c:set var="tags" value="${ sessionScope.editTransactionTags }" />
+			                <c:set var="tags" value="${ editTransactionTags }" />
 				            <script type="text/javascript">
 				           		var values="Test,Prof,Off";
 				           		var values = 'Alaska'
@@ -85,9 +85,7 @@
 				            	
 				            	values = values.replace(/[\[\]']+/g,'')
 				            	
-				            	alert(values);
                 				$.each(values.split(","), function(i,e){
-                					alert(e);
                 				    $("#multy option[value='" + e + "']").prop('selected', true);
                 				});
                 				
@@ -101,7 +99,7 @@
 		                <div class="form-group">
                   			<label>Description</label>
                  			<textarea id="desc" class="form-control" rows="3" placeholder="Enter transaction description here" name="description" ></textarea>
-                 			<c:set var="description" value="${ sessionScope.editTransactionDescription }" />
+                 			<c:set var="description" value="${ editTransactionDescription }" />
                  			<script type="text/javascript">
                  				var asd = '${description}';
 								document.getElementById("desc").value = asd;
@@ -110,8 +108,8 @@
                		  </div>
                		  <div class="box-footer">
 		                <button type="submit" class="btn btn-primary">Save</button>
-		                <a href="deleteTransaction?accountId=${sessionScope.transactionId}" class="btn btn-danger">Delete</a>
-		                <a href="transaction?accountId=${sessionScope.accountId}" class="btn btn-default">Cancel</a>
+		                <a href="deleteTransaction?accountId=${transactionId}" class="btn btn-danger">Delete</a>
+		                <a href="/FinanceTracker/account/${accountId}" class="btn btn-default">Cancel</a>
 		              </div>
 		            </form>
 	          	</div>
@@ -123,21 +121,21 @@
 	</div>
 	
 <!-- jQuery 3 -->
-<script src="./static/jquery.min.js"></script>
+<script src="<c:url value="/js/jquery.min.js" />" type ="text/javascript"></script>
 <!-- Bootstrap 3.3.7 -->
-<script src="./static/bootstrap.min.js"></script>
+<script src="<c:url value="/js/bootstrap.min.js" />" type ="text/javascript"></script>
 <!-- Select2 -->
-<script src="./static/select2.full.min.js"></script>
+<script src="<c:url value="/js/select2.full.min.js" />" type ="text/javascript"></script>
 <!-- bootstrap datepicker -->
-<script src="./static/bootstrap-datepicker.min.js"></script>
+<script src="<c:url value="/js/bootstrap-datepicker.min.js" />" type ="text/javascript"></script>
 <!-- SlimScroll -->
-<script src="./static/jquery.slimscroll.min.js"></script>
+<script src="<c:url value="/js/jquery.slimscroll.min.js" />" type ="text/javascript"></script>
 <!-- FastClick -->
-<script src="./static/fastclick.js"></script>
+<script src="<c:url value="/js/static/fastclick.js" />" type ="text/javascript"></script>
 <!-- AdminLTE App -->
-<script src="./static/adminlte.min.js"></script>
+<script src="<c:url value="/js/static/adminlte.min.js" />" type ="text/javascript"></script>
 <!-- AdminLTE for demo purposes -->
-<script src="./static/demo.js"></script>
+<script src="<c:url value="/js/static/demo.js" />" type ="text/javascript"></script>
 <!-- I hate you -->
 <script type="text/javascript">
 	$(function () {

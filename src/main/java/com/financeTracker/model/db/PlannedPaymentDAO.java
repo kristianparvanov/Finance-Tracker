@@ -35,11 +35,13 @@ public class PlannedPaymentDAO {
 		return instance;
 	}
 	
-	public synchronized void getAllPlannedPayments() throws SQLException {
-		if (!ALL_PLANNED_PAYMENTS.isEmpty()) {
-			return;
-		}
-		String query = "SELECT planned_payment_id, name, type, from_date, amount, description, account_id, category_id, own_category_id FROM finance_tracker.planned_payments";
+	public synchronized List<PlannedPayment> getAllPlannedPayments() throws SQLException {
+//		if (!ALL_PLANNED_PAYMENTS.isEmpty()) {
+//			return;
+//		}
+		String query = "SELECT planned_payment_id, name, type, from_date, amount, description, account_id, category_id FROM finance_tracker.planned_payments";
+		List<PlannedPayment> payments = new ArrayList<PlannedPayment>();
+		
 		PreparedStatement statement = CONNECTION.prepareStatement(query);
 		ResultSet result = statement.executeQuery();
 		while (result.next()) {
@@ -51,16 +53,15 @@ public class PlannedPaymentDAO {
 			BigDecimal amount = result.getBigDecimal("amount");
 			String description = result.getString("description");
 			int accountId = result.getInt("account_id");
-			//Account account = AccountDAO.getInstance().getAccountByAccountId(accountId);
 			int categoryId = result.getInt("category_id");
-			//Category category = CategoryDAO.getInstance().getCategoryByCategoryId(categoryId);
 			HashSet<Tag> tags = TagDAO.getInstance().getTagsByPlannedPaymentId(plannedPaymentId);
 			PlannedPayment payment = new PlannedPayment(name, paymentType, fromDate, amount, description, accountId, categoryId, tags);
 			payment.setPlannedPaymentId(plannedPaymentId);
+			payments.add(payment);
 			ALL_PLANNED_PAYMENTS.put(name, payment);
-			
-			System.out.println(payment);
 		}
+		
+		return payments;
 	}
 	
 	public synchronized List<PlannedPayment> getAllPlannedPaymentsByAccountId(long accountId) throws SQLException {

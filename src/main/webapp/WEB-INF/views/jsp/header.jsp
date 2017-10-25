@@ -11,15 +11,15 @@
 		  <!-- Tell the browser to be responsive to screen width -->
 		  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 		  <!-- Bootstrap 3.3.7 -->
-		  <link rel="stylesheet" href="css/bootstrap.min.css">
+		  <link href="<c:url value="/css/bootstrap.min.css" />" rel="stylesheet" type="text/css">
 		  <!-- Font Awesome -->
-		  <link rel="stylesheet" href="css/font-awesome.min.css">
+		  <link href="<c:url value="/css/font-awesome.min.css" />" rel="stylesheet" type="text/css">
 		  <!-- Ionicons -->
-		  <link rel="stylesheet" href="css/ionicons.min.css">
+		  <link href="<c:url value="/css/ionicons.min.css" />" rel="stylesheet" type="text/css">
 		  <!-- Theme style -->
-		  <link rel="stylesheet" href="css/AdminLTE.min.css">
+		  <link href="<c:url value="/css/AdminLTE.min.css" />" rel="stylesheet" type="text/css">
 		  <!-- iCheck -->
-		  <link rel="stylesheet" href="css/_all-skins.min.css">
+		  <link href="<c:url value="/css/_all-skins.min.css" />" rel="stylesheet" type="text/css">
 		<!-- Google Font -->
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 	</head>
@@ -27,7 +27,7 @@
 		<div class="wrapper">
 		 <header class="main-header">
 		    <!-- Logo -->
-		    <a href="index" class="logo">
+		    <a href="/FinanceTracker/index" class="logo">
 		      <!-- mini logo for sidebar mini 50x50 pixels -->
 		      <span class="logo-mini"><b>F</b>TR</span>
 		      <!-- logo for regular state and mobile devices -->
@@ -67,7 +67,7 @@
 		        <ul class="nav navbar-nav">
 		          <!-- User Account: style can be found in dropdown.less -->
 		          <li>
-		            <a href="#" style="font-size: 18px;">
+		            <a href="/FinanceTracker/user" style="font-size: 18px;">
 		            <i class="ion ion-person"></i>
 		              <% User u = (User) request.getSession().getAttribute("user"); %>
 		              <span><%= u.getFirstName() %></span>
@@ -75,24 +75,24 @@
 		          </li>
 		          <!-- Control Sidebar Toggle Button -->
 		          <li>
-		            <a href="logout" style="font-size: 18px;"><i class="glyphicon glyphicon-log-out"></i> Log out</a>
+		            <a href="/FinanceTracker/logout" style="font-size: 18px;"><i class="glyphicon glyphicon-log-out"></i> Log out</a>
 		          </li>
 		        </ul>
 		      </div>
 		    </nav>
 		  </header>
 		  </div>
-		<!-- jQuery 3 -->
-		<script src="jquery.min.js"></script>
-		<!-- Bootstrap 3.3.7 -->
-		<script src="bootstrap.min.js"></script>
-		<!-- SlimScroll -->
-		<script src="jquery.slimscroll.js"></script>
-		<!-- FastClick -->
-		<script src="fastclick.js"></script>
-		<!-- AdminLTE App -->
-		<script src="adminlte.min.js"></script>
-		<!-- AdminLTE for demo purposes -->
-		<script src="demo.js"></script>
+	<!-- jQuery 3 -->
+ 	<script src="<c:url value="/js/jquery.min.js" />"  type ="text/javascript"></script>
+	<!-- Bootstrap 3.3.7 -->
+ 	<script src="<c:url value="/js/bootstrap.min.js" />"  type ="text/javascript"></script>
+	<!-- SlimScroll -->
+ 	<script src="<c:url value="/js/jquery.slimscroll.min.js" />"  type ="text/javascript"></script>
+	<!-- FastClick -->
+ 	<script src="<c:url value="/js/fastclick.js" />"  type ="text/javascript"></script>
+	<!-- AdminLTE App -->
+	 <script src="<c:url value="/js/adminlte.min.js" />"  type ="text/javascript"></script>
+	<!-- AdminLTE for demo purposes -->
+	<script src="<c:url value="/js/demo.js" />"  type ="text/javascript"></script>
 	</body>
 </html>

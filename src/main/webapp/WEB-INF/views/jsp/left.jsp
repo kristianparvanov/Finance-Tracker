@@ -11,15 +11,15 @@
 	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
 	name="viewport">
 		  <!-- Bootstrap 3.3.7 -->
-		  <link rel="stylesheet" href="css/bootstrap.min.css">
+		  <link href="<c:url value="/css/bootstrap.min.css" />" rel="stylesheet" type="text/css">
 		  <!-- Font Awesome -->
-		  <link rel="stylesheet" href="css/font-awesome.min.css">
+		  <link href="<c:url value="/css/font-awesome.min.css" />" rel="stylesheet" type="text/css">
 		  <!-- Ionicons -->
-		  <link rel="stylesheet" href="css/ionicons.min.css">
+		  <link href="<c:url value="/css/ionicons.min.css" />" rel="stylesheet" type="text/css">
 		  <!-- Theme style -->
-		  <link rel="stylesheet" href="css/AdminLTE.min.css">
+		  <link href="<c:url value="/css/AdminLTE.min.css" />" rel="stylesheet" type="text/css">
 		  <!-- iCheck -->
-		  <link rel="stylesheet" href="css/_all-skins.min.css">
+		  <link href="<c:url value="/css/_all-skins.min.css" />" rel="stylesheet" type="text/css">
 		<!-- Google Font -->
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
@@ -32,57 +32,95 @@
 				<!-- sidebar menu: : style can be found in sidebar.less -->
 				<ul class="sidebar-menu" data-widget="tree">
 					<li class="header" style="font-size: 16px">MAIN NAVIGATION</li>
-					<li><a href="index"><i class="fa fa-credit-card"></i> <span
-							style="font-size: 18px">Accounts</span></a></li>
-					<li><a href="#"><i class="fa fa-dollar"></i> <span
-							style="font-size: 18px">Planned Payments</span></a></li>
-					<li><a href="budgets"><i class="fa fa-money"></i> <span
-							style="font-size: 18px">Budgets</span></a></li>
-					<li class="treeview"><a href="#"> <i
-							class="fa fa-dashboard"></i> <span style="font-size: 18px">Spravki</span>
-							<span class="pull-right-container"> <i
-								class="fa fa-angle-left pull-right"></i>
-						</span>
-					</a>
+					<li>
+						<a href="/FinanceTracker/main">
+							<i class="fa fa-credit-card"></i> 
+							<span style="font-size: 18px">Accounts</span>
+						</a>
+					</li>
+					<li>
+						<a href="/FinanceTracker/plannedPayments">
+							<i class="fa fa-dollar"></i> 
+							<span style="font-size: 18px">Planned Payments</span>
+						</a>
+					</li>
+					<li>
+						<a href="/FinanceTracker/budgets">
+							<i class="fa fa-money"></i> 
+							<span style="font-size: 18px">Budgets</span>
+						</a>
+					</li>
+					<li class="treeview">
+						<a href="#">
+							<i class="fa fa-dashboard"></i> 
+							<span style="font-size: 18px">Spravki</span>
+							<span class="pull-right-container"> 
+								<i class="fa fa-angle-left pull-right"></i>
+							</span>
+						</a>
 						<ul class="treeview-menu">
-							<li><a href="../../index.html"><i class="fa fa-circle-o"></i>
-									Spravka 1</a></li>
-							<li><a href="../../index2.html"><i
-									class="fa fa-circle-o"></i> Spravka 2</a></li>
-						</ul></li>
-					<li class="treeview"><a href="#"> <i
-							class="fa fa-pie-chart"></i> <span style="font-size: 18px">Charts</span>
-							<span class="pull-right-container"> <i
-								class="fa fa-angle-left pull-right"></i>
-						</span>
-					</a>
+							<li>
+								<a href="../../index.html">
+									<i class="fa fa-circle-o"></i>Spravka 1
+								</a>
+							</li>
+							<li>
+								<a href="../../index2.html">
+									<i class="fa fa-circle-o"></i> Spravka 2
+								</a>
+							</li>
+						</ul>
+					</li>
+					<li class="treeview">
+						<a href="#"> 
+							<i class="fa fa-pie-chart"></i> 
+							<span style="font-size: 18px">Charts</span>
+							<span class="pull-right-container">
+								<i class="fa fa-angle-left pull-right"></i>
+							</span>
+						</a>
 						<ul class="treeview-menu">
-							<li><a href="../../index.html"><i class="fa fa-circle-o"></i>
-									Chart 1</a></li>
-							<li><a href="../../index2.html"><i
-									class="fa fa-circle-o"></i> Chart 2</a></li>
-						</ul></li>
+							<li>
+								<a href="../../index.html">
+									<i class="fa fa-circle-o"></i>Chart 1
+								</a>
+							</li>
+							<li>
+								<a href="../../index2.html">
+									<i class="fa fa-circle-o"></i> Chart 2
+								</a>
+							</li>
+						</ul>
+					</li>
 
-					<li><a href="#"><i class="fa fa-book"></i> <span
-							style="font-size: 18px">Reports</span></a></li>
-					<li><a href="about"><i class="fa fa-question-circle"></i>
-							<span style="font-size: 18px">About</span></a></li>
+					<li>
+						<a href="#">
+							<i class="fa fa-book"></i> 
+							<span style="font-size: 18px">Reports</span>
+						</a>
+					</li>
+					<li>
+						<a href="/FinanceTracker/about">
+							<i class="fa fa-question-circle"></i>
+							<span style="font-size: 18px">About</span>
+						</a>
+					</li>
 				</ul>
 			</section>
 			<!-- /.sidebar -->
 		</aside>
 	</div>
 	<!-- jQuery 3 -->
-	<script src="js/jquery.min.js"></script>
+ 	<script src="<c:url value="/js/jquery.min.js" />"  type ="text/javascript"></script>
 	<!-- Bootstrap 3.3.7 -->
-	<script src="js/bootstrap.min.js"></script>
+ 	<script src="<c:url value="/js/bootstrap.min.js" />"  type ="text/javascript"></script>
 	<!-- SlimScroll -->
-	<script src="js/jquery.slimscroll.js"></script>
+ 	<script src="<c:url value="/js/jquery.slimscroll.min.js" />"  type ="text/javascript"></script>
 	<!-- FastClick -->
-	<script src="js/fastclick.js"></script>
+ 	<script src="<c:url value="/js/fastclick.js" />"  type ="text/javascript"></script>
 	<!-- AdminLTE App -->
-	<script src="js/adminlte.min.js"></script>
+	 <script src="<c:url value="/js/adminlte.min.js" />"  type ="text/javascript"></script>
 	<!-- AdminLTE for demo purposes -->
-	<script src="js/demo.js"></script>
+	<script src="<c:url value="/js/demo.js" />"  type ="text/javascript"></script>
 </body>
 </html>

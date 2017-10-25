@@ -12,7 +12,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Add Transaction | Finance Tracker</title>
 <!-- Select2 -->
-<link rel="stylesheet" href="css/select2.min.css">
+<link href="<c:url value="/css/select2.min.css" />" rel="stylesheet" type="text/css">
 </head>
 <body>
 	<div>
@@ -40,7 +40,7 @@
 		                <div class="form-group">
 			                <label>Account</label>
 			                <select class="form-control select2" style="width: 100%;" data-placeholder="Select an account" name="account">
-			                  <c:forEach items="${sessionScope.accounts }" var="account">
+			                  <c:forEach items="${accounts}" var="account">
 			                	  <option><c:out value="${account.name}"></c:out></option>
 			                  </c:forEach>
 			                </select>
@@ -48,7 +48,7 @@
 		                 <div class="form-group">
 			                <label>Category</label>
 			                <select class="form-control select2" style="width: 100%;" data-placeholder="Select a category" name="category">
-			                  <c:forEach items="${sessionScope.categories }" var="category">
+			                  <c:forEach items="${categories }" var="category">
 			                	  <option><c:out value="${category.name}"></c:out></option>
 			                  </c:forEach>
 			                </select>
@@ -60,7 +60,7 @@
 		                <div class="form-group">
 			                <label>Tags</label>
 			                <select class="form-control select2" multiple="multiple" data-placeholder="Select tags" style="width: 100%;" name="tags">
-			                  <c:forEach items="${sessionScope.tags }" var="tag">
+			                  <c:forEach items="${tags}" var="tag">
 			                	  <option><c:out value="${tag.name}"></c:out></option>
 			                  </c:forEach>
 			                </select>
@@ -72,7 +72,7 @@
                		  </div>
                		  <div class="box-footer">
 		                <button type="submit" class="btn btn-primary">Save</button>
-		                <a href="transaction?accountId=${sessionScope.accountId}" class="btn btn-default">Cancel</a>
+		                <a href="/FinanceTracker/account/${sessionScope.accountId}" class="btn btn-default">Cancel</a>
 		              </div>
 		            </form>
 	          	</div>
@@ -84,19 +84,19 @@
 	</div>
 	
 <!-- jQuery 3 -->
-<script src="./static/jquery.min.js"></script>
+ <script src="<c:url value="/js/jquery.min.js" />"  type ="text/javascript"></script>
 <!-- Bootstrap 3.3.7 -->
-<script src="./static/bootstrap.min.js"></script>
+ <script src="<c:url value="/js/bootstrap.js" />"  type ="text/javascript"></script>
 <!-- Select2 -->
-<script src="./static/select2.full.min.js"></script>
+ <script src="<c:url value="/js/select2.full.min.js" />"  type ="text/javascript"></script>
 <!-- SlimScroll -->
-<script src="./static/jquery.slimscroll.min.js"></script>
+ <script src="<c:url value="/js/jquery.slimscroll.min.js" />"  type ="text/javascript"></script>
 <!-- FastClick -->
-<script src="./static/fastclick.js"></script>
+ <script src="<c:url value="/js/fastclick.js" />"  type ="text/javascript"></script>
 <!-- AdminLTE App -->
-<script src="./static/adminlte.min.js"></script>
+ <script src="<c:url value="/js/adminlte.min.js" />"  type ="text/javascript"></script>
 <!-- AdminLTE for demo purposes -->
-<script src="./static/demo.js"></script>
+ <script src="<c:url value="/js/demo.js" />"  type ="text/javascript"></script>
 <!-- I hate you -->
 <script type="text/javascript">
 	$(function () {

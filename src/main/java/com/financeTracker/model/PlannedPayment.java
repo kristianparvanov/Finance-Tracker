@@ -14,6 +14,7 @@ public class PlannedPayment {
 	private BigDecimal amount;
 	private String description;
 	private long account;
+	private String categoryName;
 	private long category;
 	private HashSet<Tag> tags = new HashSet<Tag>();
 	
@@ -59,6 +60,14 @@ public class PlannedPayment {
 	
 	public long getAccount() {
 		return account;
+	}
+	
+	public String getCategoryName() {
+		return categoryName;
+	}
+	
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
 	}
 	
 	public long getCategory() {

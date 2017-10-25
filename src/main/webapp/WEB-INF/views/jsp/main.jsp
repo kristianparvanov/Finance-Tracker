@@ -10,16 +10,18 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Main | Finance Tracker</title>
-<script src="js/Chart.bundle.js"></script>
-<script src="js/utils.js"></script>
+<script src="<c:url value="/js/Chart.bundle.js" />"  type ="text/javascript"></script>
+<script src="<c:url value="/js/utils.js" />"  type ="text/javascript"></script>
 </head>
 <body>
+	
 	<div>
 		<jsp:include page="left.jsp"></jsp:include>
 	</div>
 	<div>
 		<jsp:include page="header.jsp"></jsp:include>
 	</div>
+	
 	<div class="content-wrapper">
 		 <section class="content-header">
 			<h2>Current balance across all accounts: <c:out value="${ balance }"></c:out></h2>
@@ -90,19 +92,26 @@
 					var presets = window.chartColors;
 					var utils = Samples.utils;
 					var values = '${transactions}';
+					var dates = '${transactionsDates}';
 					
 					values = values.replace(/[\[\]']+/g,'')
+					dates = dates.replace(/[\[\]']+/g,'')
 					
 					var allTrans = [];
 					$.each(values.split(","), function(i,e){
 						allTrans.push(e);
 					});
 					
+					var allDates = [];
+					$.each(dates.split(","), function(i,e){
+						allDates.push(e);
+					});
+					
 					var MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 				    var config = {
 				        type: 'line',
 				        data: {
-				            labels: allTrans,
+				            labels: allDates,
 				            datasets: [{
 				                label: "All transactions",
 				                backgroundColor: utils.transparentize(presets.blue),
@@ -157,19 +166,20 @@
 		<jsp:include page="footer.jsp"></jsp:include>
 	</div>
 	
-<!-- jQuery 3 -->
-<script src="js/jquery.min.js"></script>
-<!-- chartJS utils -->
-<script src="js/utils.js"></script>
-<!-- Bootstrap 3.3.7 -->
-<script src="js/bootstrap.min.js"></script>
-<!-- SlimScroll -->
-<script src="js/jquery.slimscroll.js"></script>
-<!-- FastClick -->
-<script src="js/fastclick.js"></script>
-<!-- AdminLTE App -->
-<script src="js/adminlte.min.js"></script>
-<!-- AdminLTE for demo purposes -->
-<script src="js/demo.js"></script>
+	<!-- chartJS utils -->
+	<script src="<c:url value="/js/utils.js" />"  type ="text/javascript"></script>
+
+	<!-- jQuery 3 -->
+ 	<script src="<c:url value="/js/jquery.min.js" />"  type ="text/javascript"></script>
+	<!-- Bootstrap 3.3.7 -->
+ 	<script src="<c:url value="/js/bootstrap.min.js" />"  type ="text/javascript"></script>
+	<!-- SlimScroll -->
+ 	<script src="<c:url value="/js/jquery.slimscroll.min.js" />"  type ="text/javascript"></script>
+	<!-- FastClick -->
+ 	<script src="<c:url value="/js/fastclick.js" />"  type ="text/javascript"></script>
+	<!-- AdminLTE App -->
+	 <script src="<c:url value="/js/adminlte.min.js" />"  type ="text/javascript"></script>
+	<!-- AdminLTE for demo purposes -->
+	<script src="<c:url value="/js/demo.js" />"  type ="text/javascript"></script>
 </body>
 </html>

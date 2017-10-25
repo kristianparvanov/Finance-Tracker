@@ -52,7 +52,7 @@
 						</div>
 						<div class="row">
 						    <div class="col-sm-4" style="display:table-cell; vertical-align:middle; text-align:center">
-						    	<img src=" https://image.flaticon.com/icons/png/512/28/28968.png" alt="JSP" width="180" height="auto">   
+						    	<img src="https://assets-cdn.github.com/images/modules/logos_page/Octocat.png" alt="GitHub" width="180" height="auto">   
 						    </div>
 						    <div class="col-sm-4" style="display:table-cell; vertical-align:middle; text-align:center">
 						    	<img src="https://maven.apache.org/images/maven-logo-black-on-white.png" alt="Maven" width="300" height="auto">  

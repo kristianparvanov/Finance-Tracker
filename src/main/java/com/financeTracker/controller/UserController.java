@@ -3,6 +3,9 @@ package com.financeTracker.controller;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.text.NumberFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -122,6 +125,13 @@ public class UserController {
 			}
 		}
 		
+		List<String> allTransactionsDates = new ArrayList<String>();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		for (Transaction t : allTransactions) {
+			allTransactionsDates.add(t.getDate().format(formatter));
+		}
+		
+		viewModel.addAttribute("transactionsDates", allTransactionsDates);
 		viewModel.addAttribute("transactionsValues", allTransactionsValues);
 		viewModel.addAttribute("balance", balance);
 		return "main";
