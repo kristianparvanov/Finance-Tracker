@@ -61,7 +61,7 @@
 			            		<div><i class="ion ion-pie-graph"></i></div>
 			            	</c:if>
 			            </div>
-			            <a href="transaction/account/${account.accountId}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+			            <a href="account/${account.accountId}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
 			          </div>
 				</div>
 			</c:forEach>
