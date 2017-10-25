@@ -14,6 +14,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.financeTracker.model.Account;
 import com.financeTracker.model.Budget;
 import com.financeTracker.model.Category;
@@ -22,6 +24,9 @@ import com.financeTracker.model.Transaction;
 import com.financeTracker.model.TransactionType;
 
 public class TransactionDAO {
+	
+	private BudgetDAO budgetDao = new BudgetDAO();
+	
 	private static TransactionDAO instance;
 	private static final HashMap<TransactionType, ArrayList<Transaction>> ALL_TRANSACTIONS = new HashMap<>();
 	private static final Connection CONNECTION = DBManager.getInstance().getConnection();
@@ -130,15 +135,15 @@ public class TransactionDAO {
 				TagDAO.getInstance().insertTagToTransaction(t, tag);
 			}
 			
-			boolean existsBudget = BudgetDAO.getInstance().existsBudget(t.getDate(), t.getCategory(), t.getAccount());
-			Set<Budget> budgets =  BudgetDAO.getInstance().getAllBudgetsByDateCategoryAndAccount(t.getDate(), t.getCategory(), t.getAccount());
+			boolean existsBudget =budgetDao.existsBudget(t.getDate(), t.getCategory(), t.getAccount());
+			Set<Budget> budgets =  budgetDao.getAllBudgetsByDateCategoryAndAccount(t.getDate(), t.getCategory(), t.getAccount());
 			if (existsBudget) {
 				for (Budget budget : budgets) {
 					BudgetsHasTransactionsDAO.getInstance().insertTransactionBudget(budget.getBudgetId(), t.getTransactionId());
 					if (t.getType().equals(TransactionType.EXPENCE)) {
 						budget.setAmount(budget.getAmount().add(t.getAmount()));
 					}
-					BudgetDAO.getInstance().updateBudget(budget);
+					budgetDao.updateBudget(budget);
 				}
 			}
 			

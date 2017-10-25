@@ -9,7 +9,7 @@ import java.util.List;
 
 public class Account {
 
-	private long accaountID;
+	private long accountId;
 	private String name;
 	private BigDecimal amount;
 	private long userID;
@@ -52,22 +52,22 @@ public class Account {
 	}
 	
 	public long getAccountId() {
-		return accaountID;
+		return accountId;
 	}
 
 	public long getUserId() {
 		return userID;
 	}
 
-	public void setAccaountID(long accaountID) {
-		this.accaountID = accaountID;
+	public void setAccaountId(long accaountID) {
+		this.accountId = accaountID;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (int) (accaountID ^ (accaountID >>> 32));
+		result = prime * result + (int) (accountId ^ (accountId >>> 32));
 		result = prime * result + ((amount == null) ? 0 : amount.hashCode());
 		result = prime * result + ((budgets == null) ? 0 : budgets.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
@@ -86,7 +86,7 @@ public class Account {
 		if (getClass() != obj.getClass())
 			return false;
 		Account other = (Account) obj;
-		if (accaountID != other.accaountID)
+		if (accountId != other.accountId)
 			return false;
 		if (amount == null) {
 			if (other.amount != null)

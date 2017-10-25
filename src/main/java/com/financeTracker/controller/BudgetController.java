@@ -2,26 +2,41 @@ package com.financeTracker.controller;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.junit.experimental.categories.Categories;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.financeTracker.model.Account;
 import com.financeTracker.model.Budget;
+import com.financeTracker.model.Category;
+import com.financeTracker.model.Tag;
 import com.financeTracker.model.User;
+import com.financeTracker.model.db.AccountDAO;
 import com.financeTracker.model.db.BudgetDAO;
+import com.financeTracker.model.db.CategoryDAO;
+import com.financeTracker.model.db.TagDAO;
 
 @Controller
 public class BudgetController {
 	
+	@Autowired
+	BudgetDAO budgetDao = new BudgetDAO();
+	
 	@RequestMapping(value="/budgets", method=RequestMethod.GET)
-	public String getAllBudgets(HttpServletRequest request, HttpSession session) {
-		User u = (User) request.getSession().getAttribute("user");
+	public String getAllBudgets(HttpSession session, Model model) {
+		User u = (User) session.getAttribute("user");
 		
 		Set<Budget> budgets = null;
 		BigDecimal percent = new BigDecimal(0.0);
@@ -29,7 +44,7 @@ public class BudgetController {
 		HashMap<Budget, BigDecimal> map = new HashMap<>();
 		
 		try {
-			budgets = BudgetDAO.getInstance().getAllBudgetsByUserId(u.getUserId());
+			budgets = budgetDao.getAllBudgetsByUserId(u.getUserId());
 			
 			for (Budget budget : budgets) {
 				percent = budget.getAmount().divide(budget.getInitialAmount()).multiply(BigDecimal.valueOf(100));
@@ -40,8 +55,79 @@ public class BudgetController {
 			System.out.println("Izgurmqhme li?");
 		}
 		
-		request.getSession().setAttribute("budgets", map);
+//		request.getSession().setAttribute("budgets", map);
+		
+		model.addAttribute("budgets", map);
 		
 		return "budgets";
+	}
+	
+	@RequestMapping(value="/addBudget", method=RequestMethod.GET)
+	public String mskeBudget(HttpSession session, Model model) {
+		User user = (User) session.getAttribute("user");
+		
+		try {
+			Set<Account> accounts = AccountDAO.getInstance().getAllAccountsByUserId(user.getUserId());
+			Set<Category> categories = CategoryDAO.getInstance().getAllCategoriesByUserId(user.getUserId());
+			Set<Tag> tags = TagDAO.getInstance().getAllTagsByUserId(user.getUserId());
+			
+			model.addAttribute("accounts", accounts);
+			model.addAttribute("categories", categories);
+			model.addAttribute("tags", tags);
+		} catch (SQLException e) {
+			System.out.println("NEMA BUDGETI");
+		}
+		
+		return "addBudget";
+	}
+	
+	@RequestMapping (value ="/addBudget", method = RequestMethod.POST)
+	public String addBudget(HttpServletRequest request, HttpSession session, Model model) {
+		User user = (User) session.getAttribute("user");
+		
+		try {
+			String name = request.getParameter("name");
+			Account acc = AccountDAO.getInstance().getAccountByUserIDAndAccountName(user.getUserId(), request.getParameter("account"));
+			Category category = CategoryDAO.getInstance().getCategoryByCategoryName(request.getParameter("category"));
+			BigDecimal amount = new BigDecimal(request.getParameter("amount"));
+			String[] tags = request.getParameterValues("tags");
+			String date = request.getParameter("date");
+			
+			String[] inputDate = date.split("/");
+			
+			int monthFrom = Integer.valueOf(inputDate[0]);
+			
+			int dayOfMonthFrom = Integer.valueOf(inputDate[1]);
+			
+			String[] temp = inputDate[2].toString().split(" - ");
+			
+			
+			int yearFrom = Integer.valueOf(temp[0]);
+			
+			int monthTo = Integer.valueOf(temp[1]);
+			
+			int dayOfMonthTo = Integer.valueOf(inputDate[3]);
+			
+			int yearTo = Integer.valueOf(inputDate[4]);
+			
+			LocalDateTime dateFrom = LocalDateTime.of(yearFrom, monthFrom, dayOfMonthFrom, 0, 0, 0);
+			LocalDateTime dateTo = LocalDateTime.of(yearTo, monthTo, dayOfMonthTo, 0, 0, 0);
+			
+			Set<Tag> tagsSet = new HashSet<>();
+			if (tags != null) {
+				for (String tagName : tags) {
+					tagsSet.add(new Tag(tagName, user.getUserId()));
+				}
+			}
+
+			Budget b = new Budget(name, amount, dateFrom, dateTo, acc.getAccountId(), category.getCategoryId(), tagsSet);
+			
+			budgetDao.insertBudget(b);
+		} catch (SQLException e) {
+			System.out.println("Nemame smetki mai? :(");
+		}
+		
+		
+		return "redirect:budgets";
 	}
 }

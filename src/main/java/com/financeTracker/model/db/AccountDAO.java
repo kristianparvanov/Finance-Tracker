@@ -10,6 +10,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.financeTracker.model.Account;
 import com.financeTracker.model.Budget;
 import com.financeTracker.model.PlannedPayment;
@@ -18,6 +20,7 @@ import com.financeTracker.model.User;
 
 public class AccountDAO {
 	
+	private BudgetDAO budgetDao = new BudgetDAO();
 	private static AccountDAO instance;
 	
 	private AccountDAO() {}
@@ -42,7 +45,7 @@ public class AccountDAO {
 		ResultSet res = ps.getGeneratedKeys();
 		res.next();
 		
-		acc.setAccaountID(res.getLong(1));
+		acc.setAccaountId(res.getLong(1));
 	}
 	
 	public synchronized void deleteAccount(int accountId) throws SQLException {
@@ -81,11 +84,11 @@ public class AccountDAO {
 			String name = res.getString("name");
 			BigDecimal amount = new BigDecimal(res.getDouble("amount"));
 			List<Transaction> transactions = TransactionDAO.getInstance().getAllTransactionsByAccountId(accountId);
-			List<Budget> budgets = BudgetDAO.getInstance().getAllBudgetsByAccountId(accountId);
+			List<Budget> budgets = budgetDao.getAllBudgetsByAccountId(accountId);
 			List<PlannedPayment> plannedPayments = PlannedPaymentDAO.getInstance().getAllPlannedPaymentsByAccountId(accountId);
 			
 			Account acc = new Account(name, amount, userId, transactions, budgets, plannedPayments);
-			acc.setAccaountID(accountId);
+			acc.setAccaountId(accountId);
 			
 			accounts.add(acc);
 
@@ -107,11 +110,11 @@ public class AccountDAO {
 		BigDecimal amount = res.getBigDecimal("amount");
 		int userId = res.getInt("user_id");
 		List<Transaction> transactions = TransactionDAO.getInstance().getAllTransactionsByAccountId(accountId);
-		List<Budget> budgets = BudgetDAO.getInstance().getAllBudgetsByAccountId(accountId);
+		List<Budget> budgets = budgetDao.getAllBudgetsByAccountId(accountId);
 		List<PlannedPayment> plannedPayments = PlannedPaymentDAO.getInstance().getAllPlannedPaymentsByAccountId(accountId);
 		
 		Account acc = new Account(name, amount, userId, transactions, budgets, plannedPayments);
-		acc.setAccaountID(accountId);
+		acc.setAccaountId(accountId);
 		
 		return acc;
 	}
@@ -176,11 +179,11 @@ public class AccountDAO {
 		BigDecimal amount = res.getBigDecimal("amount");
 		long userId = res.getLong("user_id");
 		List<Transaction> transactions = TransactionDAO.getInstance().getAllTransactionsByAccountId(accountId);
-		List<Budget> budgets = BudgetDAO.getInstance().getAllBudgetsByAccountId(accountId);
+		List<Budget> budgets = budgetDao.getAllBudgetsByAccountId(accountId);
 		List<PlannedPayment> plannedPayments = PlannedPaymentDAO.getInstance().getAllPlannedPaymentsByAccountId(accountId);
 		
 		Account account = new Account(name, amount, userId, transactions, budgets, plannedPayments);
-		account.setAccaountID(accountId);
+		account.setAccaountId(accountId);
 		
 		return account;
 	}
@@ -193,5 +196,24 @@ public class AccountDAO {
 		ResultSet res = statement.executeQuery();
 		res.next();
 		return res.getString("name");
+	}
+	
+	public Account getAccountByUserIDAndAccountName(long userId, String name) throws SQLException {
+		String sql = "SELECT account_id, amount FROM accounts WHERE user_id = ? AND name = ?;";
+		
+		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(sql);
+		ps.setLong(1, userId);
+		ps.setString(2, name);
+		
+		ResultSet res = ps.executeQuery();
+		res.next();
+		
+		long accountId = res.getLong("account_id");
+		BigDecimal amount = res.getBigDecimal("amount");
+		
+		Account acc = new Account(name, amount, userId);
+		acc.setAccaountId(accountId);
+		
+		return acc;
 	}
 }

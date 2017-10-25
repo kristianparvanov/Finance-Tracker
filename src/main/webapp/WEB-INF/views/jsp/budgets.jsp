@@ -27,7 +27,7 @@
 				<div style="margin-bottom: 25px">
 					<div class="row">
 						<div class="col-sm-3">
-							<a href="addTransaction.jsp" type="button" class="btn btn-block btn-primary btn-lg">Add new record</a>
+							<a href="addBudget" type="button" class="btn btn-block btn-primary btn-lg">Add new record</a>
 						</div>
 						<div class="col-sm-3">
 							<a href="main" type="button" class="btn btn-block btn-default btn-lg">Back</a>
@@ -35,7 +35,7 @@
 					</div>
 				</div>
 			
-				<c:forEach items="${ sessionScope.budgets }" var="budget">
+				<c:forEach items="${ budgets }" var="budget">
 				<div class="row"> 
 					<div class="col-md-4">
 						
@@ -48,7 +48,7 @@
 				              <div class="progress">
 				              <c:set var = "percent" scope = "session" value = "${ budget.value }"/>
 				      		  
-				                <div class="progress-bar" style="width: <c:out value = "${percent}"/>%"></div>
+				                <div class="progress-bar" style="width: <c:out value = "${ percent }"/>%"></div>
 				              </div>
 				              <span class="progress-description">
 				                    <c:out value="${ percent }%"></c:out> Increase in <%-- <c:out value="${ budget.key.toDate - budget.key.fromDate }"></c:out> --%>

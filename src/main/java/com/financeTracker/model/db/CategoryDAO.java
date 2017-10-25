@@ -10,6 +10,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.financeTracker.model.Budget;
 import com.financeTracker.model.Category;
 import com.financeTracker.model.PlannedPayment;
@@ -19,6 +21,7 @@ import com.financeTracker.model.User;
 
 public class CategoryDAO {
 
+	private BudgetDAO budgetDao = new BudgetDAO();
 	private static CategoryDAO instance;
 	//private static final ArrayList<Category> ALL_CATEGORIES = new ArrayList<>();
 
@@ -72,7 +75,7 @@ public class CategoryDAO {
 		TransactionType type = TransactionType.valueOf(res.getString("type"));
 		Long userId = new Long(res.getLong("user_id"));
 		List<Transaction> transactions = TransactionDAO.getInstance().getAllTransactionsByCategoryId(categoryId);
-		List<Budget> budgets = BudgetDAO.getInstance().getAllBudgetsByCategoryId(categoryId);
+		List<Budget> budgets = budgetDao.getAllBudgetsByCategoryId(categoryId);
 		List<PlannedPayment> plannedPayments = PlannedPaymentDAO.getInstance().getAllPlannedPaymentsByCategoryId(categoryId);
 		
 		Category category = new Category(name, type, userId, transactions, budgets, plannedPayments);
@@ -104,7 +107,7 @@ public class CategoryDAO {
 			String name = res.getString("name");
 			TransactionType type = TransactionType.valueOf(res.getString("type"));
 			List<Transaction> transactions = TransactionDAO.getInstance().getAllTransactionsByCategoryId(categoryId);
-			List<Budget> budgets = BudgetDAO.getInstance().getAllBudgetsByCategoryId(categoryId);
+			List<Budget> budgets = budgetDao.getAllBudgetsByCategoryId(categoryId);
 			List<PlannedPayment> plannedPayments = PlannedPaymentDAO.getInstance().getAllPlannedPaymentsByCategoryId(categoryId);
 			
 			categories.add(new Category(name, type, userId, transactions, budgets, plannedPayments));
@@ -138,7 +141,7 @@ public class CategoryDAO {
 		TransactionType type = TransactionType.valueOf(resultSet.getString("type"));
 		Long userId = new Long(resultSet.getLong("user_id"));
 		List<Transaction> transactions = TransactionDAO.getInstance().getAllTransactionsByCategoryId(categoryId);
-		List<Budget> budgets = BudgetDAO.getInstance().getAllBudgetsByCategoryId(categoryId);
+		List<Budget> budgets = budgetDao.getAllBudgetsByCategoryId(categoryId);
 		List<PlannedPayment> plannedPayments = PlannedPaymentDAO.getInstance().getAllPlannedPaymentsByCategoryId(categoryId);
 		
 		Category category = new Category(name, type, userId, transactions, budgets, plannedPayments);

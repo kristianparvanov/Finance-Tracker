@@ -14,6 +14,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.stereotype.Component;
+
 import com.financeTracker.model.Account;
 import com.financeTracker.model.Budget;
 import com.financeTracker.model.Category;
@@ -21,11 +23,12 @@ import com.financeTracker.model.Tag;
 import com.financeTracker.model.Transaction;
 import com.financeTracker.model.TransactionType;
 
+@Component
 public class BudgetDAO {
-	private static BudgetDAO instance;
+//	private static BudgetDAO instance;
 	private static final Connection CONNECTION = DBManager.getInstance().getConnection();
 	
-	private BudgetDAO() {
+	/*private BudgetDAO() {
 	}
 	
 	public synchronized static BudgetDAO getInstance() {
@@ -33,7 +36,7 @@ public class BudgetDAO {
 			instance = new BudgetDAO();
 		}
 		return instance;
-	}
+	}*/
 	
 	public synchronized void getAllBudgets() throws SQLException {
 		String query = "SELECT budget_id, name, initial_amount, amount, from_date, to_date, account_id, category_id FROM finance_tracker.budgets";
