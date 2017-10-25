@@ -30,7 +30,7 @@ import com.financeTracker.model.db.TransactionDAO;
 @Controller
 public class TransactionController {
 	
-	@RequestMapping(value="/transaction/account/{accountId}", method=RequestMethod.GET)
+	@RequestMapping(value="/account/{accountId}", method=RequestMethod.GET)
 	public String getAllTransactions(HttpServletRequest request, HttpSession session, @PathVariable("accountId") Long accountId) {
 		User user = (User) request.getSession().getAttribute("user");
 		List<Transaction> transactions = null;

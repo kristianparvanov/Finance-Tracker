@@ -11,15 +11,15 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Transactions | Finance Tracker</title>
 		  <!-- Bootstrap 3.3.7 -->
-		  <link href="<c:url value="/static/css/bootstrap.min.css" />" rel="stylesheet" type="text/css">
+		  <link href="<c:url value="/css/bootstrap.min.css" />" rel="stylesheet" type="text/css">
 		  <!-- Font Awesome -->
-		  <link href="<c:url value="/static/css/font-awesome.min.css" />" rel="stylesheet" type="text/css">
+		  <link href="<c:url value="/css/font-awesome.min.css" />" rel="stylesheet" type="text/css">
 		  <!-- Ionicons -->
-		  <link rel="stylesheet" href="css/ionicons.min.css">
+		  <link rel="stylesheet" href="/css/ionicons.min.css">
 		  <!-- Theme style -->
-		  <link href="<c:url value="/static/css/AdminLTE.min.css" />" rel="stylesheet" type="text/css">
+		  <link href="<c:url value="/css/AdminLTE.min.css" />" rel="stylesheet" type="text/css">
 		  <!-- iCheck -->
-		  <link href="<c:url value="/static/css/_all-skins.min.css" />" rel="stylesheet" type="text/css">
+		  <link href="<c:url value="/css/_all-skins.min.css" />" rel="stylesheet" type="text/css">
 		<!-- Google Font -->
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
