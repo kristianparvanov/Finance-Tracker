@@ -19,6 +19,7 @@ import com.financeTracker.model.Account;
 import com.financeTracker.model.Transaction;
 import com.financeTracker.model.TransactionType;
 import com.financeTracker.model.User;
+import com.financeTracker.model.db.AccountDAO;
 import com.financeTracker.model.db.TransactionDAO;
 import com.financeTracker.model.db.UserDAO;
 
@@ -88,7 +89,14 @@ public class UserController {
 	@RequestMapping(value="/main", method=RequestMethod.GET)
 	public String main(HttpSession session, Model viewModel) {
 		User u =  (User) session.getAttribute("user");
-		Set<Account> accounts = u.getAccounts();
+		
+		Set<Account> accounts = null;
+		try {
+			accounts = AccountDAO.getInstance().getAllAccountsByUserId(u.getUserId());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
 		viewModel.addAttribute("accounts", accounts);
 		
 		BigDecimal allBalance = BigDecimal.valueOf(0);

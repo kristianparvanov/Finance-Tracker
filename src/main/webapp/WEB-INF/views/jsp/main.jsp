@@ -61,7 +61,7 @@
 			            		<div><i class="ion ion-pie-graph"></i></div>
 			            	</c:if>
 			            </div>
-			            <a href="transaction/accountId=${account.accountId}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+			            <a href="transaction/account/${account.accountId}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
 			          </div>
 				</div>
 			</c:forEach>
@@ -158,18 +158,18 @@
 	</div>
 	
 <!-- jQuery 3 -->
-<script src="./static/jquery.min.js"></script>
+<script src="js/jquery.min.js"></script>
 <!-- chartJS utils -->
-<script src="./static/utils.js"></script>
+<script src="js/utils.js"></script>
 <!-- Bootstrap 3.3.7 -->
-<script src="./static/bootstrap.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
 <!-- SlimScroll -->
-<script src="./static/jquery.slimscroll.js"></script>
+<script src="js/jquery.slimscroll.js"></script>
 <!-- FastClick -->
-<script src="./static/fastclick.js"></script>
+<script src="js/fastclick.js"></script>
 <!-- AdminLTE App -->
-<script src="./static/adminlte.min.js"></script>
+<script src="js/adminlte.min.js"></script>
 <!-- AdminLTE for demo purposes -->
-<script src="./static/demo.js"></script>
+<script src="js/demo.js"></script>
 </body>
 </html>

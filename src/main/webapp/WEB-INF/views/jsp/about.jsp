@@ -86,16 +86,16 @@
 		</div>
 	
 		<!-- jQuery 3 -->
-		<script src="./static/jquery.min.js"></script>
+		<script src="jquery.min.js"></script>
 		<!-- Bootstrap 3.3.7 -->
-		<script src="./static/bootstrap.min.js"></script>
+		<script src="bootstrap.min.js"></script>
 		<!-- SlimScroll -->
-		<script src="./static/jquery.slimscroll.min.js"></script>
+		<script src="jquery.slimscroll.min.js"></script>
 		<!-- FastClick -->
-		<script src="./static/fastclick.js"></script>
+		<script src="fastclick.js"></script>
 		<!-- AdminLTE App -->
-		<script src="./static/adminlte.min.js"></script>
+		<script src="/adminlte.min.js"></script>
 		<!-- AdminLTE for demo purposes -->
-		<script src="./static/demo.js"></script>
+		<script src="demo.js"></script>
 	</body>
 </html>
