@@ -36,7 +36,7 @@
 							style="font-size: 18px">Accounts</span></a></li>
 					<li><a href="#"><i class="fa fa-dollar"></i> <span
 							style="font-size: 18px">Planned Payments</span></a></li>
-					<li><a href="budget"><i class="fa fa-money"></i> <span
+					<li><a href="budgets"><i class="fa fa-money"></i> <span
 							style="font-size: 18px">Budgets</span></a></li>
 					<li class="treeview"><a href="#"> <i
 							class="fa fa-dashboard"></i> <span style="font-size: 18px">Spravki</span>

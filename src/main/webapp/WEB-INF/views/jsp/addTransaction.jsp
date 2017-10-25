@@ -12,7 +12,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Add Transaction | Finance Tracker</title>
 <!-- Select2 -->
-<link rel="stylesheet" href="./static/select2.min.css">
+<link rel="stylesheet" href="css/select2.min.css">
 </head>
 <body>
 	<div>

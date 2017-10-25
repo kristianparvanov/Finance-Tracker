@@ -3,6 +3,7 @@ package com.financeTracker.controller;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.text.NumberFormat;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -19,6 +20,7 @@ import com.financeTracker.model.Account;
 import com.financeTracker.model.Category;
 import com.financeTracker.model.Tag;
 import com.financeTracker.model.Transaction;
+import com.financeTracker.model.TransactionType;
 import com.financeTracker.model.User;
 import com.financeTracker.model.db.AccountDAO;
 import com.financeTracker.model.db.CategoryDAO;
@@ -65,5 +67,56 @@ public class TransactionController {
 		request.getSession().setAttribute("transactions", transactions);
 		
 		return "transactions";
+	}
+	
+	@RequestMapping(value="/transaction/account/addTransaction", method=RequestMethod.POST)
+	public String postAddTransaction(HttpServletRequest request, HttpSession session) {
+		String type = request.getParameter("type");
+		String account = request.getParameter("account");
+		String category = request.getParameter("category");
+		String amount = request.getParameter("amount");
+		String[] tags = request.getParameterValues("tags");
+		String description = request.getParameter("description");
+		
+		User u = (User) request.getSession().getAttribute("user");
+		
+		HashSet<Tag> tagsSet = new HashSet<>();
+		if (tags != null) {
+			for (String tagName : tags) {
+				tagsSet.add(new Tag(tagName, u.getUserId()));
+			}
+		}
+		
+		Account acc = null;
+		try {
+			acc = AccountDAO.getInstance().getAccountByAccountName(account);
+			Category cat = CategoryDAO.getInstance().getCategoryByCategoryName(category);
+			Transaction t = new Transaction(TransactionType.valueOf(type), description, BigDecimal.valueOf(Double.valueOf(amount)), acc.getAccountId(), cat.getCategoryId(), LocalDateTime.now(), tagsSet);
+			BigDecimal newValue = BigDecimal.valueOf(Double.valueOf(amount));
+			BigDecimal oldValue = AccountDAO.getInstance().getAmountByAccountId((int)acc.getAccountId());
+			if (type.equals("EXPENCE")) {
+				AccountDAO.getInstance().updateAccountAmount(acc, (oldValue.subtract(newValue)));
+			} else 
+			if (type.equals("INCOME")) {
+				AccountDAO.getInstance().updateAccountAmount(acc, (oldValue.add(newValue)));
+			}
+			TransactionDAO.getInstance().insertTransaction(t);
+		} catch (SQLException e) {
+			System.out.println("neshto katastrofalno se slu4i");
+			e.printStackTrace();
+		}
+		request.setAttribute("user", u);
+		request.setAttribute("accountId", acc.getAccountId());
+		
+		//response.sendRedirect("transaction");
+		//transaction?accountId=${sessionScope.accountId}
+		return "transactions";
+		//request.getRequestDispatcher("transaction?accountId=" + acc.getAccountId()).forward(request, response);
+	}
+	
+	@RequestMapping(value="/transaction/account/addTransaction", method=RequestMethod.GET)
+	public String getAddTransaction(HttpServletRequest request, HttpSession session) {
+		return "addTransaction";
+		
 	}
 }

@@ -11,15 +11,15 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Transactions | Finance Tracker</title>
 		  <!-- Bootstrap 3.3.7 -->
-		  <link rel="stylesheet" href="css/bootstrap.min.css">
+		  <link href="<c:url value="/static/css/bootstrap.min.css" />" rel="stylesheet" type="text/css">
 		  <!-- Font Awesome -->
-		  <link rel="stylesheet" href="css/font-awesome.min.css">
+		  <link href="<c:url value="/static/css/font-awesome.min.css" />" rel="stylesheet" type="text/css">
 		  <!-- Ionicons -->
 		  <link rel="stylesheet" href="css/ionicons.min.css">
 		  <!-- Theme style -->
-		  <link rel="stylesheet" href="css/AdminLTE.min.css">
+		  <link href="<c:url value="/static/css/AdminLTE.min.css" />" rel="stylesheet" type="text/css">
 		  <!-- iCheck -->
-		  <link rel="stylesheet" href="css/_all-skins.min.css">
+		  <link href="<c:url value="/static/css/_all-skins.min.css" />" rel="stylesheet" type="text/css">
 		<!-- Google Font -->
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
@@ -46,10 +46,10 @@
 			<div style="margin-bottom: 25px">
 				<div class="row">
 					<div class="col-sm-3">
-						<a href="addTransaction.jsp" type="button" class="btn btn-block btn-primary btn-lg"><i class="ion ion-plus"></i> Add new record</a>
+						<a href="addTransaction" type="button" class="btn btn-block btn-primary btn-lg"><i class="ion ion-plus"></i> Add new record</a>
 					</div>
 					<div class="col-sm-3">
-						<a href="login" type="button" class="btn btn-block btn-default btn-lg"><i class="ion ion-android-arrow-back"></i> Back</a>
+						<a href="main" type="button" class="btn btn-block btn-default btn-lg"><i class="ion ion-android-arrow-back"></i> Back</a>
 					</div>
 					<div class="col-sm-3">
 						<a href="transfer?accountId=${sessionScope.accountId}" type="button" class="btn btn-block btn-default btn-lg"><i class="ion ion-arrow-swap"></i> Transfer</a>

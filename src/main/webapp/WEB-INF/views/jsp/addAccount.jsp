@@ -38,7 +38,7 @@
 		              </div>
 		              <div class="box-footer">
 		                <button type="submit" class="btn btn-primary">Save</button>
-		                <a href="main.jsp" class="btn btn-default">Cancel</a>
+		                <a href="main" class="btn btn-default">Cancel</a>
 		              </div>
 		            </form>
 	          	</div>
