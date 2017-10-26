@@ -47,7 +47,7 @@
 							</a>
 				            <div class="info-box-content">
 				              <span class="info-box-text"><c:out value="${ budget.key.name }"></c:out></span>
-				              <span class="info-box-number"><c:out value="${ budget.key.amount }"></c:out></span>
+				              <span class="info-box-number"><c:out value="${ budget.key.initialAmount }"></c:out></span>
 				
 				              <div class="progress">
 				              <c:set var = "percent" scope = "session" value = "${ budget.value }"/>

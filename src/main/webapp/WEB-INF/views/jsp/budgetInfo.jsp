@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
+<%@ page import="java.math.BigDecimal"%>
+<%@ page import="com.financeTracker.model.TransactionType" %>
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/functions" prefix = "fn" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -7,7 +9,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-		<title>Insert title here</title>
+		<title>Budget Info | Finance Tracker</title>
 	</head>
 	<body>
 		<c:if test="${ sessionScope.user == null }">
@@ -26,7 +28,7 @@
 				<div style="margin-bottom: 25px">
 					<div class="row">
 						<div class="col-sm-3">
-							<a href="http://abv.bg" type="button" class="btn btn-block btn-primary btn-lg"><i class="ion ion-plus"></i> Edit budget</a>
+							<a href="<c:url value='/budgets/${ budgetId }/editBudget'></c:url>" type="button" class="btn btn-block btn-primary btn-lg"><i class="ion ion-plus"></i> Edit budget</a>
 						</div>
 						<div class="col-sm-3">
 							<a href="<c:url value='/budgets'></c:url>" type="button" class="btn btn-block btn-default btn-lg"><i class="ion ion-android-arrow-back"></i> Back</a>
@@ -39,7 +41,7 @@
 				
 				<c:forEach items="${ budgetTransactions }" var="transaction">
 				<div>
-				<%-- 	<a href="transaction/${transaction.transactionId}"> --%>
+			<%-- 	<a href="transaction/${transaction.transactionId}"> --%>
 			            <div class="info-box" style="width: auto;">
 				            <div class="info-box-content">
 				            <div class="row">

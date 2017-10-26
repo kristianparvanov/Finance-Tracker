@@ -10,12 +10,9 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.junit.experimental.categories.Categories;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,11 +21,14 @@ import com.financeTracker.model.Account;
 import com.financeTracker.model.Budget;
 import com.financeTracker.model.Category;
 import com.financeTracker.model.Tag;
+import com.financeTracker.model.Transaction;
 import com.financeTracker.model.User;
 import com.financeTracker.model.db.AccountDAO;
 import com.financeTracker.model.db.BudgetDAO;
+import com.financeTracker.model.db.BudgetsHasTransactionsDAO;
 import com.financeTracker.model.db.CategoryDAO;
 import com.financeTracker.model.db.TagDAO;
+import com.financeTracker.model.db.TransactionDAO;
 
 @Controller
 public class BudgetController {
@@ -130,7 +130,7 @@ public class BudgetController {
 		}
 		
 		
-		return "redirect:budgets";
+		return "forward:/budgets";
 	}
 	
 	@RequestMapping (value ="/budgets/{budgetId}", method = RequestMethod.GET)
@@ -138,6 +138,7 @@ public class BudgetController {
 		try {
 			Budget b = budgetDao.getBudgetByBudgetId(budgetId);
 			
+			model.addAttribute("budgetId", budgetId);
 			model.addAttribute("budgetTransactions", b.getTransactions());
 		} catch (SQLException e) {
 			System.out.println("Mai nqmame tranzakciiki?? ;(");
@@ -147,17 +148,129 @@ public class BudgetController {
 		return "budgetInfo";
 	}
 	
-	@RequestMapping (value ="/editBudget/{budgetId}", method = RequestMethod.POST)
-	public String editBudget(@PathVariable("budgetId") Long budgetId) {
+	@RequestMapping (value ="/budgets/{budgetId}/editBudget", method = RequestMethod.POST)
+	public String postEditBudget(HttpSession session, HttpServletRequest request, @PathVariable("budgetId") Long budgetId) {
+		User user = (User) session.getAttribute("user");
 		
-		return "forward:/budgets";
+		try {
+			Budget oldBudget = budgetDao.getBudgetByBudgetId(budgetId);
+			
+			
+			String name = request.getParameter("name");
+			Account acc = AccountDAO.getInstance().getAccountByUserIDAndAccountName(user.getUserId(), request.getParameter("account"));
+			Category category = CategoryDAO.getInstance().getCategoryByCategoryName(request.getParameter("category"));
+			BigDecimal amount = new BigDecimal(request.getParameter("amount"));
+			String[] tags = request.getParameterValues("tags");
+			String date = request.getParameter("date");
+			
+			String[] inputDate = date.split("/");
+			
+			int monthFrom = Integer.valueOf(inputDate[0]);
+			
+			int dayOfMonthFrom = Integer.valueOf(inputDate[1]);
+			
+			String[] temp = inputDate[2].toString().split(" - ");
+			
+			
+			int yearFrom = Integer.valueOf(temp[0]);
+			
+			int monthTo = Integer.valueOf(temp[1]);
+			
+			int dayOfMonthTo = Integer.valueOf(inputDate[3]);
+			
+			int yearTo = Integer.valueOf(inputDate[4]);
+			
+			LocalDateTime dateFrom = LocalDateTime.of(yearFrom, monthFrom, dayOfMonthFrom, 0, 0, 0);
+			LocalDateTime dateTo = LocalDateTime.of(yearTo, monthTo, dayOfMonthTo, 0, 0, 0);
+			
+			Set<Tag> tagsSet = new HashSet<>();
+			if (tags != null) {
+				for (String tagName : tags) {
+					tagsSet.add(new Tag(tagName, user.getUserId()));
+				}
+			}
+
+			Budget newBudget = new Budget(name, amount, dateFrom, dateTo, acc.getAccountId(), category.getCategoryId(), tagsSet);
+			newBudget.setBudgetId(budgetId);
+			
+			if (newBudget.getCategoryId() != oldBudget.getCategoryId() || newBudget.getAccountId() != oldBudget.getAccountId()
+						|| newBudget.getFromDate() != oldBudget.getFromDate() || newBudget.getToDate() != oldBudget.getToDate()) {
+				
+				Set<Transaction> transactions = BudgetsHasTransactionsDAO.getInstance().getAllTransactionsByBudgetId(budgetId);
+				BigDecimal newAmount = new BigDecimal(0.0);
+				
+				for (Transaction transaction : transactions) {
+					newAmount = newAmount.subtract(transaction.getAmount());
+				}
+				
+				newBudget.setAmount(newAmount);
+				
+				BudgetsHasTransactionsDAO.getInstance().deleteTransactionBudgetByBudgetId(budgetId);
+				
+				boolean exits = TransactionDAO.getInstance().existsTransaction(newBudget.getFromDate(), newBudget.getToDate(), newBudget.getCategoryId(), newBudget.getAccountId());
+				
+				if (exits) {
+					transactions = TransactionDAO.getInstance().getAllTransactionsForBudget(newBudget.getFromDate(), newBudget.getToDate(), newBudget.getCategoryId(), newBudget.getAccountId());
+				
+					 newAmount = new BigDecimal(0.0);
+					
+					for (Transaction transaction : transactions) {
+						BudgetsHasTransactionsDAO.getInstance().insertTransactionBudget(newBudget.getBudgetId(), transaction.getTransactionId());
+						
+						newAmount = newAmount.add(transaction.getAmount());
+					}
+					
+					newBudget.setAmount(amount);
+					newBudget.setTransactions(transactions);
+					
+					budgetDao.updateBudget(newBudget);
+				}
+
+				TagDAO.getInstance().deleteAllTagsForBydget(budgetId);
+				
+				for (Tag tag : tagsSet) {
+					TagDAO.getInstance().insertTagToBudget(newBudget, tag);
+				}
+			}
+			
+		} catch (SQLException e) {
+			System.out.println("opala");
+		}
+		
+		return "forward:/budgets/" + budgetId;
 	}
 	
-	@RequestMapping (value ="/editBudget/{budgetId}", method = RequestMethod.GET)
-	public String getBudgetTransactions(@PathVariable("budgetId") Long budgetId, Model model) {
+	@RequestMapping (value ="/budgets/{budgetId}/editBudget", method = RequestMethod.GET)
+	public String getEditBudget(HttpSession session, @PathVariable("budgetId") Long budgetId, Model model) {
+		User user = (User) session.getAttribute("user");
 		
-		model.addAttribute("budgetId", budgetId);
+		Budget budget;
+		try {
+			budget = budgetDao.getBudgetByBudgetId(budgetId);
+			Account acc = AccountDAO.getInstance().getAccountByAccountId(budget.getAccountId());
+			Set<Account> accounts = AccountDAO.getInstance().getAllAccountsByUserId(user.getUserId());
+			BigDecimal amount = budget.getInitialAmount();
+			Set<Category> categories = CategoryDAO.getInstance().getAllCategoriesByUserId(user.getUserId());
+			Set<Tag> tags = TagDAO.getInstance().getAllTagsByUserId(user.getUserId());
+			LocalDateTime fromDate = budget.getFromDate();
+			
+			Set<String> tagNames = new HashSet<String>();
+			for (Tag tag : tags) {
+				tagNames.add(tag.getName());
+			}
+			
+			model.addAttribute("categories", categories);
+			model.addAttribute("tagNames", tagNames);
+			model.addAttribute("tags", tags);
+			model.addAttribute("editBudgetAmount", amount);
+			model.addAttribute("accounts", accounts);
+			model.addAttribute("accountName", acc.getName());
+			model.addAttribute("budget", budget);
+			model.addAttribute("fromDate", fromDate);
+		} catch (SQLException e) {
+			System.out.println("Nqmame budgetche??");
+		}
 		
-		return "budgetTransactions";
+		return "editBudget";
 	}
 }

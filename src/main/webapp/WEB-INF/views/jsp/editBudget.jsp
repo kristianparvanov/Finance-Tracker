@@ -6,13 +6,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
-		<link rel="stylesheet" href="css/daterangepicker.css">
+		<link rel="stylesheet" href="<c:url value='/css/daterangepicker.css'></c:url>">
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-		<link rel="stylesheet" href="css/select2.min.css">
+		<link rel="stylesheet" href="<c:url value='/css/select2.min.css'></c:url>">
 		
-		<script src="js/moment.min.js"></script>
-		<script src="js/daterangepicker.js"></script>
-		<title>Add Budget | Finance Tracker</title>
+		<script src='<c:url value='/js/moment.min.js'></c:url>'></script>
+		<script src='<c:url value='/js/daterangepicker.js'></c:url>'></script>
+		<title>Edit Budget | Finance Tracker</title>
 	</head>
 	<body>
 		<div>
@@ -30,16 +30,22 @@
 		<section class="content">
 			<div class="col-md-6">
 		        <div class="box box-primary">
-		            <form role="form" action="addBudget" method="post">
+		            <form role="form" action="/budgets/${ budget.budgetId }/editBudget" method="post">
 		              <div class="box-body">
 			             <div class="form-group">
                   			<label>Name</label>
-                 			<textarea class="form-control" rows="1" placeholder="Enter budget name" name="name"></textarea>
+                 			<textarea id="bName" class="form-control" rows="1" placeholder="Enter budget name" name="name"></textarea>
+                 			<c:set var="name" value="${ budget.name }" />
+                 			<script type="text/javascript">
+                 				var budgetName = '${ name }';
+								document.getElementById("bName").value = budgetName;
+							</script>
                			</div>
 			            
 		                <div class="form-group">
 			                <label>Account</label>
 			                <select class="form-control select2" style="width: 100%;" data-placeholder="Select an account" name="account">
+			                  <option selected="selected"><c:out value="${ accountName }"></c:out></option>
 			                  <c:forEach items="${ accounts }" var="account">
 			                	  <option><c:out value="${ account.name }"></c:out></option>
 			                  </c:forEach>
@@ -55,15 +61,33 @@
 			            </div>
 		                <div class="form-group">
 		                  <label>Amount</label>
-		                  <input type="text" class="form-control" placeholder="Amount" name="amount">
+		                  <input type="text" class="form-control" placeholder="Amount" name="amount" value="${ editBudgetAmount }">
 		                </div>
 		                <div class="form-group">
 			                <label>Tags</label>
-			                <select class="form-control select2" multiple="multiple" data-placeholder="Select tags" style="width: 100%;" name="tags">
+			                <select id="multy" class="form-control select2" multiple="multiple" data-placeholder="Select tags" style="width: 100%;" name="tags">
 			                  <c:forEach items="${ tags }" var="tag">
 			                	  <option><c:out value="${ tag.name }"></c:out></option>
 			                  </c:forEach>
 			                </select>
+			                <c:set var="tags" value="${ tagNames }" />
+			                <script type="text/javascript">
+				           		var values="Test,Prof,Off";
+				           		var values = 'Alaska'
+				            	var values = '${tags}';
+				            	
+				            	values = values.replace(/[\[\]']+/g,'')
+				            	
+                				$.each(values.split(","), function(i,e){
+                				    $("#multy option[value='" + e + "']").prop('selected', true);
+                				});
+                				
+                				options = document.querySelectorAll('#multy option');
+
+                			    values.split(',').forEach(function(v) {
+                			      Array.from(options).find(c => c.value == v).selected = true;
+                			    });
+							</script>
 			            </div>
 			            
 			              <!-- Date and time range -->
@@ -74,7 +98,7 @@
                   <div class="input-group-addon">
                     <i class="fa fa-clock-o"></i>
                   </div>
-                  <input type="text" class="form-control pull-right" id="reservationtime" name="date">
+                  <input type="text" class="form-control pull-right" id="reservationtime" value="${ fromDate }" name="date">
                 </div>
                 <!-- /.input group -->
               </div>
@@ -82,7 +106,7 @@
               
                <div class="box-footer">
 		                <button type="submit" class="btn btn-primary">Save</button>
-		                <a href="addBudget" class="btn btn-default">Cancel</a>
+		                <a href='<c:url value='/budgets/${ budgetId }'></c:url>' class="btn btn-default">Cancel</a>
 		              </div>
 		              
 	               </div>
@@ -96,20 +120,20 @@
 	</div>
 	
 	<!-- jQuery 3 -->
-	<script src="js/jquery.min.js"></script>
+	<script src='<c:url value='/js/jquery.min.js'></c:url>'></script>
 	<!-- Bootstrap 3.3.7 -->
-	<script src="js/bootstrap.min.js"></script>
+	<script src='<c:url value='/js/bootstrap.min.js'></c:url>'></script>
 	<!-- Select2 -->
-	<script src="js/select2.full.min.js"></script>
+	<script src='<c:url value='/js/select2.full.min.js'></c:url>'></script>
 	<!-- SlimScroll -->
-	<script src="js/jquery.slimscroll.min.js"></script>
+	<script src='<c:url value='/js/jquery.slimscroll.min.js'></c:url>'></script>
 	<!-- FastClick -->
-	<script src="js/fastclick.js"></script>
+	<script src='<c:url value='/js/fastclick.js'></c:url>'></script>
 	<!-- AdminLTE App -->
-	<script src="js/adminlte.min.js"></script>
+	<script src='<c:url value='/js/adminlte.min.js'></c:url>'></script>
 	<!-- AdminLTE for demo purposes -->
-	<script src="js/demo.js"></script>
-	<script src="js/daterangepicker.js"></script>
+	<script src='<c:url value='/js/demo.js'></c:url>'></script>
+	<script src='<c:url value='/js/daterangepicker.js'></c:url>'></script>
 	<!-- I hate you -->
 	<script type="text/javascript">
 		$(function () {

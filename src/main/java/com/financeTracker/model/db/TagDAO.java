@@ -146,4 +146,13 @@ public class TagDAO {
 		
 		return tags;
 	}
+	
+	public synchronized void deleteAllTagsForBydget(long budgetId) throws SQLException {
+		String sql = "DELETE FROM budgets_has_tags WHERE budget_id = ?;";
+		
+		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(sql);
+		ps.setLong(1, budgetId);
+		
+		ps.executeUpdate();
+	}
 }
