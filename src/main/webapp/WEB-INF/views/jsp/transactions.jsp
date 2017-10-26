@@ -38,7 +38,7 @@
 						<a href="addTransaction" type="button" class="btn btn-block btn-primary btn-lg"><i class="ion ion-plus"></i> Add new record</a>
 					</div>
 					<div class="col-sm-3">
-						<a href="/FinanceTracker/main" type="button" class="btn btn-block btn-default btn-lg"><i class="ion ion-android-arrow-back"></i> Back</a>
+						<a href="<c:url value="/main"></c:url>" type="button" class="btn btn-block btn-default btn-lg"><i class="ion ion-android-arrow-back"></i> Back</a>
 					</div>
 					<div class="col-sm-3">
 						<a href="transfer/accountId/${accountId}" type="button" class="btn btn-block btn-default btn-lg"><i class="ion ion-arrow-swap"></i> Transfer</a>
@@ -59,7 +59,8 @@
 						              <h4>Description: <c:out value="${transaction.description }"></c:out></h4>
 						          </div>
 						          <div class="col-sm-4">
-						              <h4>Date: <fmt:parseDate value="${transaction.date}" pattern="yyyy-MM-dd" /></h4>
+										<fmt:parseDate value="${ transaction.date }" pattern="yyyy-MM-dd'T'HH:mm" var="parsedDateTime" type="both" />
+						              	<h4>Date: <fmt:formatDate pattern="dd.MM.yyyy HH:mm" value="${ parsedDateTime }" /></h4>
 					              </div>
 				              </div>
 				             <div class="row">

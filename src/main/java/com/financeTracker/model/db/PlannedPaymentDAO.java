@@ -55,8 +55,10 @@ public class PlannedPaymentDAO {
 			int accountId = result.getInt("account_id");
 			int categoryId = result.getInt("category_id");
 			HashSet<Tag> tags = TagDAO.getInstance().getTagsByPlannedPaymentId(plannedPaymentId);
+			String categoryName = CategoryDAO.getInstance().getCategoryNameByCategoryId(categoryId);
 			PlannedPayment payment = new PlannedPayment(name, paymentType, fromDate, amount, description, accountId, categoryId, tags);
 			payment.setPlannedPaymentId(plannedPaymentId);
+			payment.setCategoryName(categoryName);
 			payments.add(payment);
 			ALL_PLANNED_PAYMENTS.put(name, payment);
 		}
@@ -152,7 +154,7 @@ public class PlannedPaymentDAO {
 		statement.setString(5, p.getDescription());
 		statement.setLong(6, p.getAccount());
 		statement.setLong(7, p.getCategory());
-		statement.setLong(9, p.getPlannedPaymentId());
+		statement.setLong(8, p.getPlannedPaymentId());
 		statement.executeUpdate();
 		
 		ALL_PLANNED_PAYMENTS.put(p.getName(), p);
@@ -170,4 +172,30 @@ public class PlannedPaymentDAO {
 	public synchronized void removeTransaction(PlannedPayment p) {
 		ALL_PLANNED_PAYMENTS.remove(p.getName());
 	}
+
+	public PlannedPayment getPlannedPaymentByPlannedPaymentId(Long plannedPaymentId) throws SQLException {
+		String query = "SELECT planned_payment_id, name, type, from_date, amount, description, account_id, category_id FROM finance_tracker.planned_payments WHERE planned_payment_id = ?";
+		PreparedStatement statement = CONNECTION.prepareStatement(query);
+		statement.setLong(1, plannedPaymentId);
+		statement.executeQuery();
+		
+		ResultSet result = statement.executeQuery();
+		result.next();
+		
+		String name = result.getString("name");
+		TransactionType plannedPaymentType = TransactionType.valueOf(result.getString("type"));
+		LocalDateTime fromDate = result.getTimestamp("from_date").toLocalDateTime();
+		BigDecimal amount = result.getBigDecimal("amount");
+		String description = result.getString("description");
+		int accountId = result.getInt("account_id");
+		int categoryId = result.getInt("category_id");
+		HashSet<Tag> tags = TagDAO.getInstance().getTagsByPlannedPaymentId(plannedPaymentId);
+		
+		PlannedPayment p = new PlannedPayment(name, plannedPaymentType, fromDate, amount, description, accountId, categoryId, tags);
+		p.setPlannedPaymentId(plannedPaymentId);
+		
+		return p;
+	}
+	
+	
 }

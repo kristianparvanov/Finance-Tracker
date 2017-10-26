@@ -67,7 +67,8 @@
 	                  			<div class="input-group-addon">
 	                    			<i class="fa fa-calendar"></i>
 	                  			</div>
-                  		 		<input type="text" class="form-control pull-right" id="datepicker" value="${ editTransactionDate }" name="date">
+	                  			<fmt:parseDate value="${ editTransactionDate }" pattern="yyyy-MM-dd'T'HH:mm" var="parsedDateTime" type="both" />
+                  		 		<input type="text" class="form-control pull-right" id="datepicker" value="<fmt:formatDate pattern="dd.MM.yyyy HH:mm" value="${ parsedDateTime }" />" name="date">
                 			</div>
 		                </div>
 		                <div class="form-group">
@@ -79,8 +80,6 @@
 			                </select>
 			                <c:set var="tags" value="${ editTransactionTags }" />
 				            <script type="text/javascript">
-				           		var values="Test,Prof,Off";
-				           		var values = 'Alaska'
 				            	var values = '${tags}';
 				            	
 				            	values = values.replace(/[\[\]']+/g,'')
@@ -109,7 +108,7 @@
                		  <div class="box-footer">
 		                <button type="submit" class="btn btn-primary">Save</button>
 		                <a href="deleteTransaction?accountId=${transactionId}" class="btn btn-danger">Delete</a>
-		                <a href="/FinanceTracker/account/${accountId}" class="btn btn-default">Cancel</a>
+		                <a href="<c:url value="/account/${sessionScope.accountId}"></c:url>" class="btn btn-default">Cancel</a>
 		              </div>
 		            </form>
 	          	</div>

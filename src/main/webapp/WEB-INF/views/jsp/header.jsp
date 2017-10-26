@@ -27,7 +27,7 @@
 		<div class="wrapper">
 		 <header class="main-header">
 		    <!-- Logo -->
-		    <a href="/FinanceTracker/index" class="logo">
+		    <a href="<c:url value="/index"></c:url>" class="logo">
 		      <!-- mini logo for sidebar mini 50x50 pixels -->
 		      <span class="logo-mini"><b>F</b>TR</span>
 		      <!-- logo for regular state and mobile devices -->
@@ -67,7 +67,7 @@
 		        <ul class="nav navbar-nav">
 		          <!-- User Account: style can be found in dropdown.less -->
 		          <li>
-		            <a href="/FinanceTracker/user" style="font-size: 18px;">
+		            <a href="<c:url value="/user"></c:url>" style="font-size: 18px;">
 		            <i class="ion ion-person"></i>
 		              <% User u = (User) request.getSession().getAttribute("user"); %>
 		              <span><%= u.getFirstName() %></span>
@@ -75,7 +75,7 @@
 		          </li>
 		          <!-- Control Sidebar Toggle Button -->
 		          <li>
-		            <a href="/FinanceTracker/logout" style="font-size: 18px;"><i class="glyphicon glyphicon-log-out"></i> Log out</a>
+		            <a href="<c:url value="/logout"></c:url>" style="font-size: 18px;"><i class="glyphicon glyphicon-log-out"></i> Log out</a>
 		          </li>
 		        </ul>
 		      </div>

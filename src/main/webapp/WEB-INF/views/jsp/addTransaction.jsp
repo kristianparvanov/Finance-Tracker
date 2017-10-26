@@ -72,7 +72,7 @@
                		  </div>
                		  <div class="box-footer">
 		                <button type="submit" class="btn btn-primary">Save</button>
-		                <a href="/FinanceTracker/account/${sessionScope.accountId}" class="btn btn-default">Cancel</a>
+		                <a href="<c:url value="/account/${sessionScope.accountId}"></c:url>" class="btn btn-default">Cancel</a>
 		              </div>
 		            </form>
 	          	</div>
