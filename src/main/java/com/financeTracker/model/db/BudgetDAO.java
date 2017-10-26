@@ -293,4 +293,28 @@ public class BudgetDAO {
 		
 		return budgets;
 	}
+	
+	public Budget getBudgetByBudgetId(long budgetId) throws SQLException {
+		String sql = "SELECT name, initial_amount, amount, from_date, to_date, account_id, category_id FROM budgets WHERE budget_id = ?;";
+		
+		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(sql);
+		ps.setLong(1, budgetId);
+		
+		ResultSet res = ps.executeQuery();
+		res.next();
+		
+		String name = res.getString("name");
+		BigDecimal initialAmount = res.getBigDecimal("initial_amount");
+		BigDecimal amount = res.getBigDecimal("amount");
+		LocalDateTime fromDate = res.getTimestamp("from_date").toLocalDateTime();
+		LocalDateTime toDate = res.getTimestamp("to_date").toLocalDateTime();
+		long accountId = res.getLong("account_id");
+		long categoryId = res.getLong("category_id");
+		Set<Tag> tags = TagDAO.getInstance().getTagsByBudgetId(budgetId);
+		Set<Transaction> transactions = BudgetsHasTransactionsDAO.getInstance().getAllTransactionsByBudgetId(budgetId);
+		
+		Budget b = new Budget(budgetId, name, initialAmount, amount, fromDate, toDate, accountId, categoryId, tags, transactions);
+		
+		return b;
+	}
 }

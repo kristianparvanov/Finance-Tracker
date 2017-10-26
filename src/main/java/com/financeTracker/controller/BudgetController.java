@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -129,5 +131,33 @@ public class BudgetController {
 		
 		
 		return "redirect:budgets";
+	}
+	
+	@RequestMapping (value ="/budgets/{budgetId}", method = RequestMethod.GET)
+	public String viewBudget(@PathVariable("budgetId") Long budgetId, Model model) {
+		try {
+			Budget b = budgetDao.getBudgetByBudgetId(budgetId);
+			
+			model.addAttribute("budgetTransactions", b.getTransactions());
+		} catch (SQLException e) {
+			System.out.println("Mai nqmame tranzakciiki?? ;(");
+		}
+		
+		
+		return "budgetInfo";
+	}
+	
+	@RequestMapping (value ="/editBudget/{budgetId}", method = RequestMethod.POST)
+	public String editBudget(@PathVariable("budgetId") Long budgetId) {
+		
+		return "forward:/budgets";
+	}
+	
+	@RequestMapping (value ="/editBudget/{budgetId}", method = RequestMethod.GET)
+	public String getBudgetTransactions(@PathVariable("budgetId") Long budgetId, Model model) {
+		
+		model.addAttribute("budgetId", budgetId);
+		
+		return "budgetTransactions";
 	}
 }
