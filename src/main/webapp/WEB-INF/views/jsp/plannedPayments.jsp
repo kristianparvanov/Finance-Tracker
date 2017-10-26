@@ -34,7 +34,7 @@
 						<a href="addPlannedPayment" type="button" class="btn btn-block btn-primary btn-lg"><i class="ion ion-plus"></i> Add new payment</a>
 					</div>
 					<div class="col-sm-3">
-						<a href="/FinanceTracker/main" type="button" class="btn btn-block btn-default btn-lg"><i class="ion ion-android-arrow-back"></i> Back</a>
+						<a href="<c:url value="/main"></c:url>" type="button" class="btn btn-block btn-default btn-lg"><i class="ion ion-android-arrow-back"></i> Back</a>
 					</div>
 				</div>
 			</div>
@@ -49,8 +49,9 @@
 							 			<h3>Name: <c:out value="${payment.name}"></c:out></h3>
 							 		</div>
 							 		<div class="col-sm-4">
-							 			<h4>Category: <c:out value="${payment.categoryName}"></c:out></h4>
-							 		</div>
+							 			<fmt:parseDate value="${ payment.fromDate }" pattern="yyyy-MM-dd'T'HH:mm" var="parsedDateTime" type="both" />
+										<h4>Will occur on: <fmt:formatDate pattern="dd.MM.yyyy HH:mm" value="${ parsedDateTime }" /></h4>
+									</div>
 							 	</div>
 							 	<div class="row">
 				              		<div class="col-sm-4">
@@ -66,9 +67,10 @@
 											</c:otherwise>
 										</c:choose>
 									</div>
+									
 									<div class="col-sm-4">
-										<h4>Date: <c:out value="${payment.fromDate}"></c:out></h4>
-									</div>
+							 			<h4>Category: <c:out value="${payment.categoryName}"></c:out></h4>
+							 		</div>
 				             	</div>
 							 </div>
 						</div>

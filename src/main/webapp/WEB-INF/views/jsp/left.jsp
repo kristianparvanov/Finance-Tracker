@@ -33,19 +33,19 @@
 				<ul class="sidebar-menu" data-widget="tree">
 					<li class="header" style="font-size: 16px">MAIN NAVIGATION</li>
 					<li>
-						<a href="/FinanceTracker/main">
+						<a href="<c:url value="/main"></c:url>">
 							<i class="fa fa-credit-card"></i> 
 							<span style="font-size: 18px">Accounts</span>
 						</a>
 					</li>
 					<li>
-						<a href="/FinanceTracker/plannedPayments">
+						<a href="<c:url value="/plannedPayments"></c:url>">
 							<i class="fa fa-dollar"></i> 
 							<span style="font-size: 18px">Planned Payments</span>
 						</a>
 					</li>
 					<li>
-						<a href="/FinanceTracker/budgets">
+						<a href="<c:url value="/budgets"></c:url>">
 							<i class="fa fa-money"></i> 
 							<span style="font-size: 18px">Budgets</span>
 						</a>
@@ -53,7 +53,7 @@
 					<li class="treeview">
 						<a href="#">
 							<i class="fa fa-dashboard"></i> 
-							<span style="font-size: 18px">Spravki</span>
+							<span style="font-size: 18px">???</span>
 							<span class="pull-right-container"> 
 								<i class="fa fa-angle-left pull-right"></i>
 							</span>
@@ -100,7 +100,7 @@
 						</a>
 					</li>
 					<li>
-						<a href="/FinanceTracker/about">
+						<a href="<c:url value="/about"></c:url>">
 							<i class="fa fa-question-circle"></i>
 							<span style="font-size: 18px">About</span>
 						</a>

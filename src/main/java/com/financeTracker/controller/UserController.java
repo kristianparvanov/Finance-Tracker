@@ -157,4 +157,9 @@ public class UserController {
 		session.invalidate();
 		return "forward:index";
 	}
+	
+	@RequestMapping(value="/user", method=RequestMethod.GET)
+	public String user(HttpSession session) {
+		return "user";
+	}
 }
