@@ -1,6 +1,7 @@
 package com.financeTracker.controller;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -49,7 +50,7 @@ public class BudgetController {
 			budgets = budgetDao.getAllBudgetsByUserId(u.getUserId());
 			
 			for (Budget budget : budgets) {
-				percent = budget.getAmount().divide(budget.getInitialAmount()).multiply(BigDecimal.valueOf(100));
+				percent = budget.getAmount().divide(budget.getInitialAmount(), 4, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100));
 				
 				map.put(budget, percent);
 			}
@@ -71,6 +72,7 @@ public class BudgetController {
 		try {
 			Set<Account> accounts = AccountDAO.getInstance().getAllAccountsByUserId(user.getUserId());
 			Set<Category> categories = CategoryDAO.getInstance().getAllCategoriesByUserId(user.getUserId());
+			categories.addAll(CategoryDAO.getInstance().getAllCategoriesByUserId());
 			Set<Tag> tags = TagDAO.getInstance().getAllTagsByUserId(user.getUserId());
 			
 			model.addAttribute("accounts", accounts);
@@ -193,8 +195,12 @@ public class BudgetController {
 			Budget newBudget = new Budget(name, amount, dateFrom, dateTo, acc.getAccountId(), category.getCategoryId(), tagsSet);
 			newBudget.setBudgetId(budgetId);
 			
-			if (newBudget.getCategoryId() != oldBudget.getCategoryId() || newBudget.getAccountId() != oldBudget.getAccountId()
-						|| newBudget.getFromDate() != oldBudget.getFromDate() || newBudget.getToDate() != oldBudget.getToDate()) {
+			boolean asd = newBudget.getCategoryId() != oldBudget.getCategoryId() || newBudget.getAccountId() != oldBudget.getAccountId()
+					|| newBudget.getFromDate() != oldBudget.getFromDate() || newBudget.getToDate() != oldBudget.getToDate();
+			
+			System.out.println(asd);
+			
+			if (asd) {
 				
 				Set<Transaction> transactions = BudgetsHasTransactionsDAO.getInstance().getAllTransactionsByBudgetId(budgetId);
 				BigDecimal newAmount = new BigDecimal(0.0);
@@ -220,7 +226,7 @@ public class BudgetController {
 						newAmount = newAmount.add(transaction.getAmount());
 					}
 					
-					newBudget.setAmount(amount);
+					newBudget.setAmount(newAmount);
 					newBudget.setTransactions(transactions);
 					
 					budgetDao.updateBudget(newBudget);
@@ -235,9 +241,11 @@ public class BudgetController {
 			
 		} catch (SQLException e) {
 			System.out.println("opala");
+			
+			e.getMessage();
 		}
 		
-		return "forward:/budgets/" + budgetId;
+		return "redirect:/budgets/" + budgetId;
 	}
 	
 	@RequestMapping (value ="/budgets/{budgetId}/editBudget", method = RequestMethod.GET)
@@ -250,15 +258,25 @@ public class BudgetController {
 			Account acc = AccountDAO.getInstance().getAccountByAccountId(budget.getAccountId());
 			Set<Account> accounts = AccountDAO.getInstance().getAllAccountsByUserId(user.getUserId());
 			BigDecimal amount = budget.getInitialAmount();
+			String categoryName = CategoryDAO.getInstance().getCategoryNameByCategoryId(budget.getCategoryId());
 			Set<Category> categories = CategoryDAO.getInstance().getAllCategoriesByUserId(user.getUserId());
+			categories.addAll(CategoryDAO.getInstance().getAllCategoriesByUserId());
 			Set<Tag> tags = TagDAO.getInstance().getAllTagsByUserId(user.getUserId());
 			LocalDateTime fromDate = budget.getFromDate();
+			LocalDateTime toDate = budget.getToDate();
+			
+			StringBuilder date = new StringBuilder();
+			
+			date.append(fromDate.getMonthValue()).append("/").append(fromDate.getDayOfMonth()).append("/").append(fromDate.getYear());
+			date.append(" - ");
+			date.append(toDate.getMonthValue()).append("/").append(toDate.getDayOfMonth()).append("/").append(toDate.getYear());
 			
 			Set<String> tagNames = new HashSet<String>();
 			for (Tag tag : tags) {
 				tagNames.add(tag.getName());
 			}
 			
+			model.addAttribute("categoryName", categoryName);
 			model.addAttribute("categories", categories);
 			model.addAttribute("tagNames", tagNames);
 			model.addAttribute("tags", tags);
@@ -266,7 +284,7 @@ public class BudgetController {
 			model.addAttribute("accounts", accounts);
 			model.addAttribute("accountName", acc.getName());
 			model.addAttribute("budget", budget);
-			model.addAttribute("fromDate", fromDate);
+			model.addAttribute("date", date);
 		} catch (SQLException e) {
 			System.out.println("Nqmame budgetche??");
 		}

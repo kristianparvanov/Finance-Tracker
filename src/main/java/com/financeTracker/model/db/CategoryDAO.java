@@ -62,11 +62,11 @@ public class CategoryDAO {
 		return name;
 	}
 	
-	public synchronized Category getCategoryByCategoryId(int categoryId) throws SQLException {
+	public synchronized Category getCategoryByCategoryId(long categoryId) throws SQLException {
 		String sql = "SELECT name, type FROM categories WHERE category_id = ?;";
 		
 		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(sql);
-		ps.setInt(1, categoryId);
+		ps.setLong(1, categoryId);
 		
 		ResultSet res = ps.executeQuery();
 		res.next();

@@ -30,7 +30,7 @@
 		<section class="content">
 			<div class="col-md-6">
 		        <div class="box box-primary">
-		            <form role="form" action="/budgets/${ budget.budgetId }/editBudget" method="post">
+		            <form role="form" action='<c:url value='/budgets/${ budget.budgetId }/editBudget'></c:url>' method="post">
 		              <div class="box-body">
 			             <div class="form-group">
                   			<label>Name</label>
@@ -54,6 +54,7 @@
 		                 <div class="form-group">
 			                <label>Category</label>
 			                <select class="form-control select2" style="width: 100%;" data-placeholder="Select a category" name="category">
+			                <option selected="selected"><c:out value="${ categoryName }"></c:out></option>
 			                  <c:forEach items="${ categories }" var="category">
 			                	  <option><c:out value="${ category.name }"></c:out></option>
 			                  </c:forEach>
@@ -98,7 +99,11 @@
                   <div class="input-group-addon">
                     <i class="fa fa-clock-o"></i>
                   </div>
-                  <input type="text" class="form-control pull-right" id="reservationtime" value="${ fromDate }" name="date">
+                  <input type="text" class="form-control pull-right" id="reservationtime" name="date">
+                  <script type="text/javascript">
+       				var date = '${ date }';
+					document.getElementById("reservationtime").value = date;
+				</script>
                 </div>
                 <!-- /.input group -->
               </div>
