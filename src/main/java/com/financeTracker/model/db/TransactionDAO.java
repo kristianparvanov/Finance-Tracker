@@ -169,6 +169,11 @@ public class TransactionDAO {
 		statement.setLong(7, t.getTransactionId());
 		statement.executeUpdate();
 		
+		for (Tag tag : t.getTags()) {
+			TagDAO.getInstance().insertTagToTags(tag, tag.getUserId());
+			TagDAO.getInstance().insertTagToTransaction(t, tag);
+		}
+		
 		ALL_TRANSACTIONS.get(t.getType()).add(t);
 	}
 	

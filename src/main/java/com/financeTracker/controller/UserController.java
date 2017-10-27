@@ -159,7 +159,19 @@ public class UserController {
 	}
 	
 	@RequestMapping(value="/user", method=RequestMethod.GET)
-	public String user(HttpSession session) {
+	public String user(HttpSession session, Model model) {
+		User u =  (User) session.getAttribute("user");
+		
+		String username = u.getUserName();
+		String email = u.getEmail();
+		String firstName = u.getFirstName();
+		String lastName = u.getLastName();
+		
+		model.addAttribute("username", username);
+		model.addAttribute("email", email);
+		model.addAttribute("firstName", firstName);
+		model.addAttribute("lastName", lastName);
+		session.setAttribute("userId", u.getUserId());
 		return "user";
 	}
 }

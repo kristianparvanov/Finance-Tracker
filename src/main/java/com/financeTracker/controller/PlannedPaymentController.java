@@ -26,7 +26,6 @@ import com.financeTracker.model.db.AccountDAO;
 import com.financeTracker.model.db.CategoryDAO;
 import com.financeTracker.model.db.PlannedPaymentDAO;
 import com.financeTracker.model.db.TagDAO;
-import com.financeTracker.model.db.TransactionDAO;
 
 @Controller
 public class PlannedPaymentController {
@@ -49,7 +48,7 @@ public class PlannedPaymentController {
 			allCategories.addAll(ownCategories);
 			tags = TagDAO.getInstance().getAllTagsByUserId(user.getUserId());
 		} catch (SQLException e) {
-			System.out.println("Something atrocious happened to the DB");
+			System.out.println("Could not get all planned payments");
 			e.printStackTrace();
 		}
 		
@@ -109,7 +108,7 @@ public class PlannedPaymentController {
 //			}
 			PlannedPaymentDAO.getInstance().insertPlannedPayment(p);
 		} catch (SQLException e) {
-			System.out.println("Something horrible happened to the DB");
+			System.out.println("Could not add planned payment");
 			e.printStackTrace();
 		}
 		request.setAttribute("user", u);
@@ -200,9 +199,22 @@ public class PlannedPaymentController {
 //			if (type.equals("INCOME")) {
 //				AccountDAO.getInstance().updateAccountAmount(acc, (oldValue.add(newValue)));
 //			}
+			TagDAO.getInstance().deleteAllTagsForPlannedPayment(plannedPaymentId);
 			PlannedPaymentDAO.getInstance().updatePlannedPayment(p);
 		} catch (SQLException e) {
-			System.out.println("Something horrible happened to the DB");
+			System.out.println("Could not edit planned payment");
+			e.printStackTrace();
+		}
+		return "redirect:/plannedPayments";
+	}
+	
+	@RequestMapping(value="/payment/deletePlannedPayment/{plannedPaymentId}", method=RequestMethod.POST)
+	public String deletePlannedPayment(@PathVariable("plannedPaymentId") Long plannedPaymentId) {
+		try {
+			TagDAO.getInstance().deleteAllTagsForPlannedPayment(plannedPaymentId);
+			PlannedPaymentDAO.getInstance().deletePlannedPayment(plannedPaymentId);
+		} catch (SQLException e) {
+			System.out.println("Could not delete planned payment");
 			e.printStackTrace();
 		}
 		return "redirect:/plannedPayments";

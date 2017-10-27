@@ -21,11 +21,9 @@ import com.financeTracker.model.TransactionType;
 
 public class PlannedPaymentDAO {
 	private static PlannedPaymentDAO instance;
-	private static final HashMap<String , PlannedPayment> ALL_PLANNED_PAYMENTS = new HashMap<>();
 	private static final Connection CONNECTION = DBManager.getInstance().getConnection();
 	
 	private PlannedPaymentDAO() {
-		//getAllPlannedPayments()??
 	}
 	
 	public synchronized static PlannedPaymentDAO getInstance() {
@@ -36,9 +34,6 @@ public class PlannedPaymentDAO {
 	}
 	
 	public synchronized List<PlannedPayment> getAllPlannedPayments() throws SQLException {
-//		if (!ALL_PLANNED_PAYMENTS.isEmpty()) {
-//			return;
-//		}
 		String query = "SELECT planned_payment_id, name, type, from_date, amount, description, account_id, category_id FROM finance_tracker.planned_payments";
 		List<PlannedPayment> payments = new ArrayList<PlannedPayment>();
 		
@@ -60,7 +55,6 @@ public class PlannedPaymentDAO {
 			payment.setPlannedPaymentId(plannedPaymentId);
 			payment.setCategoryName(categoryName);
 			payments.add(payment);
-			ALL_PLANNED_PAYMENTS.put(name, payment);
 		}
 		
 		return payments;
@@ -87,9 +81,6 @@ public class PlannedPaymentDAO {
 			PlannedPayment payment = new PlannedPayment(name, paymentType, fromDate, amount, description, account, categoryId, tags);
 			payment.setPlannedPaymentId(plannedPaymentId);
 			payments.add(payment);
-			
-			ALL_PLANNED_PAYMENTS.put(name, payment);
-			
 		}
 		
 //		for (PlannedPayment payment : ALL_PLANNED_PAYMENTS.values()) {
@@ -100,14 +91,35 @@ public class PlannedPaymentDAO {
 		return payments;
 	}
 	
-	public synchronized List<PlannedPayment> getAllPlannedPaymentsByCategoryId(long categoryId) {
+	public synchronized List<PlannedPayment> getAllPlannedPaymentsByCategoryId(long categoryId) throws SQLException {
 		//SELECT planned_payment_id, name, type, from_date, amount, description, account_id, category_id, own_category_id FROM finance_tracker.planned_payments WHERE category_id = ?
 		List<PlannedPayment> payments = new ArrayList<PlannedPayment>();
-		for (PlannedPayment payment : ALL_PLANNED_PAYMENTS.values()) {
-			if (payment.getCategory() == categoryId) {
-				payments.add(payment);
-			}
+		String query = "SELECT planned_payment_id, name, type, from_date, amount, description, account_id, category_id FROM finance_tracker.planned_payments WHERE category_id = ?";
+		
+		PreparedStatement statement = CONNECTION.prepareStatement(query);
+		statement.setLong(1, categoryId);
+		ResultSet result = statement.executeQuery();
+		while(result.next()) {
+			long plannedPaymentId = result.getLong("planned_payment_id");
+			String name = result.getString("name");
+			String type = result.getString("type");
+			TransactionType paymentType = TransactionType.valueOf(type);
+			LocalDateTime fromDate = result.getTimestamp("from_date").toLocalDateTime();
+			BigDecimal amount = result.getBigDecimal("amount");
+			String description = result.getString("description");
+			int account = result.getInt("account_id");
+			int category = result.getInt("category_id");
+			HashSet<Tag> tags = TagDAO.getInstance().getTagsByPlannedPaymentId(plannedPaymentId);
+			PlannedPayment payment = new PlannedPayment(name, paymentType, fromDate, amount, description, account, category, tags);
+			payment.setPlannedPaymentId(plannedPaymentId);
+			payments.add(payment);
 		}
+		
+//		for (PlannedPayment payment : ALL_PLANNED_PAYMENTS.values()) {
+//			if (payment.getCategory() == categoryId) {
+//				payments.add(payment);
+//			}
+//		}
 		return payments;
 	}
 	
@@ -134,8 +146,6 @@ public class PlannedPaymentDAO {
 				TagDAO.getInstance().insertTagToTags(tag, tag.getUserId());
 				TagDAO.getInstance().insertTagToPlannedPayment(p, tag);
 			}
-			
-			ALL_PLANNED_PAYMENTS.put(p.getName(), p);
 		} catch (SQLException e) {
 			CONNECTION.rollback();
 			throw new SQLException();
@@ -156,21 +166,13 @@ public class PlannedPaymentDAO {
 		statement.setLong(7, p.getCategory());
 		statement.setLong(8, p.getPlannedPaymentId());
 		statement.executeUpdate();
-		
-		ALL_PLANNED_PAYMENTS.put(p.getName(), p);
 	}
 	
-	public synchronized void deletePlannedPayment(PlannedPayment p) throws SQLException {
+	public synchronized void deletePlannedPayment(long plannedPaymentId) throws SQLException {
 		String query = "DELETE FROM finance_tracker.planned_payments WHERE planned_payment_id = ?";
 		PreparedStatement statement = CONNECTION.prepareStatement(query);
-		statement.setLong(1, p.getPlannedPaymentId());
+		statement.setLong(1, plannedPaymentId);
 		statement.executeUpdate();
-		
-		ALL_PLANNED_PAYMENTS.remove(p.getName());
-	}
-	
-	public synchronized void removeTransaction(PlannedPayment p) {
-		ALL_PLANNED_PAYMENTS.remove(p.getName());
 	}
 
 	public PlannedPayment getPlannedPaymentByPlannedPaymentId(Long plannedPaymentId) throws SQLException {

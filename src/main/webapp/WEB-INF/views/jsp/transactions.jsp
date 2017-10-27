@@ -43,9 +43,11 @@
 					<div class="col-sm-3">
 						<a href="transfer/accountId/${accountId}" type="button" class="btn btn-block btn-default btn-lg"><i class="ion ion-arrow-swap"></i> Transfer</a>
 					</div>
-					<div class="col-sm-3">
-						<a href="#" type="button" class="btn btn-block btn-danger btn-lg"><i class="ion ion-android-delete"></i> Delete Account</a>
-					</div>
+					<form action="deleteAccount/${accountId}" method="post">
+						<div class="col-sm-3">
+							<button type="submit" class="btn btn-block btn-danger btn-lg"><i class="ion ion-android-delete"></i> Delete Account</button>
+						</div>
+					</form>
 				</div>
 			</div>
 			

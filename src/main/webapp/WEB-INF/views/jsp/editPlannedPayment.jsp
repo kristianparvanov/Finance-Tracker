@@ -93,15 +93,16 @@
 				            	
 				            	values = values.replace(/[\[\]']+/g,'')
 				            	
-                				$.each(values.split(","), function(i,e){
-                				    $("#multy option[value='" + e + "']").prop('selected', true);
-                				});
-                				
-                				options = document.querySelectorAll('#multy option');
+                				var select = document.getElementById( 'multy' );
 
-                			    values.split(',').forEach(function(v) {
-                			      Array.from(options).find(c => c.value == v).selected = true;
-                			    });
+                			    for ( var i = 0, l = select.options.length, o; i < l; i++ )
+                			    {
+                			      o = select.options[i];
+                			      if ( values.indexOf( o.text ) != -1 )
+                			      {
+                			        o.selected = true;
+                			      }
+                			    }
 							</script>
 			           		</div>
 		  					<div class="form-group">
@@ -116,10 +117,14 @@
 	               		  </div>
 	               		  <div class="box-footer">
 			                <button type="submit" class="btn btn-primary">Save</button>
-			                <a href="deletePlannedPayment/${plannedPaymentId}" class="btn btn-danger">Delete</a>
 			                <a href="<c:url value="/plannedPayments"></c:url>" class="btn btn-default">Cancel</a>
 		             	</div>
 		            </form>
+		            <form action="deletePlannedPayment/${plannedPaymentId}" method="post">
+		            	<div class="box-footer">
+    						<button type="submit" class="btn btn-danger">Delete planned payment</button>
+    					</div>
+					</form>
 	          	</div>
         	</div>
 		</section>

@@ -155,4 +155,18 @@ public class TagDAO {
 		
 		ps.executeUpdate();
 	}
+
+	public void deleteAllTagsForTransaction(long transactionId) throws SQLException {
+		String query = "DELETE FROM finance_tracker.transactions_has_tags WHERE transaction_id = ?;";
+		PreparedStatement statement = DBManager.getInstance().getConnection().prepareStatement(query);
+		statement.setLong(1, transactionId);
+		statement.executeUpdate();
+	}
+
+	public void deleteAllTagsForPlannedPayment(long plannedPaymentId) throws SQLException {
+		String query = "DELETE FROM finance_tracker.planned_payments_has_tags WHERE planned_payment_id = ?;";
+		PreparedStatement statement = DBManager.getInstance().getConnection().prepareStatement(query);
+		statement.setLong(1, plannedPaymentId);
+		statement.executeUpdate();
+	}
 }

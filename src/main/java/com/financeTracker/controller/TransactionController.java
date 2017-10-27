@@ -26,6 +26,7 @@ import com.financeTracker.model.TransactionType;
 import com.financeTracker.model.User;
 import com.financeTracker.model.db.AccountDAO;
 import com.financeTracker.model.db.CategoryDAO;
+import com.financeTracker.model.db.PlannedPaymentDAO;
 import com.financeTracker.model.db.TagDAO;
 import com.financeTracker.model.db.TransactionDAO;
 
@@ -198,6 +199,8 @@ public class TransactionController {
 			if (type.equals("INCOME")) {
 				AccountDAO.getInstance().updateAccountAmount(acc, (oldValue.add(newValue)));
 			}
+			
+			TagDAO.getInstance().deleteAllTagsForTransaction(transactionId);
 			TransactionDAO.getInstance().removeTransaction(transactionId);
 			TransactionDAO.getInstance().updateTransaction(t);
 		} catch (SQLException e) {
@@ -251,5 +254,19 @@ public class TransactionController {
 		}
 		
 		return "redirect:/account/" + from.getAccountId();
+	}
+	
+	@RequestMapping(value="transaction/deleteTransaction/{transactionId}", method=RequestMethod.POST)
+	public String deleteTransaction(@PathVariable("transactionId") Long transactionId) {
+		Transaction t = null;
+		try {
+			t = TransactionDAO.getInstance().getTransactionByTransactionId(transactionId);
+			TagDAO.getInstance().deleteAllTagsForTransaction(transactionId);
+			TransactionDAO.getInstance().deleteTransaction(t);
+		} catch (SQLException e) {
+			System.out.println("Could not delete transaction");
+			e.printStackTrace();
+		}
+		return "redirect:/account/" + t.getAccount();
 	}
 }

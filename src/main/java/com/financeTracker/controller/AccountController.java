@@ -8,12 +8,15 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.financeTracker.model.Account;
 import com.financeTracker.model.User;
 import com.financeTracker.model.db.AccountDAO;
+import com.financeTracker.model.db.PlannedPaymentDAO;
+import com.financeTracker.model.db.TagDAO;
 
 @Controller
 public class AccountController {
@@ -38,5 +41,16 @@ public class AccountController {
 	@RequestMapping(value="/addAccount", method=RequestMethod.GET)
 	public String makeAccount(HttpServletRequest request, HttpSession session, Model viewModel) {
 		return "addAccount";
+	}
+	
+	@RequestMapping(value="/account/deleteAccount/{accountId}", method=RequestMethod.POST)
+	public String deleteAccount(@PathVariable("accountId") Long accountId) {
+		//try {
+			System.out.println("plz work");
+//		} catch (SQLException e) {
+//			System.out.println("Could not delete account");
+//			e.printStackTrace();
+//		}
+		return "redirect:/main";
 	}
 }
