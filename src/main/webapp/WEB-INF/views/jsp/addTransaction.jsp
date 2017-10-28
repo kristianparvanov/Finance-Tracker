@@ -32,9 +32,32 @@
 		              <div class="box-body">
 		              	<div class="form-group">
 			                <label>Type</label>
-			                <select class="form-control select2" style="width: 100%;" data-placeholder="Select a type" name="type" >
+			                <select class="form-control select2" style="width: 100%;" data-placeholder="Select a type" name="type" onchange="myFunction()" id="typ" >
 			                  <option>EXPENCE</option>
 			                  <option>INCOME</option>
+			                  
+			                  <script>
+								function myFunction() {
+								    var request = new XMLHttpRequest();
+								    var select = document.getElementById("typ");
+								    var sel = select.value;
+								    
+								    request.onreadystatechange = function() {
+								    	if (this.readyState == 4 && this.status == 200) {
+											var select = document.getElementById("cat");
+											var categories = JSON.parse(this.responseText);
+											
+											$(select).html(""); //reset child options
+										    $(categories).each(function (i) { //populate child options 
+										        $(select).append("<option>"+categories[i]+"</option>");
+										    });
+										}
+								    };
+								    
+								    request.open("GET", "http://localhost:8080/FinanceTracker/account/getIncome/"+sel);
+								    request.send();
+								}
+							  </script>
 			                </select>
 			            </div>
 		                <div class="form-group">
@@ -47,10 +70,10 @@
 			            </div>
 		                 <div class="form-group">
 			                <label>Category</label>
-			                <select class="form-control select2" style="width: 100%;" data-placeholder="Select a category" name="category">
-			                  <c:forEach items="${categories }" var="category">
+			                <select class="form-control select2" style="width: 100%;" data-placeholder="Select a category" name="category" id="cat">
+			                  <!--<c:forEach items="${categories }" var="category">
 			                	  <option><c:out value="${category.name}"></c:out></option>
-			                  </c:forEach>
+			                  </c:forEach>-->
 			                </select>
 			            </div>
 		                <div class="form-group">

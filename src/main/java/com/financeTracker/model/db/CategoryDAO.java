@@ -150,27 +150,20 @@ public class CategoryDAO {
 		return category;
 	}
 	
-	public synchronized Set<Category> getAllIncomeCategories(long userId) throws SQLException {
-		Set<Category> incomeCategories = new HashSet<Category>();
-		String query = "SELECT category_id, name, type, user_id FROM finance_tracker.categories WHERE user_id = ? AND type = 'INCOME'";
-		
+	public synchronized Set<String> getAllIncomeCategories(long userId, String type) throws SQLException {
+		Set<String> categoriesNames = new HashSet<String>();
+		String query = "SELECT name, user_id, type FROM finance_tracker.categories WHERE (user_id = ? OR user_id IS NULL) AND type = ?";
 		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(query);
 		ps.setLong(1, userId);
+		ps.setString(2, type);
 		
 		ResultSet resultSet = ps.executeQuery();
 		while(resultSet.next()) {
-			long categoryId = resultSet.getLong("category_id");
 			String name = resultSet.getString("name");
-			TransactionType type = TransactionType.valueOf(resultSet.getString("type"));
-			Long user = new Long(resultSet.getLong("user_id"));
-			List<Transaction> transactions = TransactionDAO.getInstance().getAllTransactionsByCategoryId(categoryId);
-			List<Budget> budgets = budgetDao.getAllBudgetsByCategoryId(categoryId);
-			List<PlannedPayment> plannedPayments = PlannedPaymentDAO.getInstance().getAllPlannedPaymentsByCategoryId(categoryId);
-			
-			incomeCategories.add(new Category(name, type, user, transactions, budgets, plannedPayments));
+			categoriesNames.add(name);
 		}
 		
-		return incomeCategories;
+		return categoriesNames;
 	}
 	
 	public synchronized Set<Category> getAllExpenceCategories(long userId) throws SQLException {

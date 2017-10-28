@@ -270,33 +270,18 @@ public class TransactionController {
 	}
 	
 	//methods for getting import & export sets for async ops in the view
-//	@ResponseBody
-//	@RequestMapping(value="???", method=RequestMethod.GET)
-//	public Set<Category> getIncomeCategories(HttpSession session) {
-//		User user = (User) session.getAttribute("user");
-//		Set<Category> incomeCategories = null;
-//		try {
-//			incomeCategories = CategoryDAO.getInstance().getAllIncomeCategories(user.getUserId());
-//		} catch (SQLException e) {
-//			System.out.println("Could not get all income categories");
-//			e.printStackTrace();
-//		}
-//		
-//		return incomeCategories;
-//	}
-//	
-//	@ResponseBody
-//	@RequestMapping(value="???", method=RequestMethod.GET)
-//	public Set<Category> getExpenceCategories(HttpSession session) {
-//		User user = (User) session.getAttribute("user");
-//		Set<Category> expenceCategories = null;
-//		try {
-//			expenceCategories = CategoryDAO.getInstance().getAllExpenceCategories(user.getUserId());
-//		} catch (SQLException e) {
-//			System.out.println("Could not get all expense categories");
-//			e.printStackTrace();
-//		}
-//		
-//		return expenceCategories;
-//	}
+	@ResponseBody
+	@RequestMapping(value="/getIncome/{type}", method=RequestMethod.GET)
+	public Set<String> getIncomeCategories(HttpSession session, @PathVariable("type") String type) {
+		User user = (User) session.getAttribute("user");
+		Set<String> incomeCategories = null;
+		try {
+			incomeCategories = CategoryDAO.getInstance().getAllIncomeCategories(user.getUserId(), type);
+		} catch (SQLException e) {
+			System.out.println("Could not get all income categories");
+			e.printStackTrace();
+		}
+		
+		return incomeCategories;
+	}
 }
