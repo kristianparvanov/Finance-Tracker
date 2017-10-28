@@ -3,7 +3,6 @@ package com.financeTracker.controller;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.text.NumberFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
@@ -17,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.financeTracker.model.Account;
 import com.financeTracker.model.Category;
@@ -26,7 +26,6 @@ import com.financeTracker.model.TransactionType;
 import com.financeTracker.model.User;
 import com.financeTracker.model.db.AccountDAO;
 import com.financeTracker.model.db.CategoryDAO;
-import com.financeTracker.model.db.PlannedPaymentDAO;
 import com.financeTracker.model.db.TagDAO;
 import com.financeTracker.model.db.TransactionDAO;
 
@@ -269,4 +268,34 @@ public class TransactionController {
 		}
 		return "redirect:/account/" + t.getAccount();
 	}
+	
+//	@ResponseBody
+//	@RequestMapping(value="???", method=RequestMethod.GET)
+//	public Set<Category> getIncomeCategories(HttpSession session) {
+//		User user = (User) session.getAttribute("user");
+//		Set<Category> incomeCategories = null;
+//		try {
+//			incomeCategories = CategoryDAO.getInstance().getAllIncomeCategories(user.getUserId());
+//		} catch (SQLException e) {
+//			System.out.println("Could not get all income categories");
+//			e.printStackTrace();
+//		}
+//		
+//		return incomeCategories;
+//	}
+//	
+//	@ResponseBody
+//	@RequestMapping(value="???", method=RequestMethod.GET)
+//	public Set<Category> getExpenceCategories(HttpSession session) {
+//		User user = (User) session.getAttribute("user");
+//		Set<Category> expenceCategories = null;
+//		try {
+//			expenceCategories = CategoryDAO.getInstance().getAllExpenceCategories(user.getUserId());
+//		} catch (SQLException e) {
+//			System.out.println("Could not get all expense categories");
+//			e.printStackTrace();
+//		}
+//		
+//		return expenceCategories;
+//	}
 }

@@ -166,6 +166,11 @@ public class PlannedPaymentDAO {
 		statement.setLong(7, p.getCategory());
 		statement.setLong(8, p.getPlannedPaymentId());
 		statement.executeUpdate();
+		
+		for (Tag tag : p.getTags()) {
+			TagDAO.getInstance().insertTagToTags(tag, tag.getUserId());
+			TagDAO.getInstance().insertTagToPlannedPayment(p, tag);
+		}
 	}
 	
 	public synchronized void deletePlannedPayment(long plannedPaymentId) throws SQLException {

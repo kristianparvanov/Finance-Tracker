@@ -149,4 +149,50 @@ public class CategoryDAO {
 		
 		return category;
 	}
+	
+	public synchronized Set<Category> getAllIncomeCategories(long userId) throws SQLException {
+		Set<Category> incomeCategories = new HashSet<Category>();
+		String query = "SELECT category_id, name, type, user_id FROM finance_tracker.categories WHERE user_id = ? AND type = 'INCOME'";
+		
+		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(query);
+		ps.setLong(1, userId);
+		
+		ResultSet resultSet = ps.executeQuery();
+		while(resultSet.next()) {
+			long categoryId = resultSet.getLong("category_id");
+			String name = resultSet.getString("name");
+			TransactionType type = TransactionType.valueOf(resultSet.getString("type"));
+			Long user = new Long(resultSet.getLong("user_id"));
+			List<Transaction> transactions = TransactionDAO.getInstance().getAllTransactionsByCategoryId(categoryId);
+			List<Budget> budgets = budgetDao.getAllBudgetsByCategoryId(categoryId);
+			List<PlannedPayment> plannedPayments = PlannedPaymentDAO.getInstance().getAllPlannedPaymentsByCategoryId(categoryId);
+			
+			incomeCategories.add(new Category(name, type, user, transactions, budgets, plannedPayments));
+		}
+		
+		return incomeCategories;
+	}
+	
+	public synchronized Set<Category> getAllExpenceCategories(long userId) throws SQLException {
+		Set<Category> expenceCategories = new HashSet<Category>();
+		String query = "SELECT category_id, name, type, user_id FROM finance_tracker.categories WHERE user_id = ? AND type = 'EXPENCE'";
+		
+		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(query);
+		ps.setLong(1, userId);
+		
+		ResultSet resultSet = ps.executeQuery();
+		while(resultSet.next()) {
+			long categoryId = resultSet.getLong("category_id");
+			String name = resultSet.getString("name");
+			TransactionType type = TransactionType.valueOf(resultSet.getString("type"));
+			Long user = new Long(resultSet.getLong("user_id"));
+			List<Transaction> transactions = TransactionDAO.getInstance().getAllTransactionsByCategoryId(categoryId);
+			List<Budget> budgets = budgetDao.getAllBudgetsByCategoryId(categoryId);
+			List<PlannedPayment> plannedPayments = PlannedPaymentDAO.getInstance().getAllPlannedPaymentsByCategoryId(categoryId);
+			
+			expenceCategories.add(new Category(name, type, user, transactions, budgets, plannedPayments));
+		}
+		
+		return expenceCategories;
+	}
 }
