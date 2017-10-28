@@ -28,7 +28,7 @@
 				<div style="margin-bottom: 25px">
 					<div class="row">
 						<div class="col-sm-3">
-							<a href="<c:url value='/budgets/${ budgetId }/editBudget'></c:url>" type="button" class="btn btn-block btn-primary btn-lg"><i class="ion ion-plus"></i> Edit budget</a>
+							<a href="<c:url value='/budgets/${ budgetId }/editBudget'></c:url>" type="button" class="btn btn-block btn-success btn-lg"><i class="fa fa-edit"></i> Edit budget</a>
 						</div>
 						<div class="col-sm-3">
 							<a href="<c:url value='/budgets'></c:url>" type="button" class="btn btn-block btn-default btn-lg"><i class="ion ion-android-arrow-back"></i> Back</a>
