@@ -54,7 +54,7 @@
 										}
 								    };
 								    
-								    request.open("GET", "http://localhost:8080/FinanceTracker/account/getIncome/"+sel);
+								    request.open("GET", "http://localhost:8080/FinanceTracker/account/getCategory/"+sel);
 								    request.send();
 								}
 							  </script>
@@ -63,6 +63,7 @@
 		                <div class="form-group">
 			                <label>Account</label>
 			                <select class="form-control select2" style="width: 100%;" data-placeholder="Select an account" name="account">
+			                  <option selected="selected"><c:out value="${ sessionScope.accountName }"></c:out></option>
 			                  <c:forEach items="${accounts}" var="account">
 			                	  <option><c:out value="${account.name}"></c:out></option>
 			                  </c:forEach>

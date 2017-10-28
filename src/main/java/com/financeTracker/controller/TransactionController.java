@@ -271,14 +271,14 @@ public class TransactionController {
 	
 	//methods for getting import & export sets for async ops in the view
 	@ResponseBody
-	@RequestMapping(value="/getIncome/{type}", method=RequestMethod.GET)
+	@RequestMapping(value="/getCategory/{type}", method=RequestMethod.GET)
 	public Set<String> getIncomeCategories(HttpSession session, @PathVariable("type") String type) {
 		User user = (User) session.getAttribute("user");
 		Set<String> incomeCategories = null;
 		try {
-			incomeCategories = CategoryDAO.getInstance().getAllIncomeCategories(user.getUserId(), type);
+			incomeCategories = CategoryDAO.getInstance().getAllCategoriesByType(user.getUserId(), type);
 		} catch (SQLException e) {
-			System.out.println("Could not get all income categories");
+			System.out.println("Could not get all categories by type");
 			e.printStackTrace();
 		}
 		
