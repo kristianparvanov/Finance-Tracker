@@ -41,7 +41,7 @@
 				<div class="row"> 
 					<div class="col-md-4" style="width: 50%">
 						
-						<div class="info-box" style="background-color: khaki">
+						<div class="info-box" style="background-color: khaki" >
 				            <a href="budgets/${ budget.key.budgetId }" style="color: #FFFFFF; text-decoration: none !important;">
 								<span class="info-box-icon"><i class="ion ion-information-circled" style="margin-top: 20px"></i></span>
 							</a>
@@ -61,9 +61,8 @@
 				              </div>
 				              <span class="progress-description">
 				                    <c:out value="${ percent }%"></c:out> percent spent <%-- Increase in  <c:out value="${ budget.key.toDate - budget.key.fromDate }"></c:out> --%>
-				                  </span>
+				              </span>
 				            </div>
-				            <!-- /.info-box-content -->
 				          </div>
 						</div>
 					</div>

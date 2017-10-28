@@ -5,6 +5,7 @@
 <!DOCTYPE>
 <html>
 	<head>
+		<link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 		 <title>Header | Finance Tracker</title>
