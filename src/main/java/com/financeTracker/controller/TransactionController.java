@@ -281,7 +281,6 @@ public class TransactionController {
 		return "redirect:/account/" + t.getAccount();
 	}
 	
-	//methods for getting import & export sets for async ops in the view
 	@ResponseBody
 	@RequestMapping(value="/getCategory/{type}", method=RequestMethod.GET)
 	public Set<String> getIncomeCategories(HttpSession session, @PathVariable("type") String type) {
