@@ -82,7 +82,7 @@
               
                <div class="box-footer">
 		                <button type="submit" class="btn btn-primary">Save</button>
-		                <a href="addBudget" class="btn btn-default">Cancel</a>
+		                <a href="budgets" class="btn btn-default">Cancel</a>
 		              </div>
 		              
 	               </div>

@@ -147,7 +147,7 @@ public class BudgetController {
 		}
 		
 		
-		return "forward:/budgets";
+		return "redirect:/budgets";
 	}
 	
 	@RequestMapping (value ="/budgets/{budgetId}", method = RequestMethod.GET)
@@ -271,6 +271,7 @@ public class BudgetController {
 		Budget budget;
 		try {
 			budget = budgetDao.getBudgetByBudgetId(budgetId);
+			
 			Account acc = accountDAO.getAccountByAccountId(budget.getAccountId());
 			Set<Account> accounts = accountDAO.getAllAccountsByUserId(user.getUserId());
 			BigDecimal amount = budget.getInitialAmount();
@@ -306,5 +307,20 @@ public class BudgetController {
 		}
 		
 		return "editBudget";
+	}
+	
+	@RequestMapping (value ="/budgets/{budgetId}/delete", method = RequestMethod.GET)
+	public String deleteBudget(@PathVariable("budgetId") Long budgetId) {
+		
+		Budget budget;
+		try {
+			budget = budgetDao.getBudgetByBudgetId(budgetId);
+
+			budgetDao.deleteBudget(budget);
+		} catch (SQLException e) {
+			System.out.println("Nema iztrivane i tova si e");
+		}
+		
+		return "redirect:/budgets";
 	}
 }

@@ -34,7 +34,7 @@
 							<a href="<c:url value='/budgets'></c:url>" type="button" class="btn btn-block btn-default btn-lg"><i class="ion ion-android-arrow-back"></i> Back</a>
 						</div>
 						<div class="col-sm-3">
-							<a href="#" type="button" class="btn btn-block btn-danger btn-lg"><i class="ion ion-android-delete"></i> Delete Budget</a>
+							<a href="<c:url value='/budgets/${ budgetId }/delete'></c:url>" type="button" class="btn btn-block btn-danger btn-lg"><i class="ion ion-android-delete"></i> Delete Budget</a>
 						</div>
 					</div>
 				</div>

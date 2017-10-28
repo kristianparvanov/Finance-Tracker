@@ -192,6 +192,8 @@ public class BudgetDAO {
 				budgetsHasTransactionsDAO.deleteTransactionBudgetByTransactionId(t.getTransactionId());
 			}
 			
+			tagDAO.deleteAllTagsForBydget(b.getBudgetId());
+			
 			String query = "DELETE FROM finance_tracker.budgets WHERE budget_id = ?";
 			PreparedStatement statement = dbManager.getConnection().prepareStatement(query);
 			statement.setLong(1, b.getBudgetId());
