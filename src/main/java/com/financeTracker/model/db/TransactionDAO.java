@@ -193,6 +193,8 @@ public class TransactionDAO {
 			statement.executeUpdate();
 			
 			ALL_TRANSACTIONS.get(t.getType()).remove(t);
+			
+			removeTransaction(t.getTransactionId());
 			dbManager.getConnection().commit();
 		} catch (SQLException e) {
 			dbManager.getConnection().rollback();

@@ -26,6 +26,7 @@ import com.financeTracker.model.Transaction;
 import com.financeTracker.model.TransactionType;
 import com.financeTracker.model.User;
 import com.financeTracker.model.db.AccountDAO;
+import com.financeTracker.model.db.BudgetsHasTransactionsDAO;
 import com.financeTracker.model.db.CategoryDAO;
 import com.financeTracker.model.db.TagDAO;
 import com.financeTracker.model.db.TransactionDAO;
@@ -44,6 +45,9 @@ public class TransactionController {
 	
 	@Autowired
 	private TransactionDAO transactionDAO;
+	
+	@Autowired
+	private BudgetsHasTransactionsDAO budgetsHasTransactionsDAO;
 	
 	@RequestMapping(value="/{accountId}", method=RequestMethod.GET)
 	public String getAllTransactions(HttpServletRequest request, HttpSession session, Model model, @PathVariable("accountId") Long accountId) {
@@ -272,12 +276,17 @@ public class TransactionController {
 		Transaction t = null;
 		try {
 			t = transactionDAO.getTransactionByTransactionId(transactionId);
+			
 			tagDAO.deleteAllTagsForTransaction(transactionId);
+			
+			budgetsHasTransactionsDAO.deleteTransactionBudgetByTransactionId(transactionId);
+			
 			transactionDAO.deleteTransaction(t);
 		} catch (SQLException e) {
 			System.out.println("Could not delete transaction");
 			e.printStackTrace();
 		}
+		
 		return "redirect:/account/" + t.getAccount();
 	}
 	
