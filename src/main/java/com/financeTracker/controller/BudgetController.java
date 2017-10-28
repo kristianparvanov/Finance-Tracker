@@ -35,7 +35,22 @@ import com.financeTracker.model.db.TransactionDAO;
 public class BudgetController {
 	
 	@Autowired
-	BudgetDAO budgetDao = new BudgetDAO();
+	private CategoryDAO categoryDao;
+	
+	@Autowired
+	BudgetDAO budgetDao;
+	
+	@Autowired
+	private AccountDAO accountDAO;
+	
+	@Autowired
+	private BudgetsHasTransactionsDAO budgetsHasTransactionsDAO;
+	
+	@Autowired
+	private TagDAO tagDAO;
+	
+	@Autowired
+	private TransactionDAO transactionDAO;
 	
 	@RequestMapping(value="/budgets", method=RequestMethod.GET)
 	public String getAllBudgets(HttpSession session, Model model) {
@@ -70,10 +85,10 @@ public class BudgetController {
 		User user = (User) session.getAttribute("user");
 		
 		try {
-			Set<Account> accounts = AccountDAO.getInstance().getAllAccountsByUserId(user.getUserId());
-			Set<Category> categories = CategoryDAO.getInstance().getAllCategoriesByUserId(user.getUserId());
-			categories.addAll(CategoryDAO.getInstance().getAllCategoriesByUserId());
-			Set<Tag> tags = TagDAO.getInstance().getAllTagsByUserId(user.getUserId());
+			Set<Account> accounts = accountDAO.getAllAccountsByUserId(user.getUserId());
+			Set<Category> categories = categoryDao.getAllCategoriesByUserId(user.getUserId());
+			categories.addAll(categoryDao.getAllCategoriesByUserId());
+			Set<Tag> tags = tagDAO.getAllTagsByUserId(user.getUserId());
 			
 			model.addAttribute("accounts", accounts);
 			model.addAttribute("categories", categories);
@@ -91,8 +106,8 @@ public class BudgetController {
 		
 		try {
 			String name = request.getParameter("name");
-			Account acc = AccountDAO.getInstance().getAccountByUserIDAndAccountName(user.getUserId(), request.getParameter("account"));
-			Category category = CategoryDAO.getInstance().getCategoryByCategoryName(request.getParameter("category"));
+			Account acc = accountDAO.getAccountByUserIDAndAccountName(user.getUserId(), request.getParameter("account"));
+			Category category = categoryDao.getCategoryByCategoryName(request.getParameter("category"));
 			BigDecimal amount = new BigDecimal(request.getParameter("amount"));
 			String[] tags = request.getParameterValues("tags");
 			String date = request.getParameter("date");
@@ -159,8 +174,8 @@ public class BudgetController {
 			
 			
 			String name = request.getParameter("name");
-			Account acc = AccountDAO.getInstance().getAccountByUserIDAndAccountName(user.getUserId(), request.getParameter("account"));
-			Category category = CategoryDAO.getInstance().getCategoryByCategoryName(request.getParameter("category"));
+			Account acc = accountDAO.getAccountByUserIDAndAccountName(user.getUserId(), request.getParameter("account"));
+			Category category = categoryDao.getCategoryByCategoryName(request.getParameter("category"));
 			BigDecimal amount = new BigDecimal(request.getParameter("amount"));
 			String[] tags = request.getParameterValues("tags");
 			String date = request.getParameter("date");
@@ -202,7 +217,7 @@ public class BudgetController {
 			
 			if (asd) {
 				
-				Set<Transaction> transactions = BudgetsHasTransactionsDAO.getInstance().getAllTransactionsByBudgetId(budgetId);
+				Set<Transaction> transactions = budgetsHasTransactionsDAO.getAllTransactionsByBudgetId(budgetId);
 				BigDecimal newAmount = new BigDecimal(0.0);
 				
 				for (Transaction transaction : transactions) {
@@ -211,17 +226,17 @@ public class BudgetController {
 				
 				newBudget.setAmount(newAmount);
 				
-				BudgetsHasTransactionsDAO.getInstance().deleteTransactionBudgetByBudgetId(budgetId);
+				budgetsHasTransactionsDAO.deleteTransactionBudgetByBudgetId(budgetId);
 				
-				boolean exits = TransactionDAO.getInstance().existsTransaction(newBudget.getFromDate(), newBudget.getToDate(), newBudget.getCategoryId(), newBudget.getAccountId());
+				boolean exits = transactionDAO.existsTransaction(newBudget.getFromDate(), newBudget.getToDate(), newBudget.getCategoryId(), newBudget.getAccountId());
 				
 				if (exits) {
-					transactions = TransactionDAO.getInstance().getAllTransactionsForBudget(newBudget.getFromDate(), newBudget.getToDate(), newBudget.getCategoryId(), newBudget.getAccountId());
+					transactions = transactionDAO.getAllTransactionsForBudget(newBudget.getFromDate(), newBudget.getToDate(), newBudget.getCategoryId(), newBudget.getAccountId());
 				
 					 newAmount = new BigDecimal(0.0);
 					
 					for (Transaction transaction : transactions) {
-						BudgetsHasTransactionsDAO.getInstance().insertTransactionBudget(newBudget.getBudgetId(), transaction.getTransactionId());
+						budgetsHasTransactionsDAO.insertTransactionBudget(newBudget.getBudgetId(), transaction.getTransactionId());
 						
 						newAmount = newAmount.add(transaction.getAmount());
 					}
@@ -232,11 +247,12 @@ public class BudgetController {
 					budgetDao.updateBudget(newBudget);
 				}
 
-				TagDAO.getInstance().deleteAllTagsForBydget(budgetId);
+				tagDAO.deleteAllTagsForBydget(budgetId);
 				
 				for (Tag tag : tagsSet) {
-					TagDAO.getInstance().insertTagToBudget(newBudget, tag);
+					tagDAO.insertTagToBudget(newBudget, tag);
 				}
+				
 			}
 			
 		} catch (SQLException e) {
@@ -255,13 +271,13 @@ public class BudgetController {
 		Budget budget;
 		try {
 			budget = budgetDao.getBudgetByBudgetId(budgetId);
-			Account acc = AccountDAO.getInstance().getAccountByAccountId(budget.getAccountId());
-			Set<Account> accounts = AccountDAO.getInstance().getAllAccountsByUserId(user.getUserId());
+			Account acc = accountDAO.getAccountByAccountId(budget.getAccountId());
+			Set<Account> accounts = accountDAO.getAllAccountsByUserId(user.getUserId());
 			BigDecimal amount = budget.getInitialAmount();
-			String categoryName = CategoryDAO.getInstance().getCategoryNameByCategoryId(budget.getCategoryId());
-			Set<Category> categories = CategoryDAO.getInstance().getAllCategoriesByUserId(user.getUserId());
-			categories.addAll(CategoryDAO.getInstance().getAllCategoriesByUserId());
-			Set<Tag> tags = TagDAO.getInstance().getAllTagsByUserId(user.getUserId());
+			String categoryName = categoryDao.getCategoryNameByCategoryId(budget.getCategoryId());
+			Set<Category> categories = categoryDao.getAllCategoriesByUserId(user.getUserId());
+			categories.addAll(categoryDao.getAllCategoriesByUserId());
+			Set<Tag> tags = tagDAO.getAllTagsByUserId(user.getUserId());
 			LocalDateTime fromDate = budget.getFromDate();
 			LocalDateTime toDate = budget.getToDate();
 			

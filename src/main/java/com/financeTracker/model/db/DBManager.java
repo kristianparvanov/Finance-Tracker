@@ -4,8 +4,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class DBManager {
-    private static DBManager instance;
     private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
     private static final String DB_URL = "jdbc:mysql://localhost:3306/finance_tracker";
     private static final String USERNAME = "root";
@@ -21,13 +23,6 @@ public class DBManager {
         } catch (SQLException e) {
             System.out.println("Unable to connect to database: " + e.getMessage());
         }
-    }
-    
-    public static synchronized DBManager getInstance() {
-    	if (DBManager.instance == null) {
-    		DBManager.instance = new DBManager();
-		}
-    	return DBManager.instance;
     }
     
     public Connection getConnection() {

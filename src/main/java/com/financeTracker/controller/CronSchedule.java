@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +17,12 @@ import com.financeTracker.model.db.PlannedPaymentDAO;
 
 @Component
 public class CronSchedule {
+	@Autowired
+	private PlannedPaymentDAO plannedPaymentDAO;
+	
+	@Autowired
+	private AccountDAO accountDAO;
+	
 	//@Scheduled(cron = "0 0 6 * * *")
 	//@Scheduled(cron = "0 0 21 * * *")
 	@Scheduled(cron = "*0 03 21 * * *")
@@ -24,17 +31,17 @@ public class CronSchedule {
 			System.out.println("HI");
 		}
 		try {
-			List<PlannedPayment> allPlannedPayments = PlannedPaymentDAO.getInstance().getAllPlannedPayments();
+			List<PlannedPayment> allPlannedPayments = plannedPaymentDAO.getAllPlannedPayments();
 			for (PlannedPayment plannedPayment : allPlannedPayments) {
 				if (LocalDateTime.now().isAfter(plannedPayment.getFromDate())) {
-					Account acc = AccountDAO.getInstance().getAccountByAccountId(plannedPayment.getAccount());
+					Account acc = accountDAO.getAccountByAccountId(plannedPayment.getAccount());
 					BigDecimal newValue = plannedPayment.getAmount();
-					BigDecimal oldValue = AccountDAO.getInstance().getAmountByAccountId(acc.getAccountId());
+					BigDecimal oldValue = accountDAO.getAmountByAccountId(acc.getAccountId());
 					if (plannedPayment.getPaymentType().equals(TransactionType.EXPENCE)) {
-						AccountDAO.getInstance().updateAccountAmount(acc, (oldValue.subtract(newValue)));
+						accountDAO.updateAccountAmount(acc, (oldValue.subtract(newValue)));
 					} else 
 					if (plannedPayment.getPaymentType().equals(TransactionType.INCOME)) {
-						AccountDAO.getInstance().updateAccountAmount(acc, (oldValue.add(newValue)));
+						accountDAO.updateAccountAmount(acc, (oldValue.add(newValue)));
 					}
 				}
 			}

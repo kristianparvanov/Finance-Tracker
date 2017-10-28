@@ -5,12 +5,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.financeTracker.model.Budget;
 import com.financeTracker.model.Category;
@@ -19,25 +19,22 @@ import com.financeTracker.model.Transaction;
 import com.financeTracker.model.TransactionType;
 import com.financeTracker.model.User;
 
+@Component
 public class CategoryDAO {
-
-	private BudgetDAO budgetDao = new BudgetDAO();
-	private static CategoryDAO instance;
-	//private static final ArrayList<Category> ALL_CATEGORIES = new ArrayList<>();
-
-	private CategoryDAO(){}
-
-	public static synchronized CategoryDAO getInstance() {
-		if (instance == null) {
-			instance = new CategoryDAO();
-		}
-		
-		return instance;
-	}
+	@Autowired
+	private DBManager dbManager;
 	
+	@Autowired
+	private BudgetDAO budgetDao;
+	
+	@Autowired
+	private PlannedPaymentDAO plannedPaymentDAO;
+	
+	@Autowired
+	private TransactionDAO transactionDAO;
 	
 	public synchronized void insertCategory(Category c) throws SQLException {
-		Connection con = DBManager.getInstance().getConnection();
+		Connection con = dbManager.getConnection();
 		PreparedStatement ps = con.prepareStatement("INSERT INTO categories (name, type, user_id) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 		
 		ps.setString(1, c.getName());
@@ -53,7 +50,7 @@ public class CategoryDAO {
 	
 	public synchronized String getCategoryNameByCategoryId(long categoryId) throws SQLException {
 		String query = "SELECT name FROM finance_tracker.categories WHERE category_id = ?";
-		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(query);
+		PreparedStatement ps = dbManager.getConnection().prepareStatement(query);
 		ps.setLong(1, categoryId);
 		
 		ResultSet res = ps.executeQuery();
@@ -65,7 +62,7 @@ public class CategoryDAO {
 	public synchronized Category getCategoryByCategoryId(long categoryId) throws SQLException {
 		String sql = "SELECT name, type FROM categories WHERE category_id = ?;";
 		
-		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(sql);
+		PreparedStatement ps = dbManager.getConnection().prepareStatement(sql);
 		ps.setLong(1, categoryId);
 		
 		ResultSet res = ps.executeQuery();
@@ -74,9 +71,9 @@ public class CategoryDAO {
 		String name = res.getString("name");
 		TransactionType type = TransactionType.valueOf(res.getString("type"));
 		Long userId = new Long(res.getLong("user_id"));
-		List<Transaction> transactions = TransactionDAO.getInstance().getAllTransactionsByCategoryId(categoryId);
+		List<Transaction> transactions = transactionDAO.getAllTransactionsByCategoryId(categoryId);
 		List<Budget> budgets = budgetDao.getAllBudgetsByCategoryId(categoryId);
-		List<PlannedPayment> plannedPayments = PlannedPaymentDAO.getInstance().getAllPlannedPaymentsByCategoryId(categoryId);
+		List<PlannedPayment> plannedPayments = plannedPaymentDAO.getAllPlannedPaymentsByCategoryId(categoryId);
 		
 		Category category = new Category(name, type, userId, transactions, budgets, plannedPayments);
 		
@@ -92,10 +89,10 @@ public class CategoryDAO {
 		PreparedStatement ps = null;
 		if (userId == null) {
 			sql = "SELECT category_id, name, type FROM categories WHERE user_id IS NULL;";
-			ps = DBManager.getInstance().getConnection().prepareStatement(sql);
+			ps = dbManager.getConnection().prepareStatement(sql);
 		} else {
 			sql = "SELECT category_id, name, type FROM categories WHERE user_id = ?;";
-			ps = DBManager.getInstance().getConnection().prepareStatement(sql);
+			ps = dbManager.getConnection().prepareStatement(sql);
 			ps.setLong(1, userId);
 		}
 		
@@ -106,9 +103,9 @@ public class CategoryDAO {
 			long categoryId = res.getLong("category_id");
 			String name = res.getString("name");
 			TransactionType type = TransactionType.valueOf(res.getString("type"));
-			List<Transaction> transactions = TransactionDAO.getInstance().getAllTransactionsByCategoryId(categoryId);
+			List<Transaction> transactions = transactionDAO.getAllTransactionsByCategoryId(categoryId);
 			List<Budget> budgets = budgetDao.getAllBudgetsByCategoryId(categoryId);
-			List<PlannedPayment> plannedPayments = PlannedPaymentDAO.getInstance().getAllPlannedPaymentsByCategoryId(categoryId);
+			List<PlannedPayment> plannedPayments = plannedPaymentDAO.getAllPlannedPaymentsByCategoryId(categoryId);
 			
 			categories.add(new Category(name, type, userId, transactions, budgets, plannedPayments));
 		}
@@ -130,7 +127,7 @@ public class CategoryDAO {
 
 	public Category getCategoryByCategoryName(String categoryName) throws SQLException {
 		String query = "SELECT category_id, name, type, user_id FROM finance_tracker.categories WHERE name = ?";
-		PreparedStatement statement = DBManager.getInstance().getConnection().prepareStatement(query);
+		PreparedStatement statement = dbManager.getConnection().prepareStatement(query);
 		statement.setString(1, categoryName);
 		
 		ResultSet resultSet = statement.executeQuery();
@@ -140,9 +137,9 @@ public class CategoryDAO {
 		String name = resultSet.getString("name");
 		TransactionType type = TransactionType.valueOf(resultSet.getString("type"));
 		Long userId = new Long(resultSet.getLong("user_id"));
-		List<Transaction> transactions = TransactionDAO.getInstance().getAllTransactionsByCategoryId(categoryId);
+		List<Transaction> transactions = transactionDAO.getAllTransactionsByCategoryId(categoryId);
 		List<Budget> budgets = budgetDao.getAllBudgetsByCategoryId(categoryId);
-		List<PlannedPayment> plannedPayments = PlannedPaymentDAO.getInstance().getAllPlannedPaymentsByCategoryId(categoryId);
+		List<PlannedPayment> plannedPayments = plannedPaymentDAO.getAllPlannedPaymentsByCategoryId(categoryId);
 		
 		Category category = new Category(name, type, userId, transactions, budgets, plannedPayments);
 		category.setCategoryID(categoryId);
@@ -153,7 +150,7 @@ public class CategoryDAO {
 	public synchronized Set<String> getAllIncomeCategories(long userId, String type) throws SQLException {
 		Set<String> categoriesNames = new HashSet<String>();
 		String query = "SELECT name, user_id, type FROM finance_tracker.categories WHERE (user_id = ? OR user_id IS NULL) AND type = ?";
-		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(query);
+		PreparedStatement ps = dbManager.getConnection().prepareStatement(query);
 		ps.setLong(1, userId);
 		ps.setString(2, type);
 		
@@ -170,7 +167,7 @@ public class CategoryDAO {
 		Set<Category> expenceCategories = new HashSet<Category>();
 		String query = "SELECT category_id, name, type, user_id FROM finance_tracker.categories WHERE user_id = ? AND type = 'EXPENCE'";
 		
-		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(query);
+		PreparedStatement ps = dbManager.getConnection().prepareStatement(query);
 		ps.setLong(1, userId);
 		
 		ResultSet resultSet = ps.executeQuery();
@@ -179,13 +176,14 @@ public class CategoryDAO {
 			String name = resultSet.getString("name");
 			TransactionType type = TransactionType.valueOf(resultSet.getString("type"));
 			Long user = new Long(resultSet.getLong("user_id"));
-			List<Transaction> transactions = TransactionDAO.getInstance().getAllTransactionsByCategoryId(categoryId);
+			List<Transaction> transactions = transactionDAO.getAllTransactionsByCategoryId(categoryId);
 			List<Budget> budgets = budgetDao.getAllBudgetsByCategoryId(categoryId);
-			List<PlannedPayment> plannedPayments = PlannedPaymentDAO.getInstance().getAllPlannedPaymentsByCategoryId(categoryId);
+			List<PlannedPayment> plannedPayments = plannedPaymentDAO.getAllPlannedPaymentsByCategoryId(categoryId);
 			
 			expenceCategories.add(new Category(name, type, user, transactions, budgets, plannedPayments));
 		}
 		
 		return expenceCategories;
 	}
+
 }

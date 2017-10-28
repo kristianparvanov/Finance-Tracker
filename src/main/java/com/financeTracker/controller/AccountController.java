@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +19,9 @@ import com.financeTracker.model.db.AccountDAO;
 
 @Controller
 public class AccountController {
+	
+	@Autowired
+	private AccountDAO accountDAO;
 
 	@RequestMapping(value="/addAccount", method=RequestMethod.POST)
 	public String addAccount(HttpServletRequest request, HttpSession session, Model viewModel) {
@@ -28,7 +32,7 @@ public class AccountController {
 		User user = (User) request.getSession().getAttribute("user");
 		Account account = new Account(name, amount, user.getUserId());
 		try {
-			AccountDAO.getInstance().insertAccount(account);
+			accountDAO.insertAccount(account);
 		} catch (SQLException e) {
 			System.out.println("Could not add account to database");
 			e.printStackTrace();
