@@ -9,9 +9,13 @@ import java.sql.Statement;
 import java.util.HashMap;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Map;
 import java.util.Set;
+
+import javax.annotation.PostConstruct;
 
 import com.financeTracker.model.Tag;
 
@@ -19,12 +23,24 @@ import com.financeTracker.model.Account;
 import com.financeTracker.model.Category;
 import com.financeTracker.model.User;
 
+@Component
 public class UserDAO {
-
-	private static UserDAO instance;
+	@Autowired
+	private DBManager dbManager;
+	
+	@Autowired
+	private CategoryDAO categoryDao;
+	
+	@Autowired
+	private AccountDAO accountDAO;
+	
+	@Autowired
+	private TagDAO tagDAO;
+	
 	private static final Map<String, User> ALL_USERS = new HashMap<>();
 	
-	private UserDAO() throws SQLException{
+	@PostConstruct
+	private void init() throws SQLException {
 		getAllUsers();
 	}
 	
@@ -35,7 +51,7 @@ public class UserDAO {
 		
 		String sql = "SELECT user_id, username, password, email, first_name, last_name FROM users";
 		
-		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(sql);
+		PreparedStatement ps = dbManager.getConnection().prepareStatement(sql);
 		ResultSet res = ps.executeQuery();
 		
 		while(res.next()) {
@@ -45,9 +61,9 @@ public class UserDAO {
 			String firstName = res.getString("first_name");
 			String lastName = res.getString("last_name");
 			Long userId = Long.valueOf(res.getLong("user_id"));
-			Set<Account> accounts = AccountDAO.getInstance().getAllAccountsByUserId(userId);
-			Set<Category> ownCategories = CategoryDAO.getInstance().getAllCategoriesByUserId(userId);
-			Set<Tag> tags = TagDAO.getInstance().getAllTagsByUserId(userId);
+			Set<Account> accounts = accountDAO.getAllAccountsByUserId(userId);
+			Set<Category> ownCategories = categoryDao.getAllCategoriesByUserId(userId);
+			Set<Tag> tags = tagDAO.getAllTagsByUserId(userId);
 			
 			User user = new User(userName, password, email, firstName, lastName, accounts, ownCategories, tags);
 			user.setUserId(userId);
@@ -56,16 +72,16 @@ public class UserDAO {
 		}
 	}
 
-	public static synchronized UserDAO getInstance() throws SQLException {
+	/*public static synchronized UserDAO getInstance() throws SQLException {
 		if (instance == null) {
 			instance = new UserDAO();
 		}
 		
 		return instance;
-	}
+	}*/
 	
 	public synchronized void insertUser(User u) throws SQLException {
-		Connection con = DBManager.getInstance().getConnection();
+		Connection con = dbManager.getConnection();
 		PreparedStatement ps = con.prepareStatement("INSERT INTO users (username, password, email, first_name, last_name) "
 														+ "VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 		
@@ -119,7 +135,7 @@ public class UserDAO {
 	public synchronized boolean existsUser(String username) throws SQLException {
 		String sql = "SELECT count(*) as count FROM users WHERE username = ?;";
 		
-		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(sql);
+		PreparedStatement ps = dbManager.getConnection().prepareStatement(sql);
 		ps.setString(1, username);
 		
 		ResultSet res = ps.executeQuery();
@@ -131,7 +147,7 @@ public class UserDAO {
 	public synchronized void deleteUser(String username) throws SQLException {
 		String sql = "DELETE FROM users WHERE user_id = ?;";
 		
-		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(sql);
+		PreparedStatement ps = dbManager.getConnection().prepareStatement(sql);
 		ps.setString(1,  username);
 		ps.executeUpdate();
 		

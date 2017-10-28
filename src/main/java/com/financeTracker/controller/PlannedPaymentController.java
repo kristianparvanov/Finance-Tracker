@@ -10,6 +10,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,7 +30,18 @@ import com.financeTracker.model.db.TagDAO;
 
 @Controller
 public class PlannedPaymentController {
-
+	@Autowired
+	private PlannedPaymentDAO plannedPaymentDAO;
+	
+	@Autowired
+	private CategoryDAO categoryDao;
+	
+	@Autowired
+	private AccountDAO accountDAO;
+	
+	@Autowired
+	private TagDAO tagDAO;
+	
 	@RequestMapping(value="/plannedPayments", method=RequestMethod.GET)
 	public String getAllPlannedPayments(HttpServletRequest request, HttpSession session, Model model) {
 		User user = (User) session.getAttribute("user");
@@ -40,13 +52,13 @@ public class PlannedPaymentController {
 		Set<Account> accounts = new HashSet<Account>();
 		Set<Tag> tags = new HashSet<Tag>();
 		try {
-			plannedPayments = PlannedPaymentDAO.getInstance().getAllPlannedPayments();
-			categories = CategoryDAO.getInstance().getAllCategoriesByUserId();
-			ownCategories = CategoryDAO.getInstance().getAllCategoriesByUserId(user.getUserId());
-			accounts = AccountDAO.getInstance().getAllAccountsByUserId(user.getUserId());
+			plannedPayments = plannedPaymentDAO.getAllPlannedPayments();
+			categories = categoryDao.getAllCategoriesByUserId();
+			ownCategories = categoryDao.getAllCategoriesByUserId(user.getUserId());
+			accounts = accountDAO.getAllAccountsByUserId(user.getUserId());
 			allCategories.addAll(categories);
 			allCategories.addAll(ownCategories);
-			tags = TagDAO.getInstance().getAllTagsByUserId(user.getUserId());
+			tags = tagDAO.getAllTagsByUserId(user.getUserId());
 		} catch (SQLException e) {
 			System.out.println("Could not get all planned payments");
 			e.printStackTrace();
@@ -94,19 +106,19 @@ public class PlannedPaymentController {
 		
 		Account acc = null;
 		try {
-			acc = AccountDAO.getInstance().getAccountByAccountName(account);
-			Category cat = CategoryDAO.getInstance().getCategoryByCategoryName(category);
+			acc = accountDAO.getAccountByAccountName(account);
+			Category cat = categoryDao.getCategoryByCategoryName(category);
 			PlannedPayment p = new PlannedPayment(name, TransactionType.valueOf(type), newDate, BigDecimal.valueOf(Double.valueOf(amount)), description, acc.getAccountId(), cat.getCategoryId(), tagsSet);
 //			BigDecimal newValue = BigDecimal.valueOf(Double.valueOf(amount));
-//			BigDecimal oldValue = AccountDAO.getInstance().getAmountByAccountId((int)acc.getAccountId());
+//			BigDecimal oldValue = accountDAO.getAmountByAccountId((int)acc.getAccountId());
 			
 //			if (type.equals("EXPENCE")) {
-//				AccountDAO.getInstance().updateAccountAmount(acc, (oldValue.subtract(newValue)));
+//				accountDAO.updateAccountAmount(acc, (oldValue.subtract(newValue)));
 //			} else 
 //			if (type.equals("INCOME")) {
-//				AccountDAO.getInstance().updateAccountAmount(acc, (oldValue.add(newValue)));
+//				accountDAO.updateAccountAmount(acc, (oldValue.add(newValue)));
 //			}
-			PlannedPaymentDAO.getInstance().insertPlannedPayment(p);
+			plannedPaymentDAO.insertPlannedPayment(p);
 		} catch (SQLException e) {
 			System.out.println("Could not add planned payment");
 			e.printStackTrace();
@@ -125,15 +137,15 @@ public class PlannedPaymentController {
 	@RequestMapping(value="/payment/{plannedPaymentId}", method=RequestMethod.GET)
 	public String getEditPlannedPayment(HttpServletRequest request, HttpSession session, Model model, @PathVariable("plannedPaymentId") Long plannedPaymentId) {
 		try {
-			PlannedPayment p = PlannedPaymentDAO.getInstance().getPlannedPaymentByPlannedPaymentId(plannedPaymentId);
+			PlannedPayment p = plannedPaymentDAO.getPlannedPaymentByPlannedPaymentId(plannedPaymentId);
 			String name = p.getName();
 			String type = p.getPaymentType().toString();
 			String description = p.getDescription();
 			BigDecimal amount = p.getAmount();
-			String accountName = AccountDAO.getInstance().getAccountNameByAccountId(p.getAccount());
-			String category = CategoryDAO.getInstance().getCategoryNameByCategoryId(p.getCategory());
+			String accountName = accountDAO.getAccountNameByAccountId(p.getAccount());
+			String category = categoryDao.getCategoryNameByCategoryId(p.getCategory());
 			LocalDateTime date = p.getFromDate();
-			Set<Tag> tags = TagDAO.getInstance().getTagsByPlannedPaymentId(plannedPaymentId);
+			Set<Tag> tags = tagDAO.getTagsByPlannedPaymentId(plannedPaymentId);
 			
 			Set<String> tagNames = new HashSet<String>();
 			for (Tag tag : tags) {
@@ -187,20 +199,20 @@ public class PlannedPaymentController {
 		
 		Account acc = null;
 		try {
-			acc = AccountDAO.getInstance().getAccountByAccountName(account);
-			Category cat = CategoryDAO.getInstance().getCategoryByCategoryName(category);
+			acc = accountDAO.getAccountByAccountName(account);
+			Category cat = categoryDao.getCategoryByCategoryName(category);
 			PlannedPayment p = new PlannedPayment(name, TransactionType.valueOf(type), newDate, BigDecimal.valueOf(Double.valueOf(amount)), description, acc.getAccountId(), cat.getCategoryId(), tagsSet);
 			p.setPlannedPaymentId(plannedPaymentId);
 //			BigDecimal newValue = BigDecimal.valueOf(Double.valueOf(amount));
-//			BigDecimal oldValue = AccountDAO.getInstance().getAmountByAccountId((int)acc.getAccountId());
+//			BigDecimal oldValue = accountDAO.getAmountByAccountId((int)acc.getAccountId());
 //			if (type.equals("EXPENCE")) {
-//				AccountDAO.getInstance().updateAccountAmount(acc, (oldValue.subtract(newValue)));
+//				accountDAO.updateAccountAmount(acc, (oldValue.subtract(newValue)));
 //			} else 
 //			if (type.equals("INCOME")) {
-//				AccountDAO.getInstance().updateAccountAmount(acc, (oldValue.add(newValue)));
+//				accountDAO.updateAccountAmount(acc, (oldValue.add(newValue)));
 //			}
-			TagDAO.getInstance().deleteAllTagsForPlannedPayment(plannedPaymentId);
-			PlannedPaymentDAO.getInstance().updatePlannedPayment(p);
+			tagDAO.deleteAllTagsForPlannedPayment(plannedPaymentId);
+			plannedPaymentDAO.updatePlannedPayment(p);
 		} catch (SQLException e) {
 			System.out.println("Could not edit planned payment");
 			e.printStackTrace();
@@ -211,8 +223,8 @@ public class PlannedPaymentController {
 	@RequestMapping(value="/payment/deletePlannedPayment/{plannedPaymentId}", method=RequestMethod.POST)
 	public String deletePlannedPayment(@PathVariable("plannedPaymentId") Long plannedPaymentId) {
 		try {
-			TagDAO.getInstance().deleteAllTagsForPlannedPayment(plannedPaymentId);
-			PlannedPaymentDAO.getInstance().deletePlannedPayment(plannedPaymentId);
+			tagDAO.deleteAllTagsForPlannedPayment(plannedPaymentId);
+			plannedPaymentDAO.deletePlannedPayment(plannedPaymentId);
 		} catch (SQLException e) {
 			System.out.println("Could not delete planned payment");
 			e.printStackTrace();

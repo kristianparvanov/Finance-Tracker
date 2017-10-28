@@ -11,6 +11,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,6 +33,17 @@ import com.financeTracker.model.db.TransactionDAO;
 @Controller
 @RequestMapping(value="/account")
 public class TransactionController {
+	@Autowired
+	private CategoryDAO categoryDao;
+	
+	@Autowired
+	private AccountDAO accountDAO;
+	
+	@Autowired
+	private TagDAO tagDAO;
+	
+	@Autowired
+	private TransactionDAO transactionDAO;
 	
 	@RequestMapping(value="/{accountId}", method=RequestMethod.GET)
 	public String getAllTransactions(HttpServletRequest request, HttpSession session, Model model, @PathVariable("accountId") Long accountId) {
@@ -47,15 +59,15 @@ public class TransactionController {
 		try {
 			//long accountId = Long.valueOf(request.getParameter("accountId"));
 			request.getSession().setAttribute("accountId", accountId);
-			transactions = TransactionDAO.getInstance().getAllTransactionsByAccountId(accountId);
-			accountBalance = AccountDAO.getInstance().getAmountByAccountId(accountId);
-			accountName = AccountDAO.getInstance().getAccountNameByAccountId(accountId);
-			categories = CategoryDAO.getInstance().getAllCategoriesByUserId();
-			ownCategories = CategoryDAO.getInstance().getAllCategoriesByUserId(user.getUserId());
-			accounts = AccountDAO.getInstance().getAllAccountsByUserId(user.getUserId());
+			transactions = transactionDAO.getAllTransactionsByAccountId(accountId);
+			accountBalance = accountDAO.getAmountByAccountId(accountId);
+			accountName = accountDAO.getAccountNameByAccountId(accountId);
+			categories = categoryDao.getAllCategoriesByUserId();
+			ownCategories = categoryDao.getAllCategoriesByUserId(user.getUserId());
+			accounts = accountDAO.getAllAccountsByUserId(user.getUserId());
 			allCategories.addAll(categories);
 			allCategories.addAll(ownCategories);
-			tags = TagDAO.getInstance().getAllTagsByUserId(user.getUserId());
+			tags = tagDAO.getAllTagsByUserId(user.getUserId());
 		} catch (SQLException e) {
 			System.out.println("Something horrible happened to the DB");
 			e.printStackTrace();
@@ -98,18 +110,18 @@ public class TransactionController {
 		
 		Account acc = null;
 		try {
-			acc = AccountDAO.getInstance().getAccountByAccountName(account);
-			Category cat = CategoryDAO.getInstance().getCategoryByCategoryName(category);
+			acc = accountDAO.getAccountByAccountName(account);
+			Category cat = categoryDao.getCategoryByCategoryName(category);
 			Transaction t = new Transaction(TransactionType.valueOf(type), description, BigDecimal.valueOf(Double.valueOf(amount)), acc.getAccountId(), cat.getCategoryId(), LocalDateTime.now(), tagsSet);
 			BigDecimal newValue = BigDecimal.valueOf(Double.valueOf(amount));
-			BigDecimal oldValue = AccountDAO.getInstance().getAmountByAccountId((int)acc.getAccountId());
+			BigDecimal oldValue = accountDAO.getAmountByAccountId((int)acc.getAccountId());
 			if (type.equals("EXPENCE")) {
-				AccountDAO.getInstance().updateAccountAmount(acc, (oldValue.subtract(newValue)));
+				accountDAO.updateAccountAmount(acc, (oldValue.subtract(newValue)));
 			} else 
 			if (type.equals("INCOME")) {
-				AccountDAO.getInstance().updateAccountAmount(acc, (oldValue.add(newValue)));
+				accountDAO.updateAccountAmount(acc, (oldValue.add(newValue)));
 			}
-			TransactionDAO.getInstance().insertTransaction(t);
+			transactionDAO.insertTransaction(t);
 		} catch (SQLException e) {
 			System.out.println("Something horrible happened to the DB");
 			e.printStackTrace();
@@ -127,14 +139,14 @@ public class TransactionController {
 	@RequestMapping(value="/transaction/{transactionId}", method=RequestMethod.GET)
 	public String getEditTransaction(HttpServletRequest request, HttpSession session, Model model, @PathVariable("transactionId") Long transactionId) {
 		try {
-			Transaction t = TransactionDAO.getInstance().getTransactionByTransactionId(transactionId);
+			Transaction t = transactionDAO.getTransactionByTransactionId(transactionId);
 			String type = t.getType().toString();
 			String description = t.getDescription();
 			BigDecimal amount = t.getAmount();
-			String accountName = AccountDAO.getInstance().getAccountNameByAccountId(t.getAccount());
-			String category = CategoryDAO.getInstance().getCategoryNameByCategoryId(t.getCategory());
+			String accountName = accountDAO.getAccountNameByAccountId(t.getAccount());
+			String category = categoryDao.getCategoryNameByCategoryId(t.getCategory());
 			LocalDateTime date = t.getDate();
-			Set<Tag> tags = TagDAO.getInstance().getTagsByTransactionId(transactionId);
+			Set<Tag> tags = tagDAO.getTagsByTransactionId(transactionId);
 			
 			Set<String> tagNames = new HashSet<String>();
 			for (Tag tag : tags) {
@@ -186,22 +198,22 @@ public class TransactionController {
 		
 		Account acc = null;
 		try {
-			acc = AccountDAO.getInstance().getAccountByAccountName(account);
-			Category cat = CategoryDAO.getInstance().getCategoryByCategoryName(category);
+			acc = accountDAO.getAccountByAccountName(account);
+			Category cat = categoryDao.getCategoryByCategoryName(category);
 			Transaction t = new Transaction(TransactionType.valueOf(type), description, BigDecimal.valueOf(Double.valueOf(amount)), acc.getAccountId(), cat.getCategoryId(), newDate, tagsSet);
 			t.setTransactionId(transactionId);
 			BigDecimal newValue = BigDecimal.valueOf(Double.valueOf(amount));
-			BigDecimal oldValue = AccountDAO.getInstance().getAmountByAccountId((int)acc.getAccountId());
+			BigDecimal oldValue = accountDAO.getAmountByAccountId((int)acc.getAccountId());
 			if (type.equals("EXPENCE")) {
-				AccountDAO.getInstance().updateAccountAmount(acc, (oldValue.subtract(newValue)));
+				accountDAO.updateAccountAmount(acc, (oldValue.subtract(newValue)));
 			} else 
 			if (type.equals("INCOME")) {
-				AccountDAO.getInstance().updateAccountAmount(acc, (oldValue.add(newValue)));
+				accountDAO.updateAccountAmount(acc, (oldValue.add(newValue)));
 			}
 			
-			TagDAO.getInstance().deleteAllTagsForTransaction(transactionId);
-			TransactionDAO.getInstance().removeTransaction(transactionId);
-			TransactionDAO.getInstance().updateTransaction(t);
+			tagDAO.deleteAllTagsForTransaction(transactionId);
+			transactionDAO.removeTransaction(transactionId);
+			transactionDAO.updateTransaction(t);
 		} catch (SQLException e) {
 			System.out.println("Something horrible happened to the DB");
 			e.printStackTrace();
@@ -221,8 +233,8 @@ public class TransactionController {
 		Account originAccount = null;
 		Set<Account> userAccounts = null;
 		try {
-			originAccount = AccountDAO.getInstance().getAccountByAccountId(originAccountId);
-			userAccounts = AccountDAO.getInstance().getAllAccountsByUserId(u.getUserId());
+			originAccount = accountDAO.getAccountByAccountId(originAccountId);
+			userAccounts = accountDAO.getAllAccountsByUserId(u.getUserId());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -244,9 +256,9 @@ public class TransactionController {
 		Account from = null;
 		Account to = null;
 		try {
-			from = AccountDAO.getInstance().getAccountByAccountName(fromAccount);
-			to = AccountDAO.getInstance().getAccountByAccountName(toAccount);
-			AccountDAO.getInstance().makeTransferToOtherAccount(from, to, amount);
+			from = accountDAO.getAccountByAccountName(fromAccount);
+			to = accountDAO.getAccountByAccountName(toAccount);
+			accountDAO.makeTransferToOtherAccount(from, to, amount);
 		} catch (SQLException e) {
 			System.out.println("Collosal fail when making the transfer");
 			e.printStackTrace();
@@ -259,9 +271,9 @@ public class TransactionController {
 	public String deleteTransaction(@PathVariable("transactionId") Long transactionId) {
 		Transaction t = null;
 		try {
-			t = TransactionDAO.getInstance().getTransactionByTransactionId(transactionId);
-			TagDAO.getInstance().deleteAllTagsForTransaction(transactionId);
-			TransactionDAO.getInstance().deleteTransaction(t);
+			t = transactionDAO.getTransactionByTransactionId(transactionId);
+			tagDAO.deleteAllTagsForTransaction(transactionId);
+			transactionDAO.deleteTransaction(t);
 		} catch (SQLException e) {
 			System.out.println("Could not delete transaction");
 			e.printStackTrace();
@@ -276,7 +288,7 @@ public class TransactionController {
 		User user = (User) session.getAttribute("user");
 		Set<String> incomeCategories = null;
 		try {
-			incomeCategories = CategoryDAO.getInstance().getAllCategoriesByType(user.getUserId(), type);
+			incomeCategories = categoryDao.getAllCategoriesByType(user.getUserId(), type);
 		} catch (SQLException e) {
 			System.out.println("Could not get all categories by type");
 			e.printStackTrace();

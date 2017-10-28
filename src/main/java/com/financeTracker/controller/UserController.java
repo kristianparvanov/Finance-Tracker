@@ -11,6 +11,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +27,14 @@ import com.financeTracker.model.db.UserDAO;
 
 @Controller
 public class UserController {
+	@Autowired
+	private UserDAO userDAO;
+	
+	@Autowired
+	private AccountDAO accountDAO;
+	
+	@Autowired
+	private TransactionDAO transactionDAO;
 	
 	@RequestMapping(value="/index", method=RequestMethod.GET)
 	public String welcome(HttpSession session, Model viewModel) {
@@ -43,8 +52,8 @@ public class UserController {
 		String password = request.getParameter("password");
 		
 		try {
-			if (UserDAO.getInstance().isValidLogin(username, password)) {
-				User u = UserDAO.getInstance().getUser(username);
+			if (userDAO.isValidLogin(username, password)) {
+				User u = userDAO.getUser(username);
 				session.setAttribute("user", u);
 				return "redirect:main";
 			}
@@ -73,10 +82,10 @@ public class UserController {
 		}
 		
 		try {
-			if (!UserDAO.getInstance().existsUser(username)) {
+			if (!userDAO.existsUser(username)) {
 				User u = new User(username, password, email, firstName, lastName);
 				
-				UserDAO.getInstance().insertUser(u);
+				userDAO.insertUser(u);
 				request.getSession().setAttribute("user", u);
 				return "main";
 			}
@@ -93,7 +102,7 @@ public class UserController {
 		
 		Set<Account> accounts = null;
 		try {
-			accounts = AccountDAO.getInstance().getAllAccountsByUserId(u.getUserId());
+			accounts = accountDAO.getAllAccountsByUserId(u.getUserId());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -108,7 +117,7 @@ public class UserController {
 		
 		List<Transaction> allTransactions = null;
 		try {
-			allTransactions = TransactionDAO.getInstance().getAllTransactionsByUserId(u.getUserId());
+			allTransactions = transactionDAO.getAllTransactionsByUserId(u.getUserId());
 		} catch (SQLException e) {
 			System.out.println("Could not get all transactions for this user");
 			e.printStackTrace();

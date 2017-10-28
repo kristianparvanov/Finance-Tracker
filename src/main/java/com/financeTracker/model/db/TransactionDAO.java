@@ -1,7 +1,6 @@
 package com.financeTracker.model.db;
 
 import java.math.BigDecimal;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,40 +13,46 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.PostConstruct;
 
-import com.financeTracker.model.Account;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.financeTracker.model.Budget;
-import com.financeTracker.model.Category;
 import com.financeTracker.model.Tag;
 import com.financeTracker.model.Transaction;
 import com.financeTracker.model.TransactionType;
 
+@Component
 public class TransactionDAO {
+	@Autowired
+	private DBManager dbManager;
 	
-	private BudgetDAO budgetDao = new BudgetDAO();
+	@Autowired
+	private BudgetDAO budgetDao;
 	
-	private static TransactionDAO instance;
+	@Autowired
+	private BudgetsHasTransactionsDAO budgetsHasTransactionsDAO;
+	
+	@Autowired
+	private CategoryDAO categoryDao;
+	
+	@Autowired
+	private TagDAO tagDAO;
+	
 	private static final HashMap<TransactionType, ArrayList<Transaction>> ALL_TRANSACTIONS = new HashMap<>();
-	private static final Connection CONNECTION = DBManager.getInstance().getConnection();
-	
-	private TransactionDAO() throws SQLException {
+
+	@PostConstruct
+	private void init() throws SQLException {
 		ALL_TRANSACTIONS.put(TransactionType.EXPENCE, new ArrayList<>());
 		ALL_TRANSACTIONS.put(TransactionType.INCOME, new ArrayList<>());
 		getAllTransactions();
 	}
 	
-	public synchronized static TransactionDAO getInstance() throws SQLException {
-		if (instance == null) {
-			instance = new TransactionDAO();
-		}
-		return instance;
-	}
-	
 	public synchronized void getAllTransactions() throws SQLException {
 		String query = "SELECT transaction_id, type, date, description, amount, account_id, category_id FROM finance_tracker.transactions";
 		PreparedStatement statement = null;
-		statement = CONNECTION.prepareStatement(query);
+		statement = dbManager.getConnection().prepareStatement(query);
 		ResultSet result = statement.executeQuery();
 		while (result.next()) {
 			long transactionId = result.getInt("transaction_id");
@@ -58,8 +63,8 @@ public class TransactionDAO {
 			String description = result.getString("description");
 			int accountId = result.getInt("account_id");
 			int categoryId = result.getInt("category_id");
-			HashSet<Tag> tags = TagDAO.getInstance().getTagsByTransactionId(transactionId);
-			String categoryName = CategoryDAO.getInstance().getCategoryNameByCategoryId(categoryId);
+			HashSet<Tag> tags = tagDAO.getTagsByTransactionId(transactionId);
+			String categoryName = categoryDao.getCategoryNameByCategoryId(categoryId);
 			Transaction t = new Transaction(transactionId, transactionType, description, amount, accountId, categoryId, date, tags);
 			t.setCategoryName(categoryName);
 			ALL_TRANSACTIONS.get(t.getType()).add(t);
@@ -94,7 +99,7 @@ public class TransactionDAO {
 	public synchronized Transaction getTransactionByTransactionId(long transactionId) throws SQLException {
 		String sql = "SELECT type, date, description, amount, account_id, category_id FROM transactions WHERE transaction_id = ?;";
 		
-		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(sql);
+		PreparedStatement ps = dbManager.getConnection().prepareStatement(sql);
 		ps.setLong(1, transactionId);
 		
 		ResultSet res = ps.executeQuery();
@@ -106,7 +111,7 @@ public class TransactionDAO {
 		BigDecimal amount = res.getBigDecimal("amount");
 		int accountId = res.getInt("account_id");
 		int categoryId = res.getInt("category_id");
-		HashSet<Tag> tags = TagDAO.getInstance().getTagsByTransactionId(transactionId);
+		HashSet<Tag> tags = tagDAO.getTagsByTransactionId(transactionId);
 		
 		Transaction t = new Transaction(transactionId, transactionType, description, amount, accountId, categoryId, date, tags);
 		
@@ -115,7 +120,7 @@ public class TransactionDAO {
 	
 	public synchronized void insertTransaction(Transaction t) throws SQLException {
 		String query = "INSERT INTO finance_tracker.transactions (type, date, amount, description, account_id, category_id) VALUES (?, STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), ?, ?, ?, ?)";
-		PreparedStatement statement = CONNECTION.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+		PreparedStatement statement = dbManager.getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 		statement.setString(1, t.getType().toString());
 		statement.setTimestamp(2, Timestamp.valueOf(t.getDate().withNano(0)));
 		statement.setBigDecimal(3, t.getAmount());
@@ -128,18 +133,18 @@ public class TransactionDAO {
 		resultSet.next();
 		t.setTransactionId(resultSet.getLong(1));
 		try {
-			CONNECTION.setAutoCommit(false);
+			dbManager.getConnection().setAutoCommit(false);
 			
 			for (Tag tag : t.getTags()) {
-				TagDAO.getInstance().insertTagToTags(tag, tag.getUserId());
-				TagDAO.getInstance().insertTagToTransaction(t, tag);
+				tagDAO.insertTagToTags(tag, tag.getUserId());
+				tagDAO.insertTagToTransaction(t, tag);
 			}
 			
 			boolean existsBudget = budgetDao.existsBudget(t.getDate(), t.getCategory(), t.getAccount());
 			Set<Budget> budgets = budgetDao.getAllBudgetsByDateCategoryAndAccount(t.getDate(), t.getCategory(), t.getAccount());
 			if (existsBudget) {
 				for (Budget budget : budgets) {
-					BudgetsHasTransactionsDAO.getInstance().insertTransactionBudget(budget.getBudgetId(), t.getTransactionId());
+					budgetsHasTransactionsDAO.insertTransactionBudget(budget.getBudgetId(), t.getTransactionId());
 					if (t.getType().equals(TransactionType.EXPENCE)) {
 						budget.setAmount(budget.getAmount().add(t.getAmount()));
 					}
@@ -148,18 +153,18 @@ public class TransactionDAO {
 			}
 			
 			ALL_TRANSACTIONS.get(t.getType()).add(t);
-			CONNECTION.commit();
+			dbManager.getConnection().commit();
 		} catch (SQLException e) {
-			CONNECTION.rollback();
+			dbManager.getConnection().rollback();
 			throw new SQLException();
 		} finally {
-			CONNECTION.setAutoCommit(true);
+			dbManager.getConnection().setAutoCommit(true);
 		}
 	}
 	
 	public synchronized void updateTransaction(Transaction t) throws SQLException {
 		String query = "UPDATE finance_tracker.transactions SET type = ?, date = STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), amount = ?, description = ?, account_id = ?, category_id = ? WHERE transaction_id = ?";
-		PreparedStatement statement = CONNECTION.prepareStatement(query);
+		PreparedStatement statement = dbManager.getConnection().prepareStatement(query);
 		statement.setString(1, t.getType().toString());
 		statement.setTimestamp(2, Timestamp.valueOf(t.getDate().withNano(0)));
 		statement.setBigDecimal(3, t.getAmount());
@@ -170,8 +175,8 @@ public class TransactionDAO {
 		statement.executeUpdate();
 		
 		for (Tag tag : t.getTags()) {
-			TagDAO.getInstance().insertTagToTags(tag, tag.getUserId());
-			TagDAO.getInstance().insertTagToTransaction(t, tag);
+			tagDAO.insertTagToTags(tag, tag.getUserId());
+			tagDAO.insertTagToTransaction(t, tag);
 		}
 		
 		ALL_TRANSACTIONS.get(t.getType()).add(t);
@@ -179,22 +184,22 @@ public class TransactionDAO {
 	
 	public synchronized void deleteTransaction(Transaction t) throws SQLException {
 		try {
-			CONNECTION.setAutoCommit(false);
-			BudgetsHasTransactionsDAO.getInstance().deleteTransactionBudgetByTransactionId(t.getTransactionId());
+			dbManager.getConnection().setAutoCommit(false);
+			budgetsHasTransactionsDAO.deleteTransactionBudgetByTransactionId(t.getTransactionId());
 			
 			String query = "DELETE FROM finance_tracker.transactions WHERE transaction_id = ?";
-			PreparedStatement statement = CONNECTION.prepareStatement(query);
+			PreparedStatement statement = dbManager.getConnection().prepareStatement(query);
 			statement.setLong(1, t.getTransactionId());
 			statement.executeUpdate();
 			
 			ALL_TRANSACTIONS.get(t.getType()).remove(t);
-			CONNECTION.commit();
+			dbManager.getConnection().commit();
 		} catch (SQLException e) {
-			CONNECTION.rollback();
+			dbManager.getConnection().rollback();
 			
 			throw new SQLException();
 		} finally {
-			CONNECTION.setAutoCommit(true);
+			dbManager.getConnection().setAutoCommit(true);
 		}
 	}
 	
@@ -212,7 +217,7 @@ public class TransactionDAO {
 	public boolean existsTransaction(LocalDateTime fromDate, LocalDateTime toDate, long categoryId, long accountId) throws SQLException {
 		String sql = "SELECT type, date, account_id, category_id FROM transactions WHERE category_id = ? AND account_id = ?;";
 		
-		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(sql);
+		PreparedStatement ps = dbManager.getConnection().prepareStatement(sql);
 		ps.setLong(1, categoryId);
 		ps.setLong(2, accountId);
 		
@@ -238,7 +243,7 @@ public class TransactionDAO {
 			long accountId) throws SQLException {
 		String sql = "SELECT transaction_id, type, date, description, amount, account_id, category_id FROM transactions WHERE category_id = ? AND account_id = ?;";
 		
-		PreparedStatement ps = DBManager.getInstance().getConnection().prepareStatement(sql);
+		PreparedStatement ps = dbManager.getConnection().prepareStatement(sql);
 		ps.setLong(1, categoryId);
 		ps.setLong(2, accountId);
 		
@@ -266,7 +271,7 @@ public class TransactionDAO {
 	public List<Transaction> getAllTransactionsByUserId(long userId) throws SQLException {
 		List<Transaction> transactions = new ArrayList<Transaction>();
 		String query = "SELECT t.type, t.amount, t.date FROM finance_tracker.transactions t JOIN  finance_tracker.accounts a ON t.account_id = a.account_id WHERE a.user_id = ?";
-		PreparedStatement statement = CONNECTION.prepareStatement(query);
+		PreparedStatement statement = dbManager.getConnection().prepareStatement(query);
 		statement.setLong(1, userId);
 		
 		ResultSet result = statement.executeQuery();
