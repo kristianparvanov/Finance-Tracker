@@ -49,12 +49,36 @@ public class AccountDAO {
 		acc.setAccaountId(res.getLong(1));
 	}
 	
-	public synchronized void deleteAccount(int accountId) throws SQLException {
-		String sql = "DELETE FROM accounts WHERE account_id = ?;";
+	public synchronized void deleteAccount(long accountId) throws SQLException {
+		dbManager.getConnection().setAutoCommit(false);
 		
-		PreparedStatement ps = dbManager.getConnection().prepareStatement(sql);
-		ps.setInt(1, accountId);
-		ps.executeUpdate();
+		try {
+			Account acc = getAccountByAccountId(accountId);
+			
+			for (Budget budget : acc.getBudgets()) {
+				budgetDao.deleteBudget(budget);
+			}
+			
+			for (Transaction transaction : acc.getTransactions()) {
+				transactionDAO.deleteTransaction(transaction);
+			}
+			
+			for (PlannedPayment payment : acc.getPlannedPayments()) {
+				plannedPaymentDAO.deletePlannedPayment(payment.getPlannedPaymentId());;
+			}
+			
+			String sql = "DELETE FROM accounts WHERE account_id = ?;";
+			
+			PreparedStatement ps = dbManager.getConnection().prepareStatement(sql);
+			ps.setLong(1, accountId);
+			ps.executeUpdate();
+		} catch (Exception e) {
+			dbManager.getConnection().rollback();
+			
+			throw new SQLException();
+		} finally {
+			dbManager.getConnection().setAutoCommit(true);
+		}
 	}
 	
 	public synchronized long getAccountId(User user, String name) throws SQLException {
@@ -131,12 +155,15 @@ public class AccountDAO {
 	
 	public synchronized void makeTransferToOtherAccount(Account currentAcc, Account otherAcc, BigDecimal amount) throws SQLException {
 		dbManager.getConnection().setAutoCommit(false);
+		
 		try {
 			updateAccountAmount(currentAcc, currentAcc.getAmount().subtract(amount));
 			updateAccountAmount(otherAcc, otherAcc.getAmount().add(amount));
+			
 			dbManager.getConnection().commit();
 		} catch (Exception e) {
 			dbManager.getConnection().rollback();
+			
 			throw new SQLException();
 		} finally {
 			dbManager.getConnection().setAutoCommit(true);

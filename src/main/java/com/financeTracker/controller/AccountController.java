@@ -47,12 +47,11 @@ public class AccountController {
 	
 	@RequestMapping(value="/account/deleteAccount/{accountId}", method=RequestMethod.POST)
 	public String deleteAccount(@PathVariable("accountId") Long accountId) {
-		//try {
-			System.out.println("plz work");
-//		} catch (SQLException e) {
-//			System.out.println("Could not delete account");
-//			e.printStackTrace();
-//		}
+		try {
+			accountDAO.deleteAccount(accountId);
+		} catch (SQLException e) {
+			System.out.println("nema da trieme acc-ta :(");
+		}
 		return "redirect:/main";
 	}
 }
