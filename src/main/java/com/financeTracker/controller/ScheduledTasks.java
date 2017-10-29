@@ -25,27 +25,33 @@ public class ScheduledTasks {
 	
 	@Async
 	public void testPrintHi() {
-		for (int i = 0; i < 17; i++) {
-			System.out.println("HI");
+		while (true) {
+			try {
+				List<PlannedPayment> allPlannedPayments = plannedPaymentDAO.getAllPlannedPayments();
+				for (PlannedPayment plannedPayment : allPlannedPayments) {
+					if (LocalDateTime.now().isAfter(plannedPayment.getFromDate())) {
+						Account acc = accountDAO.getAccountByAccountId(plannedPayment.getAccount());
+						BigDecimal newValue = plannedPayment.getAmount();
+						BigDecimal oldValue = accountDAO.getAmountByAccountId(acc.getAccountId());
+						if (plannedPayment.getPaymentType().equals(TransactionType.EXPENCE)) {
+							accountDAO.updateAccountAmount(acc, (oldValue.subtract(newValue)));
+						} else 
+						if (plannedPayment.getPaymentType().equals(TransactionType.INCOME)) {
+							accountDAO.updateAccountAmount(acc, (oldValue.add(newValue)));
+						}
+					}
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			System.out.println("4s--------------------------------------------------------------------------");
+			try {
+				Thread.sleep(4000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-//		try {
-//			List<PlannedPayment> allPlannedPayments = plannedPaymentDAO.getAllPlannedPayments();
-//			for (PlannedPayment plannedPayment : allPlannedPayments) {
-//				if (LocalDateTime.now().isAfter(plannedPayment.getFromDate())) {
-//					Account acc = accountDAO.getAccountByAccountId(plannedPayment.getAccount());
-//					BigDecimal newValue = plannedPayment.getAmount();
-//					BigDecimal oldValue = accountDAO.getAmountByAccountId(acc.getAccountId());
-//					if (plannedPayment.getPaymentType().equals(TransactionType.EXPENCE)) {
-//						accountDAO.updateAccountAmount(acc, (oldValue.subtract(newValue)));
-//					} else 
-//					if (plannedPayment.getPaymentType().equals(TransactionType.INCOME)) {
-//						accountDAO.updateAccountAmount(acc, (oldValue.add(newValue)));
-//					}
-//				}
-//			}
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
 	}
 }
 

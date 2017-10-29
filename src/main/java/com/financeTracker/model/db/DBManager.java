@@ -6,6 +6,8 @@ import java.sql.SQLException;
 
 import org.springframework.stereotype.Component;
 
+import com.financeTracker.controller.TaskInitializer;
+
 @Component
 public class DBManager {
     private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
@@ -23,6 +25,10 @@ public class DBManager {
         } catch (SQLException e) {
             System.out.println("Unable to connect to database: " + e.getMessage());
         }
+        
+        Thread t = new Thread(new TaskInitializer());
+        t.setDaemon(true);
+        t.start();
     }
     
     public Connection getConnection() {
