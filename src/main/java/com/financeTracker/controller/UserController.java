@@ -3,10 +3,13 @@ package com.financeTracker.controller;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.text.NumberFormat;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -125,23 +128,44 @@ public class UserController {
 			e.printStackTrace();
 		}
 		
-		List<BigDecimal> allTransactionsValues = new ArrayList<BigDecimal>();
-		for (Transaction t : allTransactions) {
-			if (t.getType().equals(TransactionType.EXPENCE)) {
-				allTransactionsValues.add(t.getAmount().negate());
-			} else {
-				allTransactionsValues.add(t.getAmount());
+		TreeMap<LocalDateTime, BigDecimal> allTransactionsValues = new TreeMap<LocalDateTime, BigDecimal>(new Comparator<LocalDateTime>() {
+			@Override
+			public int compare(LocalDateTime d1, LocalDateTime d2) {
+				return d1.compareTo(d2);
 			}
-		}
-		
-		List<String> allTransactionsDates = new ArrayList<String>();
+		});
+		TreeMap<LocalDateTime, String> allTransactionsDates = new TreeMap<LocalDateTime, String>(new Comparator<LocalDateTime>() {
+			@Override
+			public int compare(LocalDateTime d1, LocalDateTime d2) {
+				return d1.compareTo(d2);
+			}
+		});
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		for (Transaction t : allTransactions) {
-			allTransactionsDates.add(t.getDate().format(formatter));
+			if (t.getType().equals(TransactionType.EXPENCE)) {
+				allTransactionsValues.put(t.getDate(), allBalance.add(t.getAmount().negate()));
+			} else {
+				allTransactionsValues.put(t.getDate(), allBalance.add(t.getAmount()));
+			}
+			allTransactionsDates.put(t.getDate(), t.getDate().format(formatter));
+				
+		}
+		List<String>allTransactionsDatesList = new ArrayList<>();
+		List<BigDecimal>allTransactionsValuesList = new ArrayList<>();
+		allTransactionsDatesList.addAll(allTransactionsDates.values());
+		allTransactionsValuesList.addAll(allTransactionsValues.values());
+		
+		TreeMap<BigDecimal, String> categories = null;
+		try {
+			categories = transactionDAO.getAllCategoriesAndTheirAmountsByUserId(u.getUserId(), "EXPENCE");
+		} catch (SQLException e) {
+			System.out.println("Could not getAllCategoriesAndTheirAmountsByUserId");
+			e.printStackTrace();
 		}
 		
-		viewModel.addAttribute("transactionsDates", allTransactionsDates);
-		viewModel.addAttribute("transactionsValues", allTransactionsValues);
+		viewModel.addAttribute("transactionsCategories", categories);
+		viewModel.addAttribute("transactionsDates", allTransactionsDatesList);
+		viewModel.addAttribute("transactionsValues", allTransactionsValuesList);
 		viewModel.addAttribute("balance", balance);
 		return "main";
 	}

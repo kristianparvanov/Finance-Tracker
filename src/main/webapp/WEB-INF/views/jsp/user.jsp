@@ -82,17 +82,5 @@
 		<jsp:include page="footer.jsp"></jsp:include>
 	</div>
 	
-<!-- jQuery 3 -->
-<script src="./static/jquery.min.js"></script>
-<!-- Bootstrap 3.3.7 -->
-<script src="./static/bootstrap.min.js"></script>
-<!-- SlimScroll -->
-<script src="./static/jquery.slimscroll.min.js"></script>
-<!-- FastClick -->
-<script src="./static/fastclick.js"></script>
-<!-- AdminLTE App -->
-<script src="./static/adminlte.min.js"></script>
-<!-- AdminLTE for demo purposes -->
-<script src="./static/demo.js"></script>
 </body>
 </html>

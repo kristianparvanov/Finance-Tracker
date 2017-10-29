@@ -85,17 +85,26 @@
 			
 			<div>
 				<c:set var="transactions" value="${ transactionsValues }" />
-				<div style="width:100%; height: 100%">
+				<c:set var="transactions" value="${ transactionsValues }" />
+			    <c:set var="transactionsCategories" value="${ transactionsCategories }" />
+			    
+				<div style="width:100%; height: 70%">
 			        <canvas id="canvas"></canvas>
 			    </div>
+			    
+				<div id="canvas-holder" style="width:100%">
+        			<canvas id="chart-area" ></canvas>
+   				</div>
 				<script>
 					var presets = window.chartColors;
 					var utils = Samples.utils;
 					var values = '${transactions}';
 					var dates = '${transactionsDates}';
+					var cats = '${transactionsCategories}';
 					
 					values = values.replace(/[\[\]']+/g,'')
 					dates = dates.replace(/[\[\]']+/g,'')
+					cats = cats.replace(/[\{\}']+/g,'')
 					
 					var allTrans = [];
 					$.each(values.split(","), function(i,e){
@@ -113,7 +122,7 @@
 				        data: {
 				            labels: allDates,
 				            datasets: [{
-				                label: "All transactions",
+				                label: "Cashflow",
 				                backgroundColor: utils.transparentize(presets.blue),
 				                borderColor: window.chartColors.blue,
 				                data: allTrans,
@@ -153,11 +162,91 @@
 				        }
 				    };
 				    
-				    window.onload = function() {
-				        var ctx = document.getElementById("canvas").getContext("2d");
-				        window.myLine = new Chart(ctx, config);
+				    var randomScalingFactor = function() {
+				        return Math.round(Math.random() * 100);
 				    };
+				    
+				    var catsKeyValuePairs = [];
+				    var catNames = [];
+				    var catValues = [];
+					$.each(cats.split(","), function(i,e){
+						catsKeyValuePairs.push(e);
+						//alert(catsKeyValuePairs);
+						for (var i = 0; i < catsKeyValuePairs.length; i++) {
+							var kv = catsKeyValuePairs[i].split("=");
+							catValues.push(kv[0]);
+							catNames.push(kv[1]);
+						}
+					});
+					
+					alert(catNames);
+					alert(catValues);
+
+				    var config2 = {
+				        type: 'doughnut',
+				        data: {
+				            datasets: [{
+				                data: [
+				                    48,25,68,7,98,45,48,98,87
+				                ],
+				                backgroundColor: [
+				                    window.chartColors.red,
+				                    window.chartColors.orange,
+				                    window.chartColors.yellow,
+				                    window.chartColors.green,
+				                    window.chartColors.blue,
+				                    window.chartColors.red,
+				                    window.chartColors.orange,
+				                    window.chartColors.yellow,
+				                    window.chartColors.green,
+				                    window.chartColors.blue,
+				                    window.chartColors.red,
+				                    window.chartColors.orange,
+				                    window.chartColors.yellow,
+				                    window.chartColors.green,
+				                    window.chartColors.blue,
+				                ],
+				                label: 'Dataset 1'
+				            }],
+				            labels: [
+				                "Red",
+				                "Orange",
+				                "Yellow",
+				                "Green",
+				                "Blue","Green1",
+				                "Blue3","Green2",
+				                "Blue4"
+				            ]
+				        },
+				        options: {
+				            responsive: true,
+				            legend: {
+				                position: 'top',
+				            },
+				            title: {
+				                display: true,
+				                text: 'Chart.js Doughnut Chart'
+				            },
+				            animation: {
+				                animateScale: true,
+				                animateRotate: true
+				            }
+				        }
+				    };
+
+				    window.onload = function() {
+				    	var ctx = document.getElementById("canvas").getContext("2d");
+				        window.myLine = new Chart(ctx, config);
+				        var ctx2 = document.getElementById("chart-area").getContext("2d");
+				        window.myDoughnut = new Chart(ctx2, config2);
+				    };
+				    
 				</script>
+			</div>
+			
+			
+			
+				   
 			</div>
 	 	</section>
 	</div>
@@ -169,17 +258,5 @@
 	<!-- chartJS utils -->
 	<script src="<c:url value="/js/utils.js" />"  type ="text/javascript"></script>
 
-	<!-- jQuery 3 -->
- 	<script src="<c:url value="/js/jquery.min.js" />"  type ="text/javascript"></script>
-	<!-- Bootstrap 3.3.7 -->
- 	<script src="<c:url value="/js/bootstrap.min.js" />"  type ="text/javascript"></script>
-	<!-- SlimScroll -->
- 	<script src="<c:url value="/js/jquery.slimscroll.min.js" />"  type ="text/javascript"></script>
-	<!-- FastClick -->
- 	<script src="<c:url value="/js/fastclick.js" />"  type ="text/javascript"></script>
-	<!-- AdminLTE App -->
-	 <script src="<c:url value="/js/adminlte.min.js" />"  type ="text/javascript"></script>
-	<!-- AdminLTE for demo purposes -->
-	<script src="<c:url value="/js/demo.js" />"  type ="text/javascript"></script>
 </body>
 </html>

@@ -34,10 +34,12 @@ public class Transaction {
 		this.tags = tags;
 	}
 	
-	public Transaction(TransactionType type, BigDecimal amount, LocalDateTime date) {
+	public Transaction(TransactionType type, LocalDateTime date, BigDecimal amount, long account, long category) {
 		this.type = type;
-		this.amount = amount;
 		this.date = date;
+		this.amount = amount;
+		this.account = account;
+		this.category = category;
 	}
 	
 	public long getTransactionId() {

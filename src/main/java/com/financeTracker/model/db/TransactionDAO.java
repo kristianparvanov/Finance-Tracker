@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeMap;
 
 import javax.annotation.PostConstruct;
 
@@ -277,18 +278,40 @@ public class TransactionDAO {
 
 	public List<Transaction> getAllTransactionsByUserId(long userId) throws SQLException {
 		List<Transaction> transactions = new ArrayList<Transaction>();
-		String query = "SELECT t.type, t.amount, t.date FROM finance_tracker.transactions t JOIN  finance_tracker.accounts a ON t.account_id = a.account_id WHERE a.user_id = ?";
+		String query = "SELECT t.type, t.date, t.amount, t.account_id, t.category_id FROM finance_tracker.transactions t JOIN  finance_tracker.accounts a ON t.account_id = a.account_id WHERE a.user_id = ?";
 		PreparedStatement statement = dbManager.getConnection().prepareStatement(query);
 		statement.setLong(1, userId);
 		
 		ResultSet result = statement.executeQuery();
 		while (result.next()) {
 			String type = result.getString("type");
-			BigDecimal amount = result.getBigDecimal("amount");
 			LocalDateTime date = result.getTimestamp("date").toLocalDateTime();
-			Transaction t = new Transaction(TransactionType.valueOf(type), amount, date);
+			BigDecimal amount = result.getBigDecimal("amount");
+			long accountId = result.getLong("account_id");
+			long categoryId = result.getLong("category_id");
+			
+			Transaction t = new Transaction(TransactionType.valueOf(type), date, amount, accountId, categoryId);
 			transactions.add(t);
 		}
 		return transactions;
+	}
+	
+	public TreeMap<BigDecimal, String> getAllCategoriesAndTheirAmountsByUserId(long userId, String type) throws SQLException {
+		TreeMap<BigDecimal, String> categories = new TreeMap<BigDecimal, String>();
+		String query = "SELECT SUM(t.amount) as amount, t.category_id FROM finance_tracker.transactions t JOIN finance_tracker.accounts a ON t.account_id = a.account_id JOIN finance_tracker.categories c on t.category_id = c.category_id WHERE (a.user_id = ? AND c.type = ?) group by category_id;";
+		PreparedStatement statement = dbManager.getConnection().prepareStatement(query);
+		statement.setLong(1, userId);
+		statement.setString(2, type);
+		
+		ResultSet result = statement.executeQuery();
+		while (result.next()) {
+			BigDecimal amount = result.getBigDecimal("amount");
+			long categoryId = result.getLong("category_id");
+			
+			String categoryName = categoryDao.getCategoryNameByCategoryId(categoryId);
+			categories.put(amount, categoryName);
+		}
+		
+		return categories;
 	}
 }
