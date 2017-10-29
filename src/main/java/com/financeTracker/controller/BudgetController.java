@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -146,7 +147,6 @@ public class BudgetController {
 			System.out.println("Nemame smetki mai? :(");
 		}
 		
-		
 		return "redirect:/budgets";
 	}
 	
@@ -155,12 +155,14 @@ public class BudgetController {
 		try {
 			Budget b = budgetDao.getBudgetByBudgetId(budgetId);
 			
+			TreeSet<Transaction> transactions = new TreeSet<>((t1, t2) -> t2.getDate().compareTo(t1.getDate()));
+			transactions.addAll(b.getTransactions());
+			
 			model.addAttribute("budgetId", budgetId);
-			model.addAttribute("budgetTransactions", b.getTransactions());
+			model.addAttribute("budgetTransactions", transactions);
 		} catch (SQLException e) {
 			System.out.println("Mai nqmame tranzakciiki?? ;(");
 		}
-		
 		
 		return "budgetInfo";
 	}

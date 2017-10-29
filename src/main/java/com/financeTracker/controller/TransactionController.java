@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -52,7 +53,8 @@ public class TransactionController {
 	@RequestMapping(value="/{accountId}", method=RequestMethod.GET)
 	public String getAllTransactions(HttpServletRequest request, HttpSession session, Model model, @PathVariable("accountId") Long accountId) {
 		User user = (User) session.getAttribute("user");
-		List<Transaction> transactions = null;
+//		List<Transaction> transactions = null;
+		TreeSet<Transaction> transactions = new TreeSet<>((t1, t2) -> t2.getDate().compareTo(t1.getDate()));
 		BigDecimal accountBalance = null;
 		String accountName = null;
 		Set<Category> allCategories = new HashSet<Category>();
@@ -63,7 +65,8 @@ public class TransactionController {
 		try {
 			//long accountId = Long.valueOf(request.getParameter("accountId"));
 			request.getSession().setAttribute("accountId", accountId);
-			transactions = transactionDAO.getAllTransactionsByAccountId(accountId);
+			transactions.addAll(transactionDAO.getAllTransactionsByAccountId(accountId));
+//			transactions = transactionDAO.getAllTransactionsByAccountId(accountId);
 			accountBalance = accountDAO.getAmountByAccountId(accountId);
 			accountName = accountDAO.getAccountNameByAccountId(accountId);
 			categories = categoryDao.getAllCategoriesByUserId();
