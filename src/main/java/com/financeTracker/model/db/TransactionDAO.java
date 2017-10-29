@@ -186,6 +186,8 @@ public class TransactionDAO {
 		try {
 			dbManager.getConnection().setAutoCommit(false);
 			budgetsHasTransactionsDAO.deleteTransactionBudgetByTransactionId(t.getTransactionId());
+
+			tagDAO.deleteAllTagsForTransaction(t.getTransactionId());
 			
 			String query = "DELETE FROM finance_tracker.transactions WHERE transaction_id = ?";
 			PreparedStatement statement = dbManager.getConnection().prepareStatement(query);
@@ -195,8 +197,11 @@ public class TransactionDAO {
 			ALL_TRANSACTIONS.get(t.getType()).remove(t);
 			
 			removeTransaction(t.getTransactionId());
+			
 			dbManager.getConnection().commit();
 		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			
 			dbManager.getConnection().rollback();
 			
 			throw new SQLException();

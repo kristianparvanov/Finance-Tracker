@@ -277,10 +277,6 @@ public class TransactionController {
 		try {
 			t = transactionDAO.getTransactionByTransactionId(transactionId);
 			
-			tagDAO.deleteAllTagsForTransaction(transactionId);
-			
-			budgetsHasTransactionsDAO.deleteTransactionBudgetByTransactionId(transactionId);
-			
 			transactionDAO.deleteTransaction(t);
 		} catch (SQLException e) {
 			System.out.println("Could not delete transaction");
