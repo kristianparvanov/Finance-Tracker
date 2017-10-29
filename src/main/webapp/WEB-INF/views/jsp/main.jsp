@@ -177,8 +177,8 @@
 						catNames.push(kv[1]);
 					}
 					
-					alert(catNames);
-					alert(catValues);
+				/* 	alert(catNames);
+					alert(catValues); */
 
 				    var config2 = {
 				        type: 'doughnut',
