@@ -84,7 +84,6 @@
 	</div>
 	
 	<!-- jQuery 3 -->
-	<!-- jQuery 3 -->
 	<script src="<c:url value="/js/jquery.min.js" />"  type ="text/javascript"></script>
 <!-- Bootstrap 3.3.7 -->
 	<script src="<c:url value="/js/bootstrap.min.js" />"  type ="text/javascript"></script>
