@@ -10,6 +10,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -105,9 +106,9 @@ public class UserController {
 	public String main(HttpSession session, Model viewModel) {
 		User u =  (User) session.getAttribute("user");
 		
-		Set<Account> accounts = null;
+		TreeSet<Account> accounts = new TreeSet<>((a1, a2) -> a1.getName().compareToIgnoreCase(a2.getName()));
 		try {
-			accounts = accountDAO.getAllAccountsByUserId(u.getUserId());
+			accounts.addAll(accountDAO.getAllAccountsByUserId(u.getUserId()));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

@@ -37,6 +37,7 @@ public class AccountController {
 			System.out.println("Could not add account to database");
 			e.printStackTrace();
 		}
+		
 		return "redirect:main";
 	}
 	
@@ -52,6 +53,7 @@ public class AccountController {
 		} catch (SQLException e) {
 			System.out.println("nema da trieme acc-ta :(");
 		}
+		
 		return "redirect:/main";
 	}
 }
