@@ -169,15 +169,13 @@
 				    var catsKeyValuePairs = [];
 				    var catNames = [];
 				    var catValues = [];
-					$.each(cats.split(","), function(i,e){
-						catsKeyValuePairs.push(e);
-						//alert(catsKeyValuePairs);
-						for (var i = 0; i < catsKeyValuePairs.length; i++) {
-							var kv = catsKeyValuePairs[i].split("=");
-							catValues.push(kv[0]);
-							catNames.push(kv[1]);
-						}
-					});
+					catsKeyValuePairs = cats.split(",");
+					//alert(catsKeyValuePairs);
+					for (var i = 0; i < catsKeyValuePairs.length; i++) {
+						var kv = catsKeyValuePairs[i].split("=");
+						catValues.push(kv[0]);
+						catNames.push(kv[1]);
+					}
 					
 				/* 	alert(catNames);
 					alert(catValues); */
@@ -186,9 +184,8 @@
 				        type: 'doughnut',
 				        data: {
 				            datasets: [{
-				                data: [
-				                    48,25,68,7,98,45,48,98,87
-				                ],
+				                //data: [ 48,25,68,7,98,45,48,98,87 ],
+				                data: catValues,
 				                backgroundColor: [
 				                    window.chartColors.red,
 				                    window.chartColors.orange,
@@ -208,15 +205,16 @@
 				                ],
 				                label: 'Dataset 1'
 				            }],
-				            labels: [
-				                "Red",
-				                "Orange",
-				                "Yellow",
-				                "Green",
-				                "Blue","Green1",
-				                "Blue3","Green2",
-				                "Blue4"
-				            ]
+				           // labels: [
+				             //   "Red",
+				              //  "Orange",
+				             //   "Yellow",
+				             //   "Green",
+				             //   "Blue","Green1",
+				             //   "Blue3","Green2",
+				            //    "Blue4"
+				            //]
+				            labels: catNames
 				        },
 				        options: {
 				            responsive: true,
