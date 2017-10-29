@@ -24,6 +24,7 @@ import com.financeTracker.model.User;
 import com.financeTracker.model.db.AccountDAO;
 import com.financeTracker.model.db.TransactionDAO;
 import com.financeTracker.model.db.UserDAO;
+import com.financeTracker.util.EmailSender;
 
 @Controller
 public class UserController {
@@ -86,7 +87,8 @@ public class UserController {
 				User u = new User(username, password, email, firstName, lastName);
 				
 				userDAO.insertUser(u);
-				request.getSession().setAttribute("user", u);
+				session.setAttribute("user", u);
+				EmailSender.sendSimpleEmail(email, "Welcome to the Finance Tracker", "Your new profile is ready. Track away!");
 				return "main";
 			}
 		} catch (SQLException e) {
