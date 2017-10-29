@@ -174,10 +174,23 @@ public class PlannedPaymentDAO {
 	}
 	
 	public synchronized void deletePlannedPayment(long plannedPaymentId) throws SQLException {
-		String query = "DELETE FROM finance_tracker.planned_payments WHERE planned_payment_id = ?";
-		PreparedStatement statement = dbManager.getConnection().prepareStatement(query);
-		statement.setLong(1, plannedPaymentId);
-		statement.executeUpdate();
+		dbManager.getConnection().setAutoCommit(false);
+		
+		try {
+			tagDAO.deleteAllTagsForPlannedPayment(plannedPaymentId);
+			
+			String query = "DELETE FROM finance_tracker.planned_payments WHERE planned_payment_id = ?";
+		
+			PreparedStatement statement = dbManager.getConnection().prepareStatement(query);
+			statement.setLong(1, plannedPaymentId);
+			statement.executeUpdate();
+		} catch (Exception e) {
+			dbManager.getConnection().rollback();
+			
+			throw new SQLException();
+		} finally {
+			dbManager.getConnection().setAutoCommit(true);
+		}
 	}
 
 	public PlannedPayment getPlannedPaymentByPlannedPaymentId(Long plannedPaymentId) throws SQLException {
