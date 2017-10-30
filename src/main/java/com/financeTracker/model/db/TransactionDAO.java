@@ -184,8 +184,20 @@ public class TransactionDAO {
 	}
 	
 	public synchronized void deleteTransaction(Transaction t) throws SQLException {
+		dbManager.getConnection().setAutoCommit(false);
+
 		try {
-			dbManager.getConnection().setAutoCommit(false);
+
+			if (budgetDao.existsBudget(t.getDate(), t.getCategory(), t.getAccount())) {
+				Set<Budget> budget = budgetDao.getAllBudgetsByDateCategoryAndAccount(t.getDate(), t.getCategory(), t.getAccount());
+				
+				for (Budget b : budget) {
+					b.setAmount(b.getAmount().subtract(t.getAmount()));
+					
+					budgetDao.updateBudget(b);
+				}
+			}
+			
 			budgetsHasTransactionsDAO.deleteTransactionBudgetByTransactionId(t.getTransactionId());
 
 			tagDAO.deleteAllTagsForTransaction(t.getTransactionId());
