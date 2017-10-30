@@ -180,6 +180,10 @@ public class TransactionDAO {
 			tagDAO.insertTagToTransaction(t, tag);
 		}
 		
+		removeTransaction(t.getTransactionId());
+	
+		t.setCategoryName(categoryDao.getCategoryNameByCategoryId(t.getCategory()));
+		
 		ALL_TRANSACTIONS.get(t.getType()).add(t);
 	}
 	
