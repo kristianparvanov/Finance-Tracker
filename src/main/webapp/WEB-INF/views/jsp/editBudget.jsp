@@ -124,20 +124,8 @@
 		<jsp:include page="footer.jsp"></jsp:include>
 	</div>
 	
-	<!-- jQuery 3 -->
-	<script src='<c:url value='/js/jquery.min.js'></c:url>'></script>
-	<!-- Bootstrap 3.3.7 -->
-	<script src='<c:url value='/js/bootstrap.min.js'></c:url>'></script>
 	<!-- Select2 -->
 	<script src='<c:url value='/js/select2.full.min.js'></c:url>'></script>
-	<!-- SlimScroll -->
-	<script src='<c:url value='/js/jquery.slimscroll.min.js'></c:url>'></script>
-	<!-- FastClick -->
-	<script src='<c:url value='/js/fastclick.js'></c:url>'></script>
-	<!-- AdminLTE App -->
-	<script src='<c:url value='/js/adminlte.min.js'></c:url>'></script>
-	<!-- AdminLTE for demo purposes -->
-	<script src='<c:url value='/js/demo.js'></c:url>'></script>
 	<script src='<c:url value='/js/daterangepicker.js'></c:url>'></script>
 	<!-- I hate you -->
 	<script type="text/javascript">

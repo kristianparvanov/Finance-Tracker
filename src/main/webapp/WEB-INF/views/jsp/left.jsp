@@ -104,7 +104,7 @@
 					</li>
 
 					<li>
-						<a href="#">
+						<a href="<c:url value="/reports"></c:url>">
 							<i class="fa fa-book"></i> 
 							<span style="font-size: 18px">Reports</span>
 						</a>

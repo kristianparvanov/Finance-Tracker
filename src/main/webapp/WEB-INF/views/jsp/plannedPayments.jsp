@@ -20,7 +20,7 @@
 	</div>
 	<div class="content-wrapper">
 		<section class="content-header">
-			<h1>All planned payments</h1>
+			<h2>All planned payments</h2>
 		</section>
 		<section class="content">
 			<c:if test="${empty plannedPayments}">
