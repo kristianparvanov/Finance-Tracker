@@ -155,7 +155,12 @@ public class BudgetController {
 			Budget b = budgetDao.getBudgetByBudgetId(budgetId);
 			
 			TreeSet<Transaction> transactions = new TreeSet<>((t1, t2) -> t2.getDate().compareTo(t1.getDate()));
-			transactions.addAll(b.getTransactions());
+			
+			for (Transaction transaction : b.getTransactions()) {
+				transaction.setCategoryName(categoryDao.getCategoryNameByCategoryId(transaction.getCategory()));
+				
+				transactions.add(transaction);
+			}
 			
 			model.addAttribute("budgetId", budgetId);
 			model.addAttribute("budgetTransactions", transactions);
