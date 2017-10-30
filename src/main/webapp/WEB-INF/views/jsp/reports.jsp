@@ -17,7 +17,6 @@
 		<link rel="stylesheet" href="<c:url value='/css/select2.min.css'></c:url>">
 		<script src='<c:url value='/js/moment.min.js'></c:url>'></script>
 		<script src='<c:url value='/js/daterangepicker.js'></c:url>'></script>
-		<title>Main | Finance Tracker</title>
 </head>
 
 <body>

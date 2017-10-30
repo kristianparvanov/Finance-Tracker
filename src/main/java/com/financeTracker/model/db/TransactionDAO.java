@@ -19,6 +19,7 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.financeTracker.model.Account;
 import com.financeTracker.model.Budget;
 import com.financeTracker.model.Tag;
 import com.financeTracker.model.Transaction;
@@ -40,6 +41,9 @@ public class TransactionDAO {
 	
 	@Autowired
 	private TagDAO tagDAO;
+	
+	@Autowired
+	private AccountDAO accountDAO;
 	
 	private static final HashMap<TransactionType, ArrayList<Transaction>> ALL_TRANSACTIONS = new HashMap<>();
 
@@ -331,5 +335,33 @@ public class TransactionDAO {
 		}
 		
 		return categories;
+	}
+
+	public TreeMap<BigDecimal, String> getAllTransactionsByUserDateTypeAccount(long userId, LocalDateTime dateFrom, LocalDateTime dateTo, String type, String account) throws SQLException {
+		TreeMap<BigDecimal, String> transactions = new TreeMap<BigDecimal, String>();
+		String query = "SELECT SUM(t.amount) AS amount, t.category_id \r\n" + 
+				"FROM finance_tracker.transactions t \r\n" + 
+				"JOIN finance_tracker.accounts a ON t.account_id = a.account_id \r\n" + 
+				"JOIN finance_tracker.categories c on t.category_id = c.category_id \r\n" + 
+				"WHERE (a.user_id = ? AND c.type = ? AND (t.date BETWEEN ? AND ?) AND a.account_id = ?) \r\n" + 
+				"group by category_id;";
+		PreparedStatement statement = dbManager.getConnection().prepareStatement(query);
+		statement.setLong(1, userId);
+		statement.setString(2, type);
+		statement.setTimestamp(3, Timestamp.valueOf(dateFrom.withNano(0)));
+		statement.setTimestamp(4, Timestamp.valueOf(dateTo.withNano(0)));
+		Account a = accountDAO.getAccountByAccountName(account);
+		statement.setLong(5, a.getAccountId());
+		
+		ResultSet result = statement.executeQuery();
+		while (result.next()) {
+			BigDecimal amount = result.getBigDecimal("amount");
+			long categoryId = result.getLong("category_id");
+			
+			String categoryName = categoryDao.getCategoryNameByCategoryId(categoryId);
+			transactions.put(amount, categoryName);
+		}
+		
+		return transactions;
 	}
 }
