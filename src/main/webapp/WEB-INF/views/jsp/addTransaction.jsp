@@ -108,19 +108,22 @@
 	</div>
 	
 <!-- jQuery 3 -->
- <script src="<c:url value="/js/jquery.min.js" />"  type ="text/javascript"></script>
+<script src="<c:url value="/js/jquery.min.js" />" type ="text/javascript"></script>
 <!-- Bootstrap 3.3.7 -->
- <script src="<c:url value="/js/bootstrap.js" />"  type ="text/javascript"></script>
+<script src="<c:url value="/js/bootstrap.min.js" />" type ="text/javascript"></script>
 <!-- Select2 -->
- <script src="<c:url value="/js/select2.full.min.js" />"  type ="text/javascript"></script>
+<script src="<c:url value="/js/select2.full.min.js" />" type ="text/javascript"></script>
+<!-- bootstrap datepicker -->
+<script src="<c:url value="/js/bootstrap-datepicker.min.js" />" type ="text/javascript"></script>
 <!-- SlimScroll -->
- <script src="<c:url value="/js/jquery.slimscroll.min.js" />"  type ="text/javascript"></script>
+<script src="<c:url value="/js/jquery.slimscroll.min.js" />" type ="text/javascript"></script>
 <!-- FastClick -->
- <script src="<c:url value="/js/fastclick.js" />"  type ="text/javascript"></script>
+<script src="<c:url value="/js/static/fastclick.js" />" type ="text/javascript"></script>
 <!-- AdminLTE App -->
- <script src="<c:url value="/js/adminlte.min.js" />"  type ="text/javascript"></script>
+<script src="<c:url value="/js/static/adminlte.min.js" />" type ="text/javascript"></script>
 <!-- AdminLTE for demo purposes -->
- <script src="<c:url value="/js/demo.js" />"  type ="text/javascript"></script>
+<script src="<c:url value="/js/static/demo.js" />" type ="text/javascript"></script>
+
 <!-- I hate you -->
 <script type="text/javascript">
 	$(function () {

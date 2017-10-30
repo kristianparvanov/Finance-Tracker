@@ -81,23 +81,18 @@
 						</a>
 						<ul class="treeview-menu">
 							<li>
-								<a href="../../index.html">
-									<i class="fa fa-circle-o"></i>Income structutre
+								<a href="<c:url value="/cashflowStructute"></c:url>">
+									<i class="glyphicon glyphicon-menu-right"></i>Cashflow structure
 								</a>
 							</li>
 							<li>
-								<a href="../../index2.html">
-									<i class="fa fa-circle-o"></i>Expense structure
+								<a href="<c:url value="/incomeVsExpenses"></c:url>">
+									<i class="glyphicon glyphicon-menu-right"></i>Income vs Expenses
 								</a>
 							</li>
 							<li>
-								<a href="../../index2.html">
-									<i class="fa fa-circle-o"></i>Income vs Expenses
-								</a>
-							</li>
-							<li>
-								<a href="../../index2.html">
-									<i class="fa fa-circle-o"></i>Cashflow trend
+								<a href="<c:url value="/cashflowTrend"></c:url>">
+									<i class="glyphicon glyphicon-menu-right"></i>Cashflow trend
 								</a>
 							</li>
 						</ul>

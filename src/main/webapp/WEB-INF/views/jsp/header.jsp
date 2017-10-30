@@ -43,9 +43,9 @@
 		        <span class="icon-bar"></span>
 		      </a>
 				
-		      <div class="collapse navbar-collapse pull-left">
+		      <!-- <div class="collapse navbar-collapse pull-left">
 		        <ul class="nav navbar-nav">
-		          <!-- Messages: style can be found in dropdown.less-->
+		          Messages: style can be found in dropdown.less
 		          	<li><a href="#" style="font-size: 18px;">Link</a></li>
 		            <li><a href="#" style="font-size: 18px;">Link</a></li>
 		            <li class="dropdown">
@@ -61,7 +61,7 @@
 		              </ul>
 		            </li>
 		        </ul>
-		       </div>
+		       </div> -->
 		            
 		        <div class="collapse navbar-collapse pull-right">
 		        <ul class="nav navbar-nav">
