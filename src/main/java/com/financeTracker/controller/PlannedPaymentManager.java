@@ -16,7 +16,7 @@ import com.financeTracker.model.db.AccountDAO;
 import com.financeTracker.model.db.PlannedPaymentDAO;
 
 @Component
-public class ScheduledTasks {
+public class PlannedPaymentManager {
 	@Autowired
 	private PlannedPaymentDAO plannedPaymentDAO;
 	
@@ -29,6 +29,7 @@ public class ScheduledTasks {
 			try {
 				List<PlannedPayment> allPlannedPayments = plannedPaymentDAO.getAllPlannedPayments();
 				for (PlannedPayment plannedPayment : allPlannedPayments) {
+					//foreach pp -> new thread
 					if (LocalDateTime.now().isAfter(plannedPayment.getFromDate())) {
 						Account acc = accountDAO.getAccountByAccountId(plannedPayment.getAccount());
 						BigDecimal newValue = plannedPayment.getAmount();
