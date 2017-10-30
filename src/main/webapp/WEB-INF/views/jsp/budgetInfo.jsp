@@ -67,7 +67,7 @@
 		    						  </c:choose>
 		    					</div>
 	    						  <div class="col-sm-4">
-				              	  	 <h3>Category: <c:out value="${ transaction.categoryName }"></c:out></h3>
+				              	  	 <h3>Category: <c:out value="${ transaction.category }"></c:out></h3>
 			              	  	 </div>
 				              </div>
 				            </div>

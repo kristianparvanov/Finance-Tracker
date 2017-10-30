@@ -53,7 +53,6 @@ public class TransactionController {
 	@RequestMapping(value="/{accountId}", method=RequestMethod.GET)
 	public String getAllTransactions(HttpServletRequest request, HttpSession session, Model model, @PathVariable("accountId") Long accountId) {
 		User user = (User) session.getAttribute("user");
-//		List<Transaction> transactions = null;
 		TreeSet<Transaction> transactions = new TreeSet<>((t1, t2) -> t2.getDate().compareTo(t1.getDate()));
 		BigDecimal accountBalance = null;
 		String accountName = null;
@@ -63,10 +62,8 @@ public class TransactionController {
 		Set<Account> accounts = new HashSet<Account>();
 		Set<Tag> tags = new HashSet<Tag>();
 		try {
-			//long accountId = Long.valueOf(request.getParameter("accountId"));
 			request.getSession().setAttribute("accountId", accountId);
 			transactions.addAll(transactionDAO.getAllTransactionsByAccountId(accountId));
-//			transactions = transactionDAO.getAllTransactionsByAccountId(accountId);
 			accountBalance = accountDAO.getAmountByAccountId(accountId);
 			accountName = accountDAO.getAccountNameByAccountId(accountId);
 			categories = categoryDao.getAllCategoriesByUserId();
@@ -136,11 +133,7 @@ public class TransactionController {
 		request.setAttribute("user", u);
 		request.setAttribute("accountId", acc.getAccountId());
 		
-		//response.sendRedirect("transaction");
-		//transaction?accountId=${sessionScope.accountId}
-		
 		return "redirect:/account/" + acc.getAccountId();
-		//request.getRequestDispatcher("transaction?accountId=" + acc.getAccountId()).forward(request, response);
 	}
 	
 	@RequestMapping(value="/transaction/{transactionId}", method=RequestMethod.GET)
@@ -234,7 +227,6 @@ public class TransactionController {
 	
 	@RequestMapping(value="/transfer/accountId/{accountId}", method=RequestMethod.GET)
 	public String getTransfer(HttpServletRequest request, Model model, HttpSession session, @PathVariable("accountId") Long originAccountId) {
-		//long origin = Long.valueOf(request.getParameter("accountId"));
 		User u = (User) session.getAttribute("user");
 		
 		Account originAccount = null;

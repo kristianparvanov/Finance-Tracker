@@ -4,9 +4,10 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
@@ -60,7 +61,7 @@ public class BudgetController {
 		Set<Budget> budgets = null;
 		BigDecimal percent = new BigDecimal(0.0);
 		
-		HashMap<Budget, BigDecimal> map = new HashMap<>();
+		Map<Budget, BigDecimal> map = new TreeMap<>((b1, b2) -> b1.getFromDate().compareTo(b2.getFromDate()));
 		
 		try {
 			budgets = budgetDao.getAllBudgetsByUserId(u.getUserId());
@@ -73,8 +74,6 @@ public class BudgetController {
 		} catch (SQLException e) {
 			System.out.println("Izgurmqhme li?");
 		}
-		
-//		request.getSession().setAttribute("budgets", map);
 		
 		model.addAttribute("budgets", map);
 		

@@ -29,7 +29,7 @@
 				<div style="margin-bottom: 25px">
 					<div class="row">
 						<div class="col-sm-3">
-							<a href="addBudget" type="button" class="btn btn-block btn-primary btn-lg"><i class="ion ion-plus"></i> Add new record</a>
+							<a href="addBudget" type="button" class="btn btn-block btn-primary btn-lg"><i class="ion ion-plus"></i> Add new budget</a>
 						</div>
 						<div class="col-sm-3">
 							<a href="main" type="button" class="btn btn-block btn-default btn-lg"><i class="ion ion-android-arrow-back"></i> Back</a>
