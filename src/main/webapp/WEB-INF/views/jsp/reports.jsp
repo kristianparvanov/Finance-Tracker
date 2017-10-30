@@ -34,7 +34,7 @@
 		</section>
 		
 		<section class="content">
-			<c:if test="${empty transactions }">
+			<c:if test="${empty allTransactions }">
 				<h3><i class="ion ion-information-circled"></i>  No records yet</h3>
 				<h4>Track your expenses and income. Start by adding a new record. After that you can come right back here and view your reports.</h4>
 			</c:if>
@@ -42,10 +42,10 @@
 			<div style="margin-bottom: 25px">
 				<div class="row">
 					<div class="col-sm-3">
-						<a href="main" type="button" class="btn btn-block btn-default btn-lg"><i class="ion ion-android-arrow-back"></i> Back</a>
+						<a href="<c:url value="/main"></c:url>" type="button" class="btn btn-block btn-default btn-lg"><i class="ion ion-android-arrow-back"></i> Back</a>
 					</div>
 					<div class="col-sm-3">
-						<a href="main" type="button" class="btn btn-block btn-default btn-lg"><i class="fa fa-file-pdf-o"></i> Export data to PDF</a>
+						<a href="<c:url value="/main"></c:url>" type="button" class="btn btn-block btn-default btn-lg"><i class="fa fa-file-pdf-o"></i> Export data to PDF</a>
 					</div>
 				</div>
 			</div>
@@ -55,7 +55,7 @@
 			</section>
 			
 			<div>
-	        	<form role="form" action="reports/filtred" method="get">
+	        	<form role="form" action="<c:url value='/reports/filtered'></c:url>" method="post">
 	              <div class="row">
 	            	<div class="col-sm-3" style="display:table-cell; vertical-align:middle; text-align:center">
 						<div class="form-group">
@@ -72,25 +72,24 @@
 			                </div>
 			           </div>
 		           </div>
-              		
-              			<div class="col-sm-2" style="display:table-cell; vertical-align:middle; text-align:center">
+              		<div class="col-sm-2" style="display:table-cell; vertical-align:middle; text-align:center">
 						<div class="form-group">
-				        	<label>Type</label>
-							<select class="form-control select2" style="width: 100%;" data-placeholder="Select a type" name="type" onchange="myFunction()" id="type" >
-				                  <option>EXPENCE</option>
-				                  <option>INCOME</option>
-		                    </select>
-		                </div>
+			                <label>Type</label>
+			                <select class="form-control select2" style="width: 100%;" data-placeholder="Select a type" name="type" onchange="myFunction()" id="type" >
+			                  <option>EXPENCE</option>
+			                  <option>INCOME</option>
+			                  
+			                </select>
+			            </div>
 	                </div>
               		
               	   <div class="col-sm-2" style="display:table-cell; vertical-align:middle; text-align:center">
 		               <div class="form-group">
 			                <label>Category</label>
-			                <select class="form-control select2" style="width: 100%;" data-placeholder="Select a category" name="category">
-			                <option selected="selected"><c:out value="${ categoryName }"></c:out></option>
-			                  <c:forEach items="${ categories }" var="category">
-			                	  <option><c:out value="${ category.name }"></c:out></option>
-			                  </c:forEach>
+			                <select class="form-control select2" style="width: 100%;" data-placeholder="Select a category" name="category" id="category">
+			                  <%-- <c:forEach items="${categories }" var="category">
+			                	  <option><c:out value="${category.name}"></c:out></option>
+			                  </c:forEach> --%>
 			                </select>
 			            </div>
 					</div>

@@ -152,7 +152,7 @@
 				            },
 				            title: {
 				                display: true,
-				                text: 'Chart.js Doughnut Chart'
+				                text: 'Cashflow Structure'
 				            },
 				            animation: {
 				                animateScale: true,
