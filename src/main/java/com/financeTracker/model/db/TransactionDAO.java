@@ -332,4 +332,33 @@ public class TransactionDAO {
 		
 		return categories;
 	}
-}
+	
+	public Set<Transaction> getFilteredTransactions(long accountId, String type, long categoryId, LocalDateTime from, LocalDateTime to) throws SQLException {
+		Set<Transaction> transactions = new HashSet<>();
+		
+		String sql = "SELECT transaction_id, date, amount, description FROM transactions "
+						+ "WHERE account_id = ? AND category_id = ? AND date >= STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s') "
+																+  "AND date <= STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s');";
+		
+		PreparedStatement statement = dbManager.getConnection().prepareStatement(sql);
+		statement.setLong(1, accountId);
+		statement.setLong(2, categoryId);
+		statement.setTimestamp(3, Timestamp.valueOf(from.withNano(0)));
+		statement.setTimestamp(4, Timestamp.valueOf(to.withNano(0)));
+		
+		ResultSet res = statement.executeQuery();
+		
+		while(res.next()) {
+			long transactionId = res.getLong("transaction_id");
+			LocalDateTime date = res.getTimestamp("date").toLocalDateTime();
+			BigDecimal amount = res.getBigDecimal("amount");
+			String description = res.getString("description");
+			
+			Transaction t = new Transaction(transactionId, TransactionType.valueOf(type), description, amount, accountId, categoryId, date, null);
+			
+			transactions.add(t);
+		}
+		
+		return transactions;
+	}
+ }

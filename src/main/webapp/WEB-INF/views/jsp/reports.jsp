@@ -56,7 +56,7 @@
 			</section>
 			
 			<div>
-	        	<form role="form" action="getTransactions" method="post">
+	        	<form role="form" action="reports/filtred" method="get">
 	              <div class="row">
 	            	<div class="col-sm-3" style="display:table-cell; vertical-align:middle; text-align:center">
 						<div class="form-group">
@@ -74,6 +74,16 @@
 			           </div>
 		           </div>
               		
+              			<div class="col-sm-2" style="display:table-cell; vertical-align:middle; text-align:center">
+						<div class="form-group">
+				        	<label>Type</label>
+							<select class="form-control select2" style="width: 100%;" data-placeholder="Select a type" name="type" onchange="myFunction()" id="type" >
+				                  <option>EXPENCE</option>
+				                  <option>INCOME</option>
+		                    </select>
+		                </div>
+	                </div>
+              		
               	   <div class="col-sm-2" style="display:table-cell; vertical-align:middle; text-align:center">
 		               <div class="form-group">
 			                <label>Category</label>
@@ -85,23 +95,13 @@
 			                </select>
 			            </div>
 					</div>
-					
-					<div class="col-sm-2" style="display:table-cell; vertical-align:middle; text-align:center">
-						<div class="form-group">
-				        	<label>Type</label>
-							<select class="form-control select2" style="width: 100%;" data-placeholder="Select a type" name="type" onchange="myFunction()" id="typ" >
-				                  <option>EXPENCE</option>
-				                  <option>INCOME</option>
-		                    </select>
-		                </div>
-	                </div>
 	                
 	                <div class="col-sm-2" style="display:table-cell; vertical-align:middle; text-align:center">
 	                 <div class="form-group">
 			                <label>Account</label>
 			                <select class="form-control select2" style="width: 100%;" data-placeholder="Select an account" name="account">
-			                  <option selected="selected"><c:out value="${ sessionScope.accountName }"></c:out></option>
-			                  <c:forEach items="${accounts}" var="account">
+			            <%--       <option selected="selected"><c:out value="${ sessionScope.accountName }"></c:out></option> --%>
+			                  <c:forEach items="${allAccounts}" var="account">
 			                	  <option><c:out value="${account.name}"></c:out></option>
 			                  </c:forEach>
 			                </select>
@@ -171,6 +171,27 @@
 			$('#reservationtime').daterangepicker({ timePicker: true, timePickerIncrement: 30, format: 'MM/DD/YYYY h:mm A' })
 		});
 		
+		
+		function myFunction() {
+		    var request = new XMLHttpRequest();
+		    var select = document.getElementById("type");
+		    var sel = select.value;
+		    
+		    request.onreadystatechange = function() {
+		    	if (this.readyState == 4 && this.status == 200) {
+					var select = document.getElementById("category");
+					var categories = JSON.parse(this.responseText);
+					
+					$(select).html(""); //reset child options
+				    $(categories).each(function (i) { //populate child options 
+				        $(select).append("<option>"+categories[i]+"</option>");
+				    });
+				}
+		    };
+		    
+		    request.open("GET", "http://localhost:8080/FinanceTracker/account/getCategory/"+sel);
+		    request.send();
+		}
 		
 	</script>
 </body>

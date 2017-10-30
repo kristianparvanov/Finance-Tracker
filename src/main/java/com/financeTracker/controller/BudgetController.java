@@ -120,7 +120,6 @@ public class BudgetController {
 			
 			String[] temp = inputDate[2].toString().split(" - ");
 			
-			
 			int yearFrom = Integer.valueOf(temp[0]);
 			
 			int monthTo = Integer.valueOf(temp[1]);

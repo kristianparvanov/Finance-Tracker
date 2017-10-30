@@ -285,14 +285,14 @@ public class TransactionController {
 	@RequestMapping(value="/getCategory/{type}", method=RequestMethod.GET)
 	public Set<String> getIncomeCategories(HttpSession session, @PathVariable("type") String type) {
 		User user = (User) session.getAttribute("user");
-		Set<String> incomeCategories = null;
+		Set<String> categories = null;
 		try {
-			incomeCategories = categoryDao.getAllCategoriesByType(user.getUserId(), type);
+			categories = categoryDao.getAllCategoriesByType(user.getUserId(), type);
 		} catch (SQLException e) {
 			System.out.println("Could not get all categories by type");
 			e.printStackTrace();
 		}
 		
-		return incomeCategories;
+		return categories;
 	}
 }
