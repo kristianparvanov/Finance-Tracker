@@ -153,6 +153,8 @@ public class TransactionDAO {
 				}
 			}
 			
+			t.setCategoryName(categoryDao.getCategoryNameByCategoryId(t.getCategory()));
+			
 			ALL_TRANSACTIONS.get(t.getType()).add(t);
 			dbManager.getConnection().commit();
 		} catch (SQLException e) {
