@@ -53,7 +53,7 @@
 					<li class="treeview">
 						<a href="#">
 							<i class="fa fa-dashboard"></i> 
-							<span style="font-size: 18px">???</span>
+							<span style="font-size: 18px">Checkups</span>
 							<span class="pull-right-container"> 
 								<i class="fa fa-angle-left pull-right"></i>
 							</span>
@@ -82,12 +82,22 @@
 						<ul class="treeview-menu">
 							<li>
 								<a href="../../index.html">
-									<i class="fa fa-circle-o"></i>Chart 1
+									<i class="fa fa-circle-o"></i>Income structutre
 								</a>
 							</li>
 							<li>
 								<a href="../../index2.html">
-									<i class="fa fa-circle-o"></i> Chart 2
+									<i class="fa fa-circle-o"></i>Expense structure
+								</a>
+							</li>
+							<li>
+								<a href="../../index2.html">
+									<i class="fa fa-circle-o"></i>Income vs Expenses
+								</a>
+							</li>
+							<li>
+								<a href="../../index2.html">
+									<i class="fa fa-circle-o"></i>Cashflow trend
 								</a>
 							</li>
 						</ul>

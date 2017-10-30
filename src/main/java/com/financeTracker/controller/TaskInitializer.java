@@ -20,7 +20,6 @@ public class TaskInitializer implements Runnable {
 	@Override
 	public void run() {
 		System.out.println("Invoking an asynchronous method. " + Thread.currentThread().getName());
-		//tuka nadolu dava null na  ScheduledTasks tasks
 		tasks.testPrintHi();
 		
 	}
