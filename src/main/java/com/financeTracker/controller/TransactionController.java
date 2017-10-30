@@ -212,7 +212,7 @@ public class TransactionController {
 			}
 			
 			tagDAO.deleteAllTagsForTransaction(transactionId);
-			transactionDAO.removeTransaction(transactionId);
+//			transactionDAO.removeTransaction(transactionId);
 			transactionDAO.updateTransaction(t);
 		} catch (SQLException e) {
 			System.out.println("Something horrible happened to the DB");
