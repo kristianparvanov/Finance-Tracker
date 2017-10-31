@@ -183,9 +183,6 @@ public class ChartController {
 		
 		User user = (User) session.getAttribute("user");
 		
-		System.out.println(date);
-		System.out.println(account);
-		
 		String[] inputDate = date.split("/");
 		
 		int monthFrom = Integer.valueOf(inputDate[0]);
@@ -205,20 +202,37 @@ public class ChartController {
 		LocalDateTime from = LocalDateTime.of(yearFrom, monthFrom, dayOfMonthFrom, 0, 0, 0);
 		LocalDateTime to = LocalDateTime.of(yearTo, monthTo, dayOfMonthTo, 0, 0, 0);
 		
+		Map<LocalDate, BigDecimal> defaultTransactions = new TreeMap<>();
+		
+		Set<Account> accounts = user.getAccounts();
+		
 		try {
-			Map<LocalDate, BigDecimal> defaultTransactions = transactionDAO.getTransactionAmountAndDate(user.getUserId(), accountDAO.getAccountId(user, account), from, to);
-			Set<Account> accounts = user.getAccounts();
-			BigDecimal allBalance = new BigDecimal(0);
-			for (Account acc : accounts) {
-				allBalance = allBalance.add(acc.getAmount());
+			if (account.equals("All accounts")) {
+				defaultTransactions = transactionDAO.getTransactionAmountAndDate(user.getUserId(), 0, from, to);
+				
+				BigDecimal allBalance = new BigDecimal(0);
+				for (Account acc : accounts) {
+					allBalance = allBalance.add(acc.getAmount());
+				}
+				
+				for (LocalDate localDate : defaultTransactions.keySet()) {
+					defaultTransactions.put(localDate, defaultTransactions.get(localDate).add(allBalance));
+				}
+			} else {
+				long accId = accountDAO.getAccountId(user, account);
+				Account acc = accountDAO.getAccountByAccountId(accId);
+				
+				defaultTransactions = transactionDAO.getTransactionAmountAndDate(user.getUserId(), accId, from, to);
+				
+				for (LocalDate localDate : defaultTransactions.keySet()) {
+					defaultTransactions.put(localDate, defaultTransactions.get(localDate).add(acc.getAmount()));
+				}
 			}
-			System.out.println(allBalance);
 			
-			for (LocalDate localDate : defaultTransactions.keySet()) {
-				defaultTransactions.put(localDate, defaultTransactions.get(localDate).add(allBalance));
-			}
+			
 			model.addAttribute("accounts", accounts);
 			model.addAttribute("defaultTransactions", defaultTransactions);
+			model.addAttribute("date", date);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
