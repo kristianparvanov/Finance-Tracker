@@ -151,6 +151,15 @@ public class ChartController {
 	public String getCashflowTrend(HttpSession session, Model model) {
 		User user = (User) session.getAttribute("user");
 		
+		try {
+			Map<LocalDateTime, BigDecimal> defaultTransactions = transactionDAO.getTransactionAmountAndDate(user.getUserId(), 0);
+			
+			model.addAttribute("accounts", user.getAccounts());
+			model.addAttribute("defaultTransactions", defaultTransactions);
+		} catch (SQLException e) {
+			System.out.println("pls ne gurmi");
+		}
+		
 		return "cashflowTrend";
 	}
 }

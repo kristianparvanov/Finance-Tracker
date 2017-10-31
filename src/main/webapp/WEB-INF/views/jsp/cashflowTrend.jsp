@@ -83,8 +83,7 @@
 		     </div>
 		
 			<div>
-			    <c:set var="transactions" value="${ transactionsValues }" />
-			    <c:set var="transactionsCategories" value="${ transactionsCategories }" />
+			    <c:set var="transactions" value="${ defaultTransactions }" />
 			    
 				<div id="canvas-holder" style="width: 70%; margin: 0 auto; height: 100%">
         			<canvas id="chart-area" ></canvas>

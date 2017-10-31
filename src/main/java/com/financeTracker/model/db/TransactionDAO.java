@@ -437,7 +437,7 @@ public class TransactionDAO {
 		return result;
 	}
 	
-	public Map<LocalDateTime, BigDecimal> baba(long userId, long accountId, LocalDateTime ... dateArr) throws SQLException {
+	public Map<LocalDateTime, BigDecimal> getTransactionAmountAndDate(long userId, long accountId, LocalDateTime ... dateArr) throws SQLException {
 		String sql = "SELECT t.type, t.amount, t.date "
 				+ "FROM transactions t "
 				+ "JOIN accounts a "
