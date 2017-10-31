@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
@@ -154,7 +155,20 @@ public class ChartController {
 		try {
 			Map<LocalDateTime, BigDecimal> defaultTransactions = transactionDAO.getTransactionAmountAndDate(user.getUserId(), 0);
 			
-			model.addAttribute("accounts", user.getAccounts());
+			System.out.println(defaultTransactions);
+			
+			Set<Account> acconunts = user.getAccounts();
+			BigDecimal allBalance = new BigDecimal(0);
+			for (Account account : acconunts) {
+				allBalance = allBalance.add(account.getAmount());
+			}
+			System.out.println(allBalance);
+			
+			for (LocalDateTime date : defaultTransactions.keySet()) {
+				defaultTransactions.put(date, defaultTransactions.get(date).add(allBalance));
+			}
+			
+			model.addAttribute("accounts", acconunts);
 			model.addAttribute("defaultTransactions", defaultTransactions);
 		} catch (SQLException e) {
 			System.out.println("pls ne gurmi");

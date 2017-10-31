@@ -83,40 +83,47 @@
 		     </div>
 		
 			<div>
-			    <c:set var="transactions" value="${ defaultTransactions }" />
+			    <c:set var="defaultTransactions" value="${ defaultTransactions }" />
 			    
-				<div id="canvas-holder" style="width: 70%; margin: 0 auto; height: 100%">
-        			<canvas id="chart-area" ></canvas>
-   				</div>
+				<div style="width:60%;">
+			        <canvas id="canvas"></canvas>
+			    </div>
 				<script>
 					var presets = window.chartColors;
 					var utils = Samples.utils;
-					var values = '${transactions}';
-					var dates = '${transactionsDates}';
+					var values = '${defaultTransactions}';
 					
-					values = values.replace(/[\[\]']+/g,'')
-					dates = dates.replace(/[\[\]']+/g,'')
+					values = values.replace(/[\{\}']+/g,'')
 					
-					var allTrans = [];
+					alert(values);
+					
+					var dates = [];
+					var amounts = [];
+					var keyValue = [];
 					$.each(values.split(","), function(i,e){
-						allTrans.push(e);
+						keyValue.push(e);
 					});
 					
-					var allDates = [];
-					$.each(dates.split(","), function(i,e){
-						allDates.push(e);
-					});
+					for (var i = 0; i < keyValue.length; i++) {
+						var kv = keyValue[i].split("=");
+						dates.push(kv[0]);
+						amounts.push(kv[1]);
+					}
+					
+					alert(dates);
+					alert(amounts);
 					
 					var MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 				    var config = {
 				        type: 'line',
 				        data: {
-				            labels: allDates,
+				            //labels: allDates,
+				            labels: dates,
 				            datasets: [{
 				                label: "Cashflow",
 				                backgroundColor: utils.transparentize(presets.blue),
 				                borderColor: window.chartColors.blue,
-				                data: allTrans,
+				                data: amounts,
 				                fill: true,
 				            }]
 				        },
