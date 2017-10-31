@@ -95,7 +95,6 @@
 					
 					values = values.replace(/[\{\}']+/g,'')
 					
-					alert(values);
 					
 					var dates = [];
 					var amounts = [];
@@ -109,9 +108,6 @@
 						dates.push(kv[0]);
 						amounts.push(kv[1]);
 					}
-					
-					alert(dates);
-					alert(amounts);
 					
 					var MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 				    var config = {

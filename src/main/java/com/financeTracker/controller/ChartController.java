@@ -2,6 +2,7 @@ package com.financeTracker.controller;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Map;
@@ -153,7 +154,7 @@ public class ChartController {
 		User user = (User) session.getAttribute("user");
 		
 		try {
-			Map<LocalDateTime, BigDecimal> defaultTransactions = transactionDAO.getTransactionAmountAndDate(user.getUserId(), 0);
+			Map<LocalDate, BigDecimal> defaultTransactions = transactionDAO.getTransactionAmountAndDate(user.getUserId(), 0);
 			
 			System.out.println(defaultTransactions);
 			
@@ -164,7 +165,7 @@ public class ChartController {
 			}
 			System.out.println(allBalance);
 			
-			for (LocalDateTime date : defaultTransactions.keySet()) {
+			for (LocalDate date : defaultTransactions.keySet()) {
 				defaultTransactions.put(date, defaultTransactions.get(date).add(allBalance));
 			}
 			

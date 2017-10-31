@@ -437,7 +437,7 @@ public class TransactionDAO {
 		return result;
 	}
 	
-	public Map<LocalDateTime, BigDecimal> getTransactionAmountAndDate(long userId, long accountId, LocalDateTime ... dateArr) throws SQLException {
+	public Map<LocalDate, BigDecimal> getTransactionAmountAndDate(long userId, long accountId, LocalDateTime ... dateArr) throws SQLException {
 		String sql = "SELECT t.type, t.amount, t.date "
 				+ "FROM transactions t "
 				+ "JOIN accounts a "
@@ -463,7 +463,7 @@ public class TransactionDAO {
 			}
 		}
 		
-		Map<LocalDateTime, BigDecimal> map = new TreeMap<>();
+		Map<LocalDate, BigDecimal> map = new TreeMap<>(/*(d1, d2) -> d1.toLocalDate().compareTo(d2.toLocalDate())*/);
 		
 		ResultSet res = ps.executeQuery();
 		
@@ -472,10 +472,10 @@ public class TransactionDAO {
 			BigDecimal amount = res.getBigDecimal("amount");
 			LocalDateTime date = res.getTimestamp("date").toLocalDateTime();
 			
-			if (!map.containsKey(date)) {
-				map.put(date, type.equals("EXPENCE") ? amount.negate() : amount);
+			if (!map.containsKey(date.toLocalDate())) {
+				map.put(date.toLocalDate(), type.equals("EXPENCE") ? amount.negate() : amount);
 			} else {
-				map.put(date, map.get(date).add(type.equals("EXPENCE") ? amount.negate() : amount));
+				map.put(date.toLocalDate(), map.get(date.toLocalDate()).add(type.equals("EXPENCE") ? amount.negate() : amount));
 			}
 		}
 		
