@@ -19,8 +19,11 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.financeTracker.model.Account;
 import com.financeTracker.model.Category;
@@ -63,9 +66,8 @@ public class ChartController {
 		return "cashflowStructute";
 	}
 	
-	//getTransactions
 	@RequestMapping(value="/getTransactions", method=RequestMethod.POST)
-	public String postAddPlannedPayment(HttpServletRequest request, HttpSession session, Model model) {
+	public String postGetTransactions(HttpServletRequest request, HttpSession session, Model model) {
 		String date = request.getParameter("date");
 		String type = request.getParameter("type");
 		String account = request.getParameter("account");
@@ -82,12 +84,6 @@ public class ChartController {
 		
 		LocalDateTime dateFrom = LocalDateTime.of(yearFrom, monthFrom, dayOfMonthFrom, 0, 0, 0);
 		LocalDateTime dateTo = LocalDateTime.of(yearTo, monthTo, dayOfMonthTo, 0, 0, 0);
-		
-		System.out.println(date);
-		System.out.println(type);
-		System.out.println(account);
-		System.out.println(dateFrom);
-		System.out.println(dateTo);
 		
 		User u =  (User) session.getAttribute("user");
 		
@@ -107,4 +103,52 @@ public class ChartController {
 		return "cashflowStructute";
 	}
 	
+	//working but trouble with vars in jsp
+	@ResponseBody
+	@RequestMapping(value="/getTransaction/{date}/{type}/{account}", method=RequestMethod.GET)
+	public TreeMap<BigDecimal, String> postGetTransactionsAsync(HttpServletRequest request, HttpSession session, Model model, 
+			@PathVariable("date") String date,
+			@PathVariable("type") String type,
+			@PathVariable("account") String account) {
+		
+		//10 28 2017 - 10 31 2017
+		System.out.println(date);
+		String[] inputDate = date.split(" ");
+		
+		for (String string : inputDate) {
+			System.out.println(string);
+		}
+		
+		int monthFrom = Integer.valueOf(inputDate[0]);
+		int dayOfMonthFrom = Integer.valueOf(inputDate[1]);
+		int yearFrom = Integer.valueOf(inputDate[2]);
+		//String[] temp = inputDate[2].toString().split(" - ");
+		
+		int monthTo = Integer.valueOf(inputDate[4]);
+		int dayOfMonthTo = Integer.valueOf(inputDate[5]);
+		int yearTo = Integer.valueOf(inputDate[6]);
+		
+		LocalDateTime dateFrom = LocalDateTime.of(yearFrom, monthFrom, dayOfMonthFrom, 0, 0, 0);
+		LocalDateTime dateTo = LocalDateTime.of(yearTo, monthTo, dayOfMonthTo, 0, 0, 0);
+		
+		System.out.println(dateFrom);
+		System.out.println(dateTo);
+		
+		User u =  (User) session.getAttribute("user");
+		
+		Set<Account> accounts = new HashSet<Account>();
+		TreeMap<BigDecimal, String> transactions = null;
+		
+		try {
+			accounts = accountDAO.getAllAccountsByUserId(u.getUserId());
+			transactions = transactionDAO.getAllTransactionsByUserDateTypeAccount(u.getUserId(), dateFrom, dateTo, type, account);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		model.addAttribute("accounts", accounts);
+		model.addAttribute("transactionsCategories", transactions);
+		
+		return transactions;
+	}
 }
