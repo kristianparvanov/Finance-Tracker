@@ -62,7 +62,7 @@ public class ReportController {
 		return "reports";
 	}
 	
-	@RequestMapping(value = "/reports/filtered", method = RequestMethod.POST)
+	@RequestMapping(value = "/reports/filtered", method = RequestMethod.GET)
 	public String filterTransactions(HttpServletRequest request, Model model, HttpSession session) {
 		User user = (User) session.getAttribute("user");
 		

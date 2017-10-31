@@ -9,7 +9,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Charts | Finance Tracker</title>
+<title>Cashflow Structure | Finance Tracker</title>
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -111,8 +111,8 @@
 					//alert(catsKeyValuePairs);
 					for (var i = 0; i < catsKeyValuePairs.length; i++) {
 						var kv = catsKeyValuePairs[i].split("=");
-						catValues.push(kv[0]);
-						catNames.push(kv[1]);
+						catNames.push(kv[0]);
+						catValues.push(kv[1]);
 					}
 					
 				/* 	alert(catNames);
@@ -185,7 +185,7 @@
 	<script type="text/javascript">
 		$(function () {
 			$('.select2').select2()
-			$('#reservationtime').daterangepicker({ timePicker: true, timePickerIncrement: 30, format: 'MM/DD/YYYY h:mm A' })
+			$('#reservationtime').daterangepicker({ timePicker: false, timePickerIncrement: 30, format: 'MM/DD/YYYY h:mm A' })
 		});
 	</script>
 </body>

@@ -43,7 +43,7 @@ public class ChartController {
 		User u =  (User) session.getAttribute("user");
 		
 		Set<Account> accounts = new HashSet<Account>();
-		TreeMap<BigDecimal, String> transactionCategories = null;
+		Map<String, BigDecimal> transactionCategories = null;
 		
 		try {
 			accounts = accountDAO.getAllAccountsByUserId(u.getUserId());
@@ -80,7 +80,7 @@ public class ChartController {
 		User u =  (User) session.getAttribute("user");
 		
 		Set<Account> accounts = new HashSet<Account>();
-		TreeMap<BigDecimal, String> transactions = null;
+		TreeMap<String, BigDecimal> transactions = null;
 		
 		try {
 			accounts = accountDAO.getAllAccountsByUserId(u.getUserId());
@@ -93,49 +93,6 @@ public class ChartController {
 		model.addAttribute("transactionsCategories", transactions);
 		
 		return "cashflowStructute";
-	}
-	
-	//working but trouble with vars in jsp
-	@ResponseBody
-	@RequestMapping(value="/getTransaction/{date}/{type}/{account}", method=RequestMethod.GET)
-	public TreeMap<BigDecimal, String> postGetTransactionsAsync(HttpServletRequest request, HttpSession session, Model model, 
-			@PathVariable("date") String date,
-			@PathVariable("type") String type,
-			@PathVariable("account") String account) {
-		
-		String[] inputDate = date.split(" ");
-		
-		int monthFrom = Integer.valueOf(inputDate[0]);
-		int dayOfMonthFrom = Integer.valueOf(inputDate[1]);
-		int yearFrom = Integer.valueOf(inputDate[2]);
-		//String[] temp = inputDate[2].toString().split(" - ");
-		
-		int monthTo = Integer.valueOf(inputDate[4]);
-		int dayOfMonthTo = Integer.valueOf(inputDate[5]);
-		int yearTo = Integer.valueOf(inputDate[6]);
-		
-		LocalDateTime dateFrom = LocalDateTime.of(yearFrom, monthFrom, dayOfMonthFrom, 0, 0, 0);
-		LocalDateTime dateTo = LocalDateTime.of(yearTo, monthTo, dayOfMonthTo, 0, 0, 0);
-		
-		System.out.println(dateFrom);
-		System.out.println(dateTo);
-		
-		User u =  (User) session.getAttribute("user");
-		
-		Set<Account> accounts = new HashSet<Account>();
-		TreeMap<BigDecimal, String> transactions = null;
-		
-		try {
-			accounts = accountDAO.getAllAccountsByUserId(u.getUserId());
-			transactions = transactionDAO.getAllTransactionsByUserDateTypeAccount(u.getUserId(), dateFrom, dateTo, type, account);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		model.addAttribute("accounts", accounts);
-		model.addAttribute("transactionsCategories", transactions);
-		
-		return transactions;
 	}
 	
 	@RequestMapping(value = "/incomeVsExpenses", method = RequestMethod.GET)
@@ -188,5 +145,12 @@ public class ChartController {
 		}
 		
 		return "incomeVsExpenses";
+	}
+	
+	@RequestMapping(value = "/cashflowTrend", method = RequestMethod.GET)
+	public String getCashflowTrend(HttpSession session, Model model) {
+		User user = (User) session.getAttribute("user");
+		
+		return "cashflowTrend";
 	}
 }

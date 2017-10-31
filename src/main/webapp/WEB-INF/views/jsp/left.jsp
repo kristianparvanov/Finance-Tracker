@@ -51,27 +51,6 @@
 						</a>
 					</li>
 					<li class="treeview">
-						<a href="#">
-							<i class="fa fa-dashboard"></i> 
-							<span style="font-size: 18px">Checkups</span>
-							<span class="pull-right-container"> 
-								<i class="fa fa-angle-left pull-right"></i>
-							</span>
-						</a>
-						<ul class="treeview-menu">
-							<li>
-								<a href="../../index.html">
-									<i class="fa fa-circle-o"></i>Spravka 1
-								</a>
-							</li>
-							<li>
-								<a href="../../index2.html">
-									<i class="fa fa-circle-o"></i> Spravka 2
-								</a>
-							</li>
-						</ul>
-					</li>
-					<li class="treeview">
 						<a href="#"> 
 							<i class="fa fa-pie-chart"></i> 
 							<span style="font-size: 18px">Charts</span>

@@ -319,8 +319,8 @@ public class TransactionDAO {
 		return transactions;
 	}
 	
-	public TreeMap<BigDecimal, String> getAllCategoriesAndTheirAmountsByUserId(long userId, String type) throws SQLException {
-		TreeMap<BigDecimal, String> categories = new TreeMap<BigDecimal, String>();
+	public TreeMap<String, BigDecimal> getAllCategoriesAndTheirAmountsByUserId(long userId, String type) throws SQLException {
+		TreeMap<String, BigDecimal> categories = new TreeMap<String, BigDecimal>();
 		String query = "SELECT SUM(t.amount) as amount, t.category_id FROM finance_tracker.transactions t JOIN finance_tracker.accounts a ON t.account_id = a.account_id JOIN finance_tracker.categories c on t.category_id = c.category_id WHERE (a.user_id = ? AND c.type = ?) group by category_id;";
 		PreparedStatement statement = dbManager.getConnection().prepareStatement(query);
 		statement.setLong(1, userId);
@@ -332,7 +332,7 @@ public class TransactionDAO {
 			long categoryId = result.getLong("category_id");
 			
 			String categoryName = categoryDao.getCategoryNameByCategoryId(categoryId);
-			categories.put(amount, categoryName);
+			categories.put(categoryName, amount);
 		}
 		
 		return categories;
@@ -367,9 +367,9 @@ public class TransactionDAO {
 		return transactions;
 	}
 		
-	public TreeMap<BigDecimal, String> getAllTransactionsByUserDateTypeAccount(long userId, LocalDateTime dateFrom, LocalDateTime dateTo, String type, String account) throws SQLException {
-		TreeMap<BigDecimal, String> transactions = new TreeMap<BigDecimal, String>();
-		String query = "SELECT SUM(t.amount) AS amount, t.category_id \r\n" + 
+	public TreeMap<String, BigDecimal> getAllTransactionsByUserDateTypeAccount(long userId, LocalDateTime dateFrom, LocalDateTime dateTo, String type, String account) throws SQLException {
+		TreeMap<String, BigDecimal> transactions = new TreeMap<String, BigDecimal>();
+		String query = "SELECT t.category_id, SUM(t.amount) AS amount \r\n" + 
 				"FROM finance_tracker.transactions t \r\n" + 
 				"JOIN finance_tracker.accounts a ON t.account_id = a.account_id \r\n" + 
 				"JOIN finance_tracker.categories c on t.category_id = c.category_id \r\n" + 
@@ -385,11 +385,11 @@ public class TransactionDAO {
 		
 		ResultSet result = statement.executeQuery();
 		while (result.next()) {
-			BigDecimal amount = result.getBigDecimal("amount");
 			long categoryId = result.getLong("category_id");
+			BigDecimal amount = result.getBigDecimal("amount");
 			
 			String categoryName = categoryDao.getCategoryNameByCategoryId(categoryId);
-			transactions.put(amount, categoryName);
+			transactions.put(categoryName, amount);
 		}
 		
 		return transactions;
@@ -435,4 +435,5 @@ public class TransactionDAO {
 				
 		return result;
 	}
+
 }

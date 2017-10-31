@@ -55,7 +55,7 @@
 			</section>
 			
 			<div>
-	        	<form role="form" action="<c:url value='/reports/filtered'></c:url>" method="post">
+	        	<form role="form" action="<c:url value='/reports/filtered'></c:url>" method="get">
 	              <div class="row">
 	            	<div class="col-sm-3" style="display:table-cell; vertical-align:middle; text-align:center">
 						<div class="form-group">
