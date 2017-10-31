@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -434,5 +435,50 @@ public class TransactionDAO {
 		}
 				
 		return result;
+	}
+	
+	public Map<LocalDateTime, BigDecimal> baba(long userId, long accountId, LocalDateTime ... dateArr) throws SQLException {
+		String sql = "SELECT t.type, t.amount, t.date "
+				+ "FROM transactions t "
+				+ "JOIN accounts a "
+				+ "ON t.account_id = a.account_id "
+				+ "AND a.user_id = ? "
+				+ (accountId == 0 ? "" : "AND a.account_id = ? ")
+				+ (dateArr.length <= 0 ? "" : "WHERE t.date >= STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s') "
+											+ 	"AND t.date <= STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s')") + ";";
+		
+		PreparedStatement ps = dbManager.getConnection().prepareStatement(sql);
+		ps.setLong(1, userId);
+		if (accountId > 0) {
+			ps.setLong(2, accountId);
+			
+			if (dateArr.length == 2) {
+				ps.setTimestamp(3, Timestamp.valueOf(dateArr[0].withNano(0)));
+				ps.setTimestamp(4, Timestamp.valueOf(dateArr[1].withNano(0)));
+			}
+		} else {
+			if (dateArr.length == 2) {
+				ps.setTimestamp(2, Timestamp.valueOf(dateArr[0].withNano(0)));
+				ps.setTimestamp(3, Timestamp.valueOf(dateArr[1].withNano(0)));
+			}
+		}
+		
+		Map<LocalDateTime, BigDecimal> map = new TreeMap<>();
+		
+		ResultSet res = ps.executeQuery();
+		
+		while(res.next()) {
+			String type = res.getString("type");
+			BigDecimal amount = res.getBigDecimal("amount");
+			LocalDateTime date = res.getTimestamp("date").toLocalDateTime();
+			
+			if (!map.containsKey(date)) {
+				map.put(date, type.equals("EXPENCE") ? amount.negate() : amount);
+			} else {
+				map.put(date, map.get(date).add(type.equals("EXPENCE") ? amount.negate() : amount));
+			}
+		}
+		
+		return map;
 	}
 }
