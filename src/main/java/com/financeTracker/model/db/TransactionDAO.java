@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
@@ -392,5 +393,46 @@ public class TransactionDAO {
 		}
 		
 		return transactions;
+	}
+	
+	public Map<String, BigDecimal> getIncomeVsExpences(long userId, LocalDateTime ... dateArr) throws SQLException{
+		Map<String, BigDecimal> result = new HashMap<>();
+		result.put("INCOME", BigDecimal.valueOf(0));
+		result.put("EXPENCE", BigDecimal.valueOf(0));
+		
+		String sql = "";
+		
+		PreparedStatement ps = null;
+		
+		if (dateArr.length <= 0) {
+			sql = "SELECT t.type, t.amount "
+					+ "FROM transactions t "
+					+ "JOIN accounts a ON t.account_id = a.account_id AND a.user_id = ?;";
+			
+			ps = dbManager.getConnection().prepareStatement(sql);
+			ps.setLong(1, userId);
+		} else {
+			sql = "SELECT t.type, t.amount "
+					+ "FROM transactions t "
+					+ "JOIN accounts a ON t.account_id = a.account_id "
+					+ "AND a.user_id = ? WHERE t.date >= STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s') "
+					+ "AND t.date <= STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s');";
+			
+			ps = dbManager.getConnection().prepareStatement(sql);
+			ps.setLong(1, userId);
+			ps.setTimestamp(2, Timestamp.valueOf(dateArr[0].withNano(0)));
+			ps.setTimestamp(3, Timestamp.valueOf(dateArr[1].withNano(0)));
+		}
+		
+		ResultSet res = ps.executeQuery();
+		
+		while(res.next()) {
+			String type = res.getString("type");
+			BigDecimal amount = res.getBigDecimal("amount");
+			
+			result.put(type, result.get(type).add(amount));
+		}
+				
+		return result;
 	}
 }
