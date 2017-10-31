@@ -117,8 +117,6 @@ public class ChartController {
 		User user = (User) session.getAttribute("user");
 		String date = request.getParameter("date");
 		
-		System.out.println(date);
-		
 		String[] inputDate = date.split("/");
 		
 		int monthFrom = Integer.valueOf(inputDate[0]);
@@ -158,9 +156,9 @@ public class ChartController {
 			
 			System.out.println(defaultTransactions);
 			
-			Set<Account> acconunts = user.getAccounts();
+			Set<Account> accounts = user.getAccounts();
 			BigDecimal allBalance = new BigDecimal(0);
-			for (Account account : acconunts) {
+			for (Account account : accounts) {
 				allBalance = allBalance.add(account.getAmount());
 			}
 			System.out.println(allBalance);
@@ -169,10 +167,60 @@ public class ChartController {
 				defaultTransactions.put(date, defaultTransactions.get(date).add(allBalance));
 			}
 			
-			model.addAttribute("accounts", acconunts);
+			model.addAttribute("accounts", accounts);
 			model.addAttribute("defaultTransactions", defaultTransactions);
 		} catch (SQLException e) {
 			System.out.println("pls ne gurmi");
+		}
+		
+		return "cashflowTrend";
+	}
+	
+	@RequestMapping(value = "/cashflowTrend/filtered", method = RequestMethod.GET)
+	public String getCashflowTrendFiltered(HttpServletRequest request, HttpSession session, Model model) {
+		String date = request.getParameter("date");
+		String account = request.getParameter("account");
+		
+		User user = (User) session.getAttribute("user");
+		
+		System.out.println(date);
+		System.out.println(account);
+		
+		String[] inputDate = date.split("/");
+		
+		int monthFrom = Integer.valueOf(inputDate[0]);
+		
+		int dayOfMonthFrom = Integer.valueOf(inputDate[1]);
+		
+		String[] temp = inputDate[2].toString().split(" - ");
+		
+		int yearFrom = Integer.valueOf(temp[0]);
+		
+		int monthTo = Integer.valueOf(temp[1]);
+		
+		int dayOfMonthTo = Integer.valueOf(inputDate[3]);
+		
+		int yearTo = Integer.valueOf(inputDate[4]);
+		
+		LocalDateTime from = LocalDateTime.of(yearFrom, monthFrom, dayOfMonthFrom, 0, 0, 0);
+		LocalDateTime to = LocalDateTime.of(yearTo, monthTo, dayOfMonthTo, 0, 0, 0);
+		
+		try {
+			Map<LocalDate, BigDecimal> defaultTransactions = transactionDAO.getTransactionAmountAndDate(user.getUserId(), accountDAO.getAccountId(user, account), from, to);
+			Set<Account> accounts = user.getAccounts();
+			BigDecimal allBalance = new BigDecimal(0);
+			for (Account acc : accounts) {
+				allBalance = allBalance.add(acc.getAmount());
+			}
+			System.out.println(allBalance);
+			
+			for (LocalDate localDate : defaultTransactions.keySet()) {
+				defaultTransactions.put(localDate, defaultTransactions.get(localDate).add(allBalance));
+			}
+			model.addAttribute("accounts", accounts);
+			model.addAttribute("defaultTransactions", defaultTransactions);
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 		
 		return "cashflowTrend";

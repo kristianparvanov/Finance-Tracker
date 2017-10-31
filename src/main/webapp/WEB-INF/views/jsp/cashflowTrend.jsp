@@ -38,7 +38,7 @@
 		
 		<section class="content">
 			<div>
-	        	<form role="form" action="#" method="post">
+	        	<form role="form" action="<c:url value='/cashflowTrend/filtered'> </c:url>" method="get">
 	              <div class="row">
 	            	<div class="col-sm-3" style="display:table-cell; vertical-align:middle; text-align:center">
 						<div class="form-group">
