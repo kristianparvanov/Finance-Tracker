@@ -85,26 +85,20 @@
 			
 			<div>
 				<c:set var="transactions" value="${ transactionsValues }" />
-				<c:set var="transactions" value="${ transactionsValues }" />
 			    <c:set var="transactionsCategories" value="${ transactionsCategories }" />
 			    
-				<div style="width:100%; height: 70%">
+				<div style="width:75%;">
 			        <canvas id="canvas"></canvas>
 			    </div>
 			    
-				<div id="canvas-holder" style="width:100%">
-        			<canvas id="chart-area" ></canvas>
-   				</div>
 				<script>
 					var presets = window.chartColors;
 					var utils = Samples.utils;
 					var values = '${transactions}';
 					var dates = '${transactionsDates}';
-					var cats = '${transactionsCategories}';
 					
 					values = values.replace(/[\[\]']+/g,'')
 					dates = dates.replace(/[\[\]']+/g,'')
-					cats = cats.replace(/[\{\}']+/g,'')
 					
 					var allTrans = [];
 					$.each(values.split(","), function(i,e){
@@ -162,81 +156,10 @@
 				        }
 				    };
 				    
-				    var randomScalingFactor = function() {
-				        return Math.round(Math.random() * 100);
-				    };
-				    
-				    var catsKeyValuePairs = [];
-				    var catNames = [];
-				    var catValues = [];
-					catsKeyValuePairs = cats.split(",");
-					//alert(catsKeyValuePairs);
-					for (var i = 0; i < catsKeyValuePairs.length; i++) {
-						var kv = catsKeyValuePairs[i].split("=");
-						catValues.push(kv[0]);
-						catNames.push(kv[1]);
-					}
-					
-				/* 	alert(catNames);
-					alert(catValues); */
-
-				    var config2 = {
-				        type: 'doughnut',
-				        data: {
-				            datasets: [{
-				                //data: [ 48,25,68,7,98,45,48,98,87 ],
-				                data: catValues,
-				                backgroundColor: [
-				                    window.chartColors.red,
-				                    window.chartColors.orange,
-				                    window.chartColors.yellow,
-				                    window.chartColors.green,
-				                    window.chartColors.blue,
-				                    window.chartColors.red,
-				                    window.chartColors.orange,
-				                    window.chartColors.yellow,
-				                    window.chartColors.green,
-				                    window.chartColors.blue,
-				                    window.chartColors.red,
-				                    window.chartColors.orange,
-				                    window.chartColors.yellow,
-				                    window.chartColors.green,
-				                    window.chartColors.blue,
-				                ],
-				                label: 'Dataset 1'
-				            }],
-				           // labels: [
-				             //   "Red",
-				              //  "Orange",
-				             //   "Yellow",
-				             //   "Green",
-				             //   "Blue","Green1",
-				             //   "Blue3","Green2",
-				            //    "Blue4"
-				            //]
-				            labels: catNames
-				        },
-				        options: {
-				            responsive: true,
-				            legend: {
-				                position: 'top',
-				            },
-				            title: {
-				                display: true,
-				                text: 'Chart.js Doughnut Chart'
-				            },
-				            animation: {
-				                animateScale: true,
-				                animateRotate: true
-				            }
-				        }
-				    };
 
 				    window.onload = function() {
 				    	var ctx = document.getElementById("canvas").getContext("2d");
 				        window.myLine = new Chart(ctx, config);
-				        var ctx2 = document.getElementById("chart-area").getContext("2d");
-				        window.myDoughnut = new Chart(ctx2, config2);
 				    };
 				    
 				</script>

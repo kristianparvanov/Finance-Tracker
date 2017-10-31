@@ -156,15 +156,6 @@ public class UserController {
 		allTransactionsDatesList.addAll(allTransactionsDates.values());
 		allTransactionsValuesList.addAll(allTransactionsValues.values());
 		
-		TreeMap<BigDecimal, String> categories = null;
-		try {
-			categories = transactionDAO.getAllCategoriesAndTheirAmountsByUserId(u.getUserId(), "EXPENCE");
-		} catch (SQLException e) {
-			System.out.println("Could not getAllCategoriesAndTheirAmountsByUserId");
-			e.printStackTrace();
-		}
-		
-		viewModel.addAttribute("transactionsCategories", categories);
 		viewModel.addAttribute("transactionsDates", allTransactionsDatesList);
 		viewModel.addAttribute("transactionsValues", allTransactionsValuesList);
 		viewModel.addAttribute("balance", balance);
