@@ -4,7 +4,9 @@ import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -13,6 +15,7 @@ import java.util.TreeMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.xpath.axes.DescendantIterator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -163,12 +166,25 @@ public class ChartController {
 			}
 			System.out.println(allBalance);
 			
-			for (LocalDate date : defaultTransactions.keySet()) {
-				defaultTransactions.put(date, defaultTransactions.get(date).add(allBalance));
+			Map<LocalDate, BigDecimal> reverseDefaultTransactions = new TreeMap<LocalDate,BigDecimal>(Collections.reverseOrder());
+			reverseDefaultTransactions.putAll(defaultTransactions);
+			System.out.println("REV " + reverseDefaultTransactions);
+			
+			for (LocalDate date : reverseDefaultTransactions.keySet()) {
+				BigDecimal transactionAmount = reverseDefaultTransactions.get(date);
+				System.out.println("T AMOUNT: " + transactionAmount);
+				allBalance = allBalance.subtract(transactionAmount);
+				reverseDefaultTransactions.put(date, transactionAmount.add(allBalance));
+				//allBalance = allBalance.add(transactionAmount);
 			}
 			
+			Map<LocalDate, BigDecimal> finalDefaultTransactions = new TreeMap<LocalDate,BigDecimal>();
+			finalDefaultTransactions.putAll(reverseDefaultTransactions);
+			
+			System.out.println("FINAL " + finalDefaultTransactions);
+			
 			model.addAttribute("accounts", accounts);
-			model.addAttribute("defaultTransactions", defaultTransactions);
+			model.addAttribute("defaultTransactions", finalDefaultTransactions);
 		} catch (SQLException e) {
 			System.out.println("pls ne gurmi");
 		}

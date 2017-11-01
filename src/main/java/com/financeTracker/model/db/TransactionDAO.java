@@ -463,7 +463,7 @@ public class TransactionDAO {
 			}
 		}
 		
-		Map<LocalDate, BigDecimal> map = new TreeMap<>(/*(d1, d2) -> d1.toLocalDate().compareTo(d2.toLocalDate())*/);
+		Map<LocalDate, BigDecimal> map = new TreeMap<>();
 		
 		ResultSet res = ps.executeQuery();
 		
