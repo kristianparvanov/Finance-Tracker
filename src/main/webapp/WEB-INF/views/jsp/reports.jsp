@@ -166,7 +166,7 @@
 	<script type="text/javascript">
 		$(function () {
 			$('.select2').select2()
-			$('#reservationtime').daterangepicker({ timePicker: true, timePickerIncrement: 30, format: 'MM/DD/YYYY h:mm A' })
+			$('#reservationtime').daterangepicker({ timePicker: false, timePickerIncrement: 30, format: 'MM/DD/YYYY h:mm A' })
 		});
 		
 		

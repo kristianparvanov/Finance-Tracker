@@ -116,6 +116,7 @@ public class ReportController {
 			
 		}
 		
+		model.addAttribute("date", date);
 		model.addAttribute("categories", categories);
 		model.addAttribute("allAccounts", allAccounts);
 		model.addAttribute("allTransactions", transactions);
