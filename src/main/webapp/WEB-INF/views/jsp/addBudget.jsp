@@ -49,7 +49,7 @@
 			                <label>Category</label>
 			                <select class="form-control select2" style="width: 100%;" data-placeholder="Select a category" name="category">
 			                  <c:forEach items="${ categories }" var="category">
-			                	  <option><c:out value="${ category.name }"></c:out></option>
+			                	  <option><c:out value="${ category }"></c:out></option>
 			                  </c:forEach>
 			                </select>
 			            </div>
@@ -114,7 +114,7 @@
 	<script type="text/javascript">
 		$(function () {
 			$('.select2').select2()
-			$('#reservationtime').daterangepicker({ timePicker: true, timePickerIncrement: 30, format: 'MM/DD/YYYY h:mm A' })
+			$('#reservationtime').daterangepicker({ timePicker: false, timePickerIncrement: 30, format: 'MM/DD/YYYY h:mm A' })
 		});
 		
 		

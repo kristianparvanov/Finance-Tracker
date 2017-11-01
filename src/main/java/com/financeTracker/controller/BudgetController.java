@@ -90,8 +90,8 @@ public class BudgetController {
 		
 		try {
 			Set<Account> accounts = accountDAO.getAllAccountsByUserId(user.getUserId());
-			Set<Category> categories = categoryDao.getAllCategoriesByUserId(user.getUserId());
-			categories.addAll(categoryDao.getAllCategoriesByUserId());
+			Set<String> categories = categoryDao.getAllCategoriesByType(user.getUserId(), "EXPENCE");
+//			categories.addAll(categoryDao.getAllCategoriesByUserId());
 			Set<Tag> tags = tagDAO.getAllTagsByUserId(user.getUserId());
 			
 			model.addAttribute("accounts", accounts);
@@ -289,8 +289,10 @@ public class BudgetController {
 			Set<Account> accounts = accountDAO.getAllAccountsByUserId(user.getUserId());
 			BigDecimal amount = budget.getInitialAmount();
 			String categoryName = categoryDao.getCategoryNameByCategoryId(budget.getCategoryId());
-			Set<Category> categories = categoryDao.getAllCategoriesByUserId(user.getUserId());
-			categories.addAll(categoryDao.getAllCategoriesByUserId());
+			Set<String> categories = categoryDao.getAllCategoriesByType(user.getUserId(), "EXPENCE");
+//			Set<Category> categories = categoryDao.getAllCategoriesByUserId(user.getUserId());
+//			categories.addAll(categoryDao.getAllCategoriesByUserId());
+			
 			Set<Tag> tags = tagDAO.getAllTagsByUserId(user.getUserId());
 			LocalDateTime fromDate = budget.getFromDate();
 			LocalDateTime toDate = budget.getToDate();
