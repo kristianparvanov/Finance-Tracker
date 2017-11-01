@@ -25,17 +25,8 @@
 		<section class="content">
 			<div class="col-md-6">
 		        <div class="box box-primary">
-		            <form role="form" action="editUser" method="post">
+		            <form role="form" action='<c:url value='/user/edit'></c:url>' method="post">
 		              <div class="box-body">
-		              	<div class="form-group">
-			                <label>Username</label>
-               				<input type="text" id="usrname" class="form-control" name="username" >
-               				<c:set var="name" value="${ username }" />
-                 			<script type="text/javascript">
-                 				var asd = '${name}';
-								document.getElementById("usrname").value = asd;
-							</script>
-			            </div>
 		                <div class="form-group">
 			                <label>Email</label>
                				<input type="text" id="email" class="form-control" name="email" >
