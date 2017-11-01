@@ -396,33 +396,34 @@ public class TransactionDAO {
 		return transactions;
 	}
 	
-	public Map<String, BigDecimal> getIncomeVsExpences(long userId, LocalDateTime ... dateArr) throws SQLException{
+	public Map<String, BigDecimal> getIncomeVsExpences(long userId, long accountId, LocalDateTime ... dateArr) throws SQLException{
 		Map<String, BigDecimal> result = new HashMap<>();
 		result.put("INCOME", BigDecimal.valueOf(0));
 		result.put("EXPENCE", BigDecimal.valueOf(0));
 		
-		String sql = "";
+		String sql = "SELECT t.type, t.amount "
+				+ "FROM transactions t "
+				+ "JOIN accounts a "
+				+ "ON t.account_id = a.account_id "
+				+ "AND a.user_id = ? "
+				+ (accountId == 0 ? "" : "AND a.account_id = ? ")
+				+ (dateArr.length <= 0 ? "" : "WHERE t.date >= STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s') "
+											+ 	"AND t.date <= STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s')") + ";";
 		
-		PreparedStatement ps = null;
-		
-		if (dateArr.length <= 0) {
-			sql = "SELECT t.type, t.amount "
-					+ "FROM transactions t "
-					+ "JOIN accounts a ON t.account_id = a.account_id AND a.user_id = ?;";
+		PreparedStatement ps = dbManager.getConnection().prepareStatement(sql);
+		ps.setLong(1, userId);
+		if (accountId > 0) {
+			ps.setLong(2, accountId);
 			
-			ps = dbManager.getConnection().prepareStatement(sql);
-			ps.setLong(1, userId);
+			if (dateArr.length == 2) {
+				ps.setTimestamp(3, Timestamp.valueOf(dateArr[0].withNano(0)));
+				ps.setTimestamp(4, Timestamp.valueOf(dateArr[1].withNano(0)));
+			}
 		} else {
-			sql = "SELECT t.type, t.amount "
-					+ "FROM transactions t "
-					+ "JOIN accounts a ON t.account_id = a.account_id "
-					+ "AND a.user_id = ? WHERE t.date >= STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s') "
-					+ "AND t.date <= STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s');";
-			
-			ps = dbManager.getConnection().prepareStatement(sql);
-			ps.setLong(1, userId);
-			ps.setTimestamp(2, Timestamp.valueOf(dateArr[0].withNano(0)));
-			ps.setTimestamp(3, Timestamp.valueOf(dateArr[1].withNano(0)));
+			if (dateArr.length == 2) {
+				ps.setTimestamp(2, Timestamp.valueOf(dateArr[0].withNano(0)));
+				ps.setTimestamp(3, Timestamp.valueOf(dateArr[1].withNano(0)));
+			}
 		}
 		
 		ResultSet res = ps.executeQuery();
