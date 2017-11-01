@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.mail.Session;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -31,6 +32,7 @@ import com.financeTracker.model.db.BudgetsHasTransactionsDAO;
 import com.financeTracker.model.db.CategoryDAO;
 import com.financeTracker.model.db.TagDAO;
 import com.financeTracker.model.db.TransactionDAO;
+import com.financeTracker.model.db.UserDAO;
 
 @Controller
 @RequestMapping(value="/account")
@@ -49,6 +51,9 @@ public class TransactionController {
 	
 	@Autowired
 	private BudgetsHasTransactionsDAO budgetsHasTransactionsDAO;
+	
+	@Autowired
+	private UserDAO userDao;
 	
 	@RequestMapping(value="/{accountId}", method=RequestMethod.GET)
 	public String getAllTransactions(HttpServletRequest request, HttpSession session, Model model, @PathVariable("accountId") Long accountId) {
@@ -126,6 +131,9 @@ public class TransactionController {
 				accountDAO.updateAccountAmount(acc, (oldValue.add(newValue)));
 			}
 			transactionDAO.insertTransaction(t);
+			
+			u.setLastFill(LocalDateTime.now());
+			userDao.updateUser(u);
 		} catch (SQLException e) {
 			System.out.println("Something horrible happened to the DB");
 			e.printStackTrace();
@@ -214,6 +222,9 @@ public class TransactionController {
 			tagDAO.deleteAllTagsForTransaction(transactionId);
 //			transactionDAO.removeTransaction(transactionId);
 			transactionDAO.updateTransaction(t);
+			
+			u.setLastFill(LocalDateTime.now());
+			userDao.updateUser(u);
 		} catch (SQLException e) {
 			System.out.println("Something horrible happened to the DB");
 			e.printStackTrace();
@@ -246,6 +257,8 @@ public class TransactionController {
 	
 	@RequestMapping(value="/transfer/accountId/transfer", method=RequestMethod.POST)
 	public String postTransfer(HttpServletRequest request, HttpSession session) {
+		User user = (User) session.getAttribute("user");
+		
 		String amountParam = request.getParameter("amount");
 		String fromAccount = request.getParameter("fromAccount");
 		String toAccount = request.getParameter("toAccount");
@@ -258,6 +271,9 @@ public class TransactionController {
 			from = accountDAO.getAccountByAccountName(fromAccount);
 			to = accountDAO.getAccountByAccountName(toAccount);
 			accountDAO.makeTransferToOtherAccount(from, to, amount);
+			
+			user.setLastFill(LocalDateTime.now());
+			userDao.updateUser(user);
 		} catch (SQLException e) {
 			System.out.println("Collosal fail when making the transfer");
 			e.printStackTrace();
@@ -267,12 +283,17 @@ public class TransactionController {
 	}
 	
 	@RequestMapping(value="transaction/deleteTransaction/{transactionId}", method=RequestMethod.POST)
-	public String deleteTransaction(@PathVariable("transactionId") Long transactionId) {
+	public String deleteTransaction(@PathVariable("transactionId") Long transactionId, HttpSession session) {
+		User user = (User) session.getAttribute("user");
+		
 		Transaction t = null;
 		try {
 			t = transactionDAO.getTransactionByTransactionId(transactionId);
 			
 			transactionDAO.deleteTransaction(t);
+			
+			user.setLastFill(LocalDateTime.now());
+			userDao.updateUser(user);
 		} catch (SQLException e) {
 			System.out.println("Could not delete transaction");
 			e.printStackTrace();

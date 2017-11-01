@@ -25,7 +25,7 @@
 		<section class="content">
 			<div class="col-md-6">
 		        <div class="box box-primary">
-		            <form role="form" action="editUser" method="post">
+		            <form role="form" action='<c:url value='/user/edit'></c:url>' method="post">
 		              <div class="box-body">
 		                <div class="form-group">
 			                <label>Username</label>

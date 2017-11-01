@@ -199,4 +199,24 @@ public class UserController {
 		session.setAttribute("userId", u.getUserId());
 		return "user";
 	}
+	
+	@RequestMapping(value="/user/edit", method=RequestMethod.POST)
+	public String UpdateUser(HttpSession session, HttpServletRequest request) {
+		User user = (User) session.getAttribute("user");
+		
+		user.setEmail(request.getParameter("email"));
+		user.setFirstName(request.getParameter("firstName"));
+		user.setLastName(request.getParameter("lastName"));
+		
+		try {
+			userDAO.updateUser(user);
+			
+			session.setAttribute("user", user);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return "redirect:/main";
+	}
 }

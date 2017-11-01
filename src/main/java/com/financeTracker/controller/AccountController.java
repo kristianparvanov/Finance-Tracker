@@ -2,6 +2,7 @@ package com.financeTracker.controller;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -16,12 +17,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.financeTracker.model.Account;
 import com.financeTracker.model.User;
 import com.financeTracker.model.db.AccountDAO;
+import com.financeTracker.model.db.UserDAO;
 
 @Controller
 public class AccountController {
 	
 	@Autowired
 	private AccountDAO accountDAO;
+	
+	@Autowired
+	private UserDAO userDao;
 
 	@RequestMapping(value="/addAccount", method=RequestMethod.POST)
 	public String addAccount(HttpServletRequest request, HttpSession session, Model viewModel) {
@@ -33,6 +38,9 @@ public class AccountController {
 		Account account = new Account(name, amount, user.getUserId());
 		try {
 			accountDAO.insertAccount(account);
+			
+			user.setLastFill(LocalDateTime.now());
+			userDao.updateUser(user);
 		} catch (SQLException e) {
 			System.out.println("Could not add account to database");
 			e.printStackTrace();
@@ -47,9 +55,14 @@ public class AccountController {
 	}
 	
 	@RequestMapping(value="/account/deleteAccount/{accountId}", method=RequestMethod.POST)
-	public String deleteAccount(@PathVariable("accountId") Long accountId) {
+	public String deleteAccount(@PathVariable("accountId") Long accountId, HttpSession session) {
+		User user = (User) session.getAttribute("user");
+		
 		try {
 			accountDAO.deleteAccount(accountId);
+			
+			user.setLastFill(LocalDateTime.now());
+			userDao.updateUser(user);
 		} catch (SQLException e) {
 			System.out.println("nema da trieme acc-ta :(");
 		}
