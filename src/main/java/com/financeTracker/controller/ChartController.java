@@ -105,9 +105,10 @@ public class ChartController {
 		User user = (User) session.getAttribute("user");
 		
 		try {
-			Map<String, BigDecimal> transactions = transactionDAO.getIncomeVsExpences(user.getUserId());
+			Map<String, BigDecimal> transactions = transactionDAO.getIncomeVsExpences(user.getUserId(), 0);
 			
 			model.addAttribute("transactions", transactions);
+			model.addAttribute("accounts", user.getAccounts());
 		} catch (SQLException e) {
 			System.out.println("opa");
 		}
@@ -119,6 +120,7 @@ public class ChartController {
 	public String getFilteredIncomeVsExpences(HttpSession session, Model model, HttpServletRequest request) {
 		User user = (User) session.getAttribute("user");
 		String date = request.getParameter("date");
+		String account = request.getParameter("account");
 		
 		String[] inputDate = date.split("/");
 		
@@ -140,11 +142,20 @@ public class ChartController {
 		LocalDateTime to = LocalDateTime.of(yearTo, monthTo, dayOfMonthTo, 0, 0, 0);
 		
 		try {
-			Map<String, BigDecimal> transactions = transactionDAO.getIncomeVsExpences(user.getUserId(), from, to);
+			long accId = 0;
+			
+			if (!account.equals("All accounts")) {
+				accId = accountDAO.getAccountId(user, account);
+			}
+			
+			Map<String, BigDecimal> transactions = transactionDAO.getIncomeVsExpences(user.getUserId(), accId, from, to);
 			
 			model.addAttribute("transactions", transactions);
+			model.addAttribute("date", date);
+			model.addAttribute("accounts", user.getAccounts());
 		} catch (SQLException e) {
 			System.out.println("opa");
+			System.out.println(e.getMessage());
 		}
 		
 		return "incomeVsExpenses";
@@ -157,14 +168,12 @@ public class ChartController {
 		try {
 			Map<LocalDate, BigDecimal> defaultTransactions = transactionDAO.getTransactionAmountAndDate(user.getUserId(), 0);
 			
-			System.out.println(defaultTransactions);
 			
 			Set<Account> accounts = user.getAccounts();
 			BigDecimal allBalance = new BigDecimal(0);
 			for (Account account : accounts) {
 				allBalance = allBalance.add(account.getAmount());
 			}
-			System.out.println(allBalance);
 			
 			Map<LocalDate, BigDecimal> reverseDefaultTransactions = new TreeMap<LocalDate,BigDecimal>(Collections.reverseOrder());
 			reverseDefaultTransactions.putAll(defaultTransactions);
