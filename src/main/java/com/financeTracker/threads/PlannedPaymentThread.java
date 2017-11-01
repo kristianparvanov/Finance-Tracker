@@ -8,6 +8,7 @@ import java.time.Period;
 import java.util.HashSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.financeTracker.model.Account;
 import com.financeTracker.model.PlannedPayment;
@@ -30,7 +31,7 @@ public class PlannedPaymentThread extends Thread {
 	
 	@Autowired
 	private PlannedPaymentDAO plannedPaymentDAO;
-
+	
 	public PlannedPaymentThread(PlannedPayment plannedPayment) {
 		this.plannedPayment = plannedPayment;
 	}

@@ -8,7 +8,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,6 +75,22 @@ public class UserDAO {
 			
 			ALL_USERS.put(userName, user);
 		}
+	}
+	
+	public List<User> getUsersAndLastFillDate() throws SQLException {
+		List<User> users = new ArrayList<User>();
+		String query = "SELECT email, first_name, last_fill FROM users";
+		PreparedStatement ps = dbManager.getConnection().prepareStatement(query);
+		ResultSet res = ps.executeQuery();
+		while(res.next()) {
+			String email = res.getString("email");
+			String firstName = res.getString("first_name");
+			LocalDateTime lastFill = res.getTimestamp("last_fill").toLocalDateTime();
+			
+			User user = new User(email, firstName, lastFill);
+			users.add(user);
+		}
+		return users;
 	}
 
 	public synchronized void insertUser(User u) throws SQLException {

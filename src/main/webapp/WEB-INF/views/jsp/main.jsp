@@ -87,7 +87,7 @@
 				<c:set var="transactions" value="${ transactionsValues }" />
 			    <c:set var="transactionsCategories" value="${ transactionsCategories }" />
 			    
-				<div style="width:75%;">
+				<div style="width:60%;">
 			        <canvas id="canvas"></canvas>
 			    </div>
 			    

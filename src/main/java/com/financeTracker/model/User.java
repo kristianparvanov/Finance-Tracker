@@ -37,6 +37,12 @@ public class User {
 		this(username, password, email, firstName, lastName, new HashSet<>(), new HashSet<>(), new HashSet<>(), LocalDateTime.now());
 		
 	}
+	
+	public User(String email, String firstName, LocalDateTime lastFill) {
+		this.email = email;
+		this.firstName = firstName;
+		this.lastFill = lastFill;
+	}
 
 	public long getUserId() {
 		return userId;

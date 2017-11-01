@@ -37,7 +37,7 @@
 		
 		<div>
 	        	<form role="form" action='<c:url value = '/incomeVsExpenses/filtered'></c:url>' method="get">
-	              <div class="row" style="margin-left: 250px;">
+	              <div class="row" style="height: 100%; display: flex; justify-content: center; align-items: center;">
 	            	<div class="col-sm-3" style="display:table-cell; vertical-align:middle; text-align:center">
 						<div class="form-group">
 			                <label>Date and time range:</label>

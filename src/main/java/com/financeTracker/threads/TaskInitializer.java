@@ -1,26 +1,27 @@
 package com.financeTracker.threads;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
 
-@Controller
-public class TaskInitializer implements Runnable {
+@Component
+public class TaskInitializer extends Thread {
+	@Autowired
+	private PlannedPaymentService plannedPaymentService;
 	
 	@Autowired
-	private PlannedPaymentManager tasks;
+	private EmailService emailService;
+	
 //	@PostConstruct
 //	public void initialize() {
-//		// tasks.testPrintHi();
-//	}
 	
+//	}
 
 	@Override
 	public void run() {
-		System.out.println("Invoking an asynchronous method. " + Thread.currentThread().getName());
-		tasks.testPrintHi();
-		
+		System.out.println("Invoking an asynchronous methods. " + Thread.currentThread().getName());
+		this.plannedPaymentService.setDaemon(true);
+		this.plannedPaymentService.start();
+		this.emailService.setDaemon(true);
+		this.emailService.start();
 	}
 }
