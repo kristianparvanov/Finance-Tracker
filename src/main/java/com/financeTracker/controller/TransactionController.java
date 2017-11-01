@@ -119,7 +119,7 @@ public class TransactionController {
 		
 		Account acc = null;
 		try {
-			acc = accountDAO.getAccountByAccountName(account);
+			acc = accountDAO.getAccountByAccountNameAndAccountId(account, u.getUserId());
 			Category cat = categoryDao.getCategoryByCategoryName(category);
 			Transaction t = new Transaction(TransactionType.valueOf(type), description, BigDecimal.valueOf(Double.valueOf(amount)), acc.getAccountId(), cat.getCategoryId(), LocalDateTime.now(), tagsSet);
 			BigDecimal newValue = BigDecimal.valueOf(Double.valueOf(amount));
@@ -206,7 +206,7 @@ public class TransactionController {
 		
 		Account acc = null;
 		try {
-			acc = accountDAO.getAccountByAccountName(account);
+			acc = accountDAO.getAccountByAccountNameAndAccountId(account, u.getUserId());
 			Category cat = categoryDao.getCategoryByCategoryName(category);
 			Transaction t = new Transaction(TransactionType.valueOf(type), description, BigDecimal.valueOf(Double.valueOf(amount)), acc.getAccountId(), cat.getCategoryId(), newDate, tagsSet);
 			t.setTransactionId(transactionId);

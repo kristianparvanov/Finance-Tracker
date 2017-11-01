@@ -193,28 +193,6 @@ public class AccountDAO {
 		
 		return true;
 	}
-
-	public Account getAccountByAccountName(String accountName) throws SQLException {
-		String query = "SELECT account_id, name, amount, user_id FROM finance_tracker.accounts WHERE accounts.name = ?";
-		PreparedStatement statement = dbManager.getConnection().prepareStatement(query);
-		statement.setString(1, accountName);
-		
-		ResultSet res = statement.executeQuery();
-		res.next();
-		
-		long accountId = res.getLong("account_id");
-		String name = res.getString("name");
-		BigDecimal amount = res.getBigDecimal("amount");
-		long userId = res.getLong("user_id");
-		List<Transaction> transactions = transactionDAO.getAllTransactionsByAccountId(accountId);
-		List<Budget> budgets = budgetDao.getAllBudgetsByAccountId(accountId);
-		List<PlannedPayment> plannedPayments = plannedPaymentDAO.getAllPlannedPaymentsByAccountId(accountId);
-		
-		Account account = new Account(name, amount, userId, transactions, budgets, plannedPayments);
-		account.setAccaountId(accountId);
-		
-		return account;
-	}
 	
 	public String getAccountNameByAccountId(long accountId) throws SQLException {
 		String query = "SELECT name FROM accounts WHERE accounts.account_id = ?";
