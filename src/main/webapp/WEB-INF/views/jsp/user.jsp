@@ -28,15 +28,6 @@
 		            <form role="form" action='<c:url value='/user/edit'></c:url>' method="post">
 		              <div class="box-body">
 		                <div class="form-group">
-			                <label>Username</label>
-               				<input type="text" id="usrname" class="form-control" name="username" >
-               				<c:set var="name" value="${ username }" />
-                 			<script type="text/javascript">
-                 				var asd = '${name}';
-								document.getElementById("usrname").value = asd;
-							</script>
-			            </div>
-		                <div class="form-group">
 			                <label>Email</label>
                				<input type="text" id="email" class="form-control" name="email" >
                				<c:set var="email" value="${ email }" />
