@@ -176,19 +176,15 @@ public class ChartController {
 			
 			Map<LocalDate, BigDecimal> reverseDefaultTransactions = new TreeMap<LocalDate,BigDecimal>(Collections.reverseOrder());
 			reverseDefaultTransactions.putAll(defaultTransactions);
-			System.out.println("REV " + reverseDefaultTransactions);
 			
 			for (LocalDate date : reverseDefaultTransactions.keySet()) {
 				BigDecimal transactionAmount = reverseDefaultTransactions.get(date);
-				System.out.println("T AMOUNT: " + transactionAmount);
 				allBalance = allBalance.subtract(transactionAmount);
 				reverseDefaultTransactions.put(date, transactionAmount.add(allBalance));
 			}
 			
 			Map<LocalDate, BigDecimal> finalDefaultTransactions = new TreeMap<LocalDate,BigDecimal>();
 			finalDefaultTransactions.putAll(reverseDefaultTransactions);
-			
-			System.out.println("FINAL " + finalDefaultTransactions);
 			
 			model.addAttribute("accounts", accounts);
 			model.addAttribute("defaultTransactions", finalDefaultTransactions);
@@ -241,11 +237,9 @@ public class ChartController {
 				
 				Map<LocalDate, BigDecimal> reverseDefaultTransactions = new TreeMap<LocalDate,BigDecimal>(Collections.reverseOrder());
 				reverseDefaultTransactions.putAll(defaultTransactions);
-				System.out.println("REV " + reverseDefaultTransactions);
 				
 				for (LocalDate tdate : reverseDefaultTransactions.keySet()) {
 					BigDecimal transactionAmount = reverseDefaultTransactions.get(tdate);
-					System.out.println("T AMOUNT: " + transactionAmount);
 					allBalance = allBalance.subtract(transactionAmount);
 					reverseDefaultTransactions.put(tdate, transactionAmount.add(allBalance));
 				}
@@ -260,11 +254,9 @@ public class ChartController {
 				
 				Map<LocalDate, BigDecimal> reverseDefaultTransactions = new TreeMap<LocalDate,BigDecimal>(Collections.reverseOrder());
 				reverseDefaultTransactions.putAll(defaultTransactions);
-				System.out.println("REV " + reverseDefaultTransactions);
 				
 				for (LocalDate tdate : reverseDefaultTransactions.keySet()) {
 					BigDecimal transactionAmount = reverseDefaultTransactions.get(tdate);
-					System.out.println("T AMOUNT: " + transactionAmount);
 					accVal = accVal.subtract(transactionAmount);
 					reverseDefaultTransactions.put(tdate, transactionAmount.add(accVal));
 				}

@@ -74,7 +74,7 @@
 		             <div class="col-sm-2" style="display:table-cell; vertical-align:middle; text-align:center">
 		            	<div class="form-group">
 		            		<label>Navigation</label><br>
-							<a href="main" type="button" class="btn btn-block btn-default"><i class="ion ion-android-arrow-back"></i> Back</a>
+							<a href="<c:url value="/main"></c:url>" type="button" class="btn btn-block btn-default"><i class="ion ion-android-arrow-back"></i> Back</a>
 						</div>
 					</div>
 		          </div>
