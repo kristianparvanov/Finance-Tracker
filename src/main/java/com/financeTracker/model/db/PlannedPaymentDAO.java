@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -217,5 +218,32 @@ public class PlannedPaymentDAO {
 		return p;
 	}
 	
-	
+	public List<PlannedPayment> getAllPlannedPaymentsByUserId(long userId) throws SQLException {
+		String query = "SELECT planned_payment_id, name, type, from_date, amount, description, account_id, category_id "
+				+ "FROM finance_tracker.planned_payments "
+				+ "JOIN finance_tracker.accounts ON planned_payments.account_id = accounts.account_id AND user_id = ?;";
+		List<PlannedPayment> payments = new ArrayList<PlannedPayment>();
+		
+		PreparedStatement statement = dbManager.getConnection().prepareStatement(query);
+		statement.setLong(1, userId);
+		ResultSet result = statement.executeQuery();
+		while (result.next()) {
+			long plannedPaymentId = result.getLong("planned_payment_id");
+			String name = result.getString("name");
+			String type = result.getString("type");
+			TransactionType paymentType = TransactionType.valueOf(type);
+			LocalDateTime fromDate = result.getTimestamp("from_date").toLocalDateTime();
+			BigDecimal amount = result.getBigDecimal("amount");
+			String description = result.getString("description");
+			int accountId = result.getInt("account_id");
+			int categoryId = result.getInt("category_id");
+			HashSet<Tag> tags = tagDAO.getTagsByPlannedPaymentId(plannedPaymentId);
+			String categoryName = categoryDao.getCategoryNameByCategoryId(categoryId);
+			PlannedPayment payment = new PlannedPayment(name, paymentType, fromDate, amount, description, accountId, categoryId, tags);
+			payment.setPlannedPaymentId(plannedPaymentId);
+			payment.setCategoryName(categoryName);
+			payments.add(payment);
+		}
+		return payments;
+	}
 }

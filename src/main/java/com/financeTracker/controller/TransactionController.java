@@ -268,8 +268,8 @@ public class TransactionController {
 		Account from = null;
 		Account to = null;
 		try {
-			from = accountDAO.getAccountByAccountName(fromAccount);
-			to = accountDAO.getAccountByAccountName(toAccount);
+			from = accountDAO.getAccountByAccountNameAndAccountId(fromAccount, user.getUserId());
+			to = accountDAO.getAccountByAccountNameAndAccountId(toAccount, user.getUserId());
 			accountDAO.makeTransferToOtherAccount(from, to, amount);
 			
 			user.setLastFill(LocalDateTime.now());

@@ -381,7 +381,7 @@ public class TransactionDAO {
 		statement.setString(2, type);
 		statement.setTimestamp(3, Timestamp.valueOf(dateFrom.withNano(0)));
 		statement.setTimestamp(4, Timestamp.valueOf(dateTo.withNano(0)));
-		Account a = accountDAO.getAccountByAccountName(account);
+		Account a = accountDAO.getAccountByAccountNameAndAccountId(account, userId);
 		statement.setLong(5, a.getAccountId());
 		
 		ResultSet result = statement.executeQuery();

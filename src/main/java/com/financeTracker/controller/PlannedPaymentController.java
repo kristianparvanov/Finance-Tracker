@@ -57,7 +57,7 @@ public class PlannedPaymentController {
 		Set<Account> accounts = new HashSet<Account>();
 		Set<Tag> tags = new HashSet<Tag>();
 		try {
-			plannedPayments = plannedPaymentDAO.getAllPlannedPayments();
+			plannedPayments = plannedPaymentDAO.getAllPlannedPaymentsByUserId(user.getUserId());
 			categories = categoryDao.getAllCategoriesByUserId();
 			ownCategories = categoryDao.getAllCategoriesByUserId(user.getUserId());
 			accounts = accountDAO.getAllAccountsByUserId(user.getUserId());
@@ -111,7 +111,7 @@ public class PlannedPaymentController {
 		
 		Account acc = null;
 		try {
-			acc = accountDAO.getAccountByAccountName(account);
+			acc = accountDAO.getAccountByAccountNameAndAccountId(account, u.getUserId());
 			Category cat = categoryDao.getCategoryByCategoryName(category);
 			PlannedPayment p = new PlannedPayment(name, TransactionType.valueOf(type), newDate, BigDecimal.valueOf(Double.valueOf(amount)), description, acc.getAccountId(), cat.getCategoryId(), tagsSet);
 //			BigDecimal newValue = BigDecimal.valueOf(Double.valueOf(amount));
@@ -208,7 +208,7 @@ public class PlannedPaymentController {
 		
 		Account acc = null;
 		try {
-			acc = accountDAO.getAccountByAccountName(account);
+			acc = accountDAO.getAccountByAccountNameAndAccountId(account, u.getUserId());
 			Category cat = categoryDao.getCategoryByCategoryName(category);
 			PlannedPayment p = new PlannedPayment(name, TransactionType.valueOf(type), newDate, BigDecimal.valueOf(Double.valueOf(amount)), description, acc.getAccountId(), cat.getCategoryId(), tagsSet);
 			p.setPlannedPaymentId(plannedPaymentId);

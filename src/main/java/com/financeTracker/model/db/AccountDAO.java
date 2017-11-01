@@ -244,4 +244,26 @@ public class AccountDAO {
 		
 		return acc;
 	}
+	
+	public Account getAccountByAccountNameAndAccountId(String accountName, long userId) throws SQLException {
+		String query = "SELECT account_id, name, amount, user_id FROM finance_tracker.accounts WHERE accounts.name = ? AND user_id = ?";
+		PreparedStatement statement = dbManager.getConnection().prepareStatement(query);
+		statement.setString(1, accountName);
+		statement.setLong(2, userId);
+		
+		ResultSet res = statement.executeQuery();
+		res.next();
+		
+		long accountId = res.getLong("account_id");
+		String name = res.getString("name");
+		BigDecimal amount = res.getBigDecimal("amount");
+		List<Transaction> transactions = transactionDAO.getAllTransactionsByAccountId(accountId);
+		List<Budget> budgets = budgetDao.getAllBudgetsByAccountId(accountId);
+		List<PlannedPayment> plannedPayments = plannedPaymentDAO.getAllPlannedPaymentsByAccountId(accountId);
+		
+		Account account = new Account(name, amount, userId, transactions, budgets, plannedPayments);
+		account.setAccaountId(accountId);
+		
+		return account;
+	}
 }
