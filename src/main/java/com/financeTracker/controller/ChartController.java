@@ -168,7 +168,6 @@ public class ChartController {
 		try {
 			Map<LocalDate, BigDecimal> defaultTransactions = transactionDAO.getTransactionAmountAndDate(user.getUserId(), 0);
 			
-			
 			Set<Account> accounts = user.getAccounts();
 			BigDecimal allBalance = new BigDecimal(0);
 			for (Account account : accounts) {
@@ -184,7 +183,6 @@ public class ChartController {
 				System.out.println("T AMOUNT: " + transactionAmount);
 				allBalance = allBalance.subtract(transactionAmount);
 				reverseDefaultTransactions.put(date, transactionAmount.add(allBalance));
-				//allBalance = allBalance.add(transactionAmount);
 			}
 			
 			Map<LocalDate, BigDecimal> finalDefaultTransactions = new TreeMap<LocalDate,BigDecimal>();
@@ -232,6 +230,7 @@ public class ChartController {
 		Set<Account> accounts = user.getAccounts();
 		
 		try {
+			Map<LocalDate, BigDecimal> finalDefaultTransactions = new TreeMap<LocalDate,BigDecimal>();
 			if (account.equals("All accounts")) {
 				defaultTransactions = transactionDAO.getTransactionAmountAndDate(user.getUserId(), 0, from, to);
 				
@@ -240,23 +239,41 @@ public class ChartController {
 					allBalance = allBalance.add(acc.getAmount());
 				}
 				
-				for (LocalDate localDate : defaultTransactions.keySet()) {
-					defaultTransactions.put(localDate, defaultTransactions.get(localDate).add(allBalance));
+				Map<LocalDate, BigDecimal> reverseDefaultTransactions = new TreeMap<LocalDate,BigDecimal>(Collections.reverseOrder());
+				reverseDefaultTransactions.putAll(defaultTransactions);
+				System.out.println("REV " + reverseDefaultTransactions);
+				
+				for (LocalDate tdate : reverseDefaultTransactions.keySet()) {
+					BigDecimal transactionAmount = reverseDefaultTransactions.get(tdate);
+					System.out.println("T AMOUNT: " + transactionAmount);
+					allBalance = allBalance.subtract(transactionAmount);
+					reverseDefaultTransactions.put(tdate, transactionAmount.add(allBalance));
 				}
+				
+				finalDefaultTransactions.putAll(reverseDefaultTransactions);
 			} else {
 				long accId = accountDAO.getAccountId(user, account);
 				Account acc = accountDAO.getAccountByAccountId(accId);
+				BigDecimal accVal = acc.getAmount();
 				
 				defaultTransactions = transactionDAO.getTransactionAmountAndDate(user.getUserId(), accId, from, to);
 				
-				for (LocalDate localDate : defaultTransactions.keySet()) {
-					defaultTransactions.put(localDate, defaultTransactions.get(localDate).add(acc.getAmount()));
+				Map<LocalDate, BigDecimal> reverseDefaultTransactions = new TreeMap<LocalDate,BigDecimal>(Collections.reverseOrder());
+				reverseDefaultTransactions.putAll(defaultTransactions);
+				System.out.println("REV " + reverseDefaultTransactions);
+				
+				for (LocalDate tdate : reverseDefaultTransactions.keySet()) {
+					BigDecimal transactionAmount = reverseDefaultTransactions.get(tdate);
+					System.out.println("T AMOUNT: " + transactionAmount);
+					accVal = accVal.subtract(transactionAmount);
+					reverseDefaultTransactions.put(tdate, transactionAmount.add(accVal));
 				}
+				
+				finalDefaultTransactions.putAll(reverseDefaultTransactions);
 			}
 			
-			
 			model.addAttribute("accounts", accounts);
-			model.addAttribute("defaultTransactions", defaultTransactions);
+			model.addAttribute("defaultTransactions", finalDefaultTransactions);
 			model.addAttribute("date", date);
 		} catch (SQLException e) {
 			e.printStackTrace();
