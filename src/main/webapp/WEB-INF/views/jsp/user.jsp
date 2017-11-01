@@ -27,7 +27,7 @@
 		        <div class="box box-primary">
 		            <form role="form" action="editUser" method="post">
 		              <div class="box-body">
-		              	<div class="form-group">
+		                <div class="form-group">
 			                <label>Username</label>
                				<input type="text" id="usrname" class="form-control" name="username" >
                				<c:set var="name" value="${ username }" />

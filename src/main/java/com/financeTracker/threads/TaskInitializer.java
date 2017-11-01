@@ -1,4 +1,4 @@
-package com.financeTracker.controller;
+package com.financeTracker.threads;
 
 import javax.annotation.PostConstruct;
 

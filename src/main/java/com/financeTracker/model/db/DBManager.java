@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 import org.springframework.stereotype.Component;
 
-import com.financeTracker.controller.TaskInitializer;
+import com.financeTracker.threads.TaskInitializer;
 
 @Component
 public class DBManager {
