@@ -32,6 +32,7 @@ import com.financeTracker.model.db.BudgetsHasTransactionsDAO;
 import com.financeTracker.model.db.CategoryDAO;
 import com.financeTracker.model.db.TagDAO;
 import com.financeTracker.model.db.TransactionDAO;
+import com.financeTracker.model.db.UserDAO;
 
 @Controller
 public class BudgetController {
@@ -53,6 +54,9 @@ public class BudgetController {
 	
 	@Autowired
 	private TransactionDAO transactionDAO;
+	
+	@Autowired
+	private UserDAO userDao;
 	
 	@RequestMapping(value="/budgets", method=RequestMethod.GET)
 	public String getAllBudgets(HttpSession session, Model model) {
@@ -141,6 +145,9 @@ public class BudgetController {
 			Budget b = new Budget(name, amount, dateFrom, dateTo, acc.getAccountId(), category.getCategoryId(), tagsSet);
 			
 			budgetDao.insertBudget(b);
+
+			user.setLastFill(LocalDateTime.now());
+			userDao.updateUser(user);
 		} catch (SQLException e) {
 			System.out.println("Nemame smetki mai? :(");
 		}
@@ -215,12 +222,11 @@ public class BudgetController {
 			Budget newBudget = new Budget(name, amount, dateFrom, dateTo, acc.getAccountId(), category.getCategoryId(), tagsSet);
 			newBudget.setBudgetId(budgetId);
 			
-			boolean asd = newBudget.getCategoryId() != oldBudget.getCategoryId() || newBudget.getAccountId() != oldBudget.getAccountId()
+			boolean exist = newBudget.getCategoryId() != oldBudget.getCategoryId() || newBudget.getAccountId() != oldBudget.getAccountId()
 					|| newBudget.getFromDate() != oldBudget.getFromDate() || newBudget.getToDate() != oldBudget.getToDate();
 			
-			System.out.println(asd);
 			
-			if (asd) {
+			if (exist) {
 				
 				Set<Transaction> transactions = budgetsHasTransactionsDAO.getAllTransactionsByBudgetId(budgetId);
 				BigDecimal newAmount = new BigDecimal(0.0);
@@ -259,7 +265,9 @@ public class BudgetController {
 				}
 				
 			}
-			
+
+			user.setLastFill(LocalDateTime.now());
+			userDao.updateUser(user);
 		} catch (SQLException e) {
 			System.out.println("opala");
 			
@@ -315,13 +323,17 @@ public class BudgetController {
 	}
 	
 	@RequestMapping (value ="/budgets/{budgetId}/delete", method = RequestMethod.GET)
-	public String deleteBudget(@PathVariable("budgetId") Long budgetId) {
+	public String deleteBudget(@PathVariable("budgetId") Long budgetId, HttpSession session) {
+		User user = (User) session.getAttribute("user");
 		
 		Budget budget;
 		try {
 			budget = budgetDao.getBudgetByBudgetId(budgetId);
 
 			budgetDao.deleteBudget(budget);
+
+			user.setLastFill(LocalDateTime.now());
+			userDao.updateUser(user);
 		} catch (SQLException e) {
 			System.out.println("Nema iztrivane i tova si e");
 		}

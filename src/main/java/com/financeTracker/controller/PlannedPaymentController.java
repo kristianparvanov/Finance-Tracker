@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.mail.Session;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -27,6 +28,7 @@ import com.financeTracker.model.db.AccountDAO;
 import com.financeTracker.model.db.CategoryDAO;
 import com.financeTracker.model.db.PlannedPaymentDAO;
 import com.financeTracker.model.db.TagDAO;
+import com.financeTracker.model.db.UserDAO;
 
 @Controller
 public class PlannedPaymentController {
@@ -41,6 +43,9 @@ public class PlannedPaymentController {
 	
 	@Autowired
 	private TagDAO tagDAO;
+	
+	@Autowired
+	private UserDAO userDao;
 	
 	@RequestMapping(value="/plannedPayments", method=RequestMethod.GET)
 	public String getAllPlannedPayments(HttpServletRequest request, HttpSession session, Model model) {
@@ -119,6 +124,9 @@ public class PlannedPaymentController {
 //				accountDAO.updateAccountAmount(acc, (oldValue.add(newValue)));
 //			}
 			plannedPaymentDAO.insertPlannedPayment(p);
+			
+			u.setLastFill(LocalDateTime.now());
+			userDao.updateUser(u);
 		} catch (SQLException e) {
 			System.out.println("Could not add planned payment");
 			e.printStackTrace();
@@ -171,6 +179,7 @@ public class PlannedPaymentController {
 	
 	@RequestMapping(value="/payment/editPlannedPayment", method=RequestMethod.POST)
 	public String postEditPlannedPayment(HttpServletRequest request, HttpSession session, Model model) {
+		
 		String name = request.getParameter("name");
 		String type = request.getParameter("type");
 		String account = request.getParameter("account");
@@ -213,6 +222,9 @@ public class PlannedPaymentController {
 //			}
 			tagDAO.deleteAllTagsForPlannedPayment(plannedPaymentId);
 			plannedPaymentDAO.updatePlannedPayment(p);
+			
+			u.setLastFill(LocalDateTime.now());
+			userDao.updateUser(u);
 		} catch (SQLException e) {
 			System.out.println("Could not edit planned payment");
 			e.printStackTrace();
@@ -221,10 +233,15 @@ public class PlannedPaymentController {
 	}
 	
 	@RequestMapping(value="/payment/deletePlannedPayment/{plannedPaymentId}", method=RequestMethod.POST)
-	public String deletePlannedPayment(@PathVariable("plannedPaymentId") Long plannedPaymentId) {
+	public String deletePlannedPayment(@PathVariable("plannedPaymentId") Long plannedPaymentId, HttpSession session) {
+		User user = (User) session.getAttribute("user");
+		
 		try {
 			tagDAO.deleteAllTagsForPlannedPayment(plannedPaymentId);
 			plannedPaymentDAO.deletePlannedPayment(plannedPaymentId);
+			
+			user.setLastFill(LocalDateTime.now());
+			userDao.updateUser(user);
 		} catch (SQLException e) {
 			System.out.println("Could not delete planned payment");
 			e.printStackTrace();

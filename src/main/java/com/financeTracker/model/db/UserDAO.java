@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 
 import org.apache.commons.codec.digest.DigestUtils;
@@ -49,7 +51,7 @@ public class UserDAO {
 			return;
 		}
 		
-		String sql = "SELECT user_id, username, password, email, first_name, last_name FROM users";
+		String sql = "SELECT user_id, username, password, email, first_name, last_name, last_fill FROM users";
 		
 		PreparedStatement ps = dbManager.getConnection().prepareStatement(sql);
 		ResultSet res = ps.executeQuery();
@@ -61,28 +63,21 @@ public class UserDAO {
 			String firstName = res.getString("first_name");
 			String lastName = res.getString("last_name");
 			Long userId = Long.valueOf(res.getLong("user_id"));
+			LocalDateTime lastFill = res.getTimestamp("last_fill").toLocalDateTime();
 			Set<Account> accounts = accountDAO.getAllAccountsByUserId(userId);
 			Set<Category> ownCategories = categoryDao.getAllCategoriesByUserId(userId);
 			Set<Tag> tags = tagDAO.getAllTagsByUserId(userId);
 			
-			User user = new User(userName, password, email, firstName, lastName, accounts, ownCategories, tags);
+			User user = new User(userName, password, email, firstName, lastName, accounts, ownCategories, tags, lastFill);
 			user.setUserId(userId);
 			
 			ALL_USERS.put(userName, user);
 		}
 	}
 
-	/*public static synchronized UserDAO getInstance() throws SQLException {
-		if (instance == null) {
-			instance = new UserDAO();
-		}
-		
-		return instance;
-	}*/
-	
 	public synchronized void insertUser(User u) throws SQLException {
 		Connection con = dbManager.getConnection();
-		PreparedStatement ps = con.prepareStatement("INSERT INTO users (username, password, email, first_name, last_name) "
+		PreparedStatement ps = con.prepareStatement("INSERT INTO users (username, password, email, first_name, last_name, last_fill) "
 														+ "VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 		
 		ps.setString(1, u.getUserName());
@@ -90,6 +85,7 @@ public class UserDAO {
 		ps.setString(3, u.getEmail());
 		ps.setString(4, u.getFirstName());
 		ps.setString(5, u.getLastName());
+		ps.setTimestamp(6, Timestamp.valueOf(LocalDateTime.now().withNano(0)));
 		ps.executeUpdate();
 		
 		ResultSet res = ps.getGeneratedKeys();
@@ -98,6 +94,21 @@ public class UserDAO {
 		u.setUserId(res.getLong(1));
 		
 		ALL_USERS.put(u.getUserName(), u);
+	}
+	
+	public synchronized void updateUser(User user) throws SQLException {
+		String sql = "UPDATE users SET email = ?, first_name = ?, last_name = ?, "
+				+ "last_fill = STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s') WHERE user_id = ?;";
+		
+		PreparedStatement ps = dbManager.getConnection().prepareStatement(sql);
+		ps.setString(1, user.getEmail());
+		ps.setString(2, user.getFirstName());
+		ps.setString(3, user.getLastName());
+		ps.setTimestamp(4, Timestamp.valueOf(user.getLastFill().withNano(0)));
+		ps.setLong(5, user.getUserId());
+		ps.executeUpdate();
+		
+		ALL_USERS.put(user.getUserName(), user);
 	}
 	
 	public synchronized User getUserByUserId(int userId) {
