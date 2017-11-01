@@ -23,6 +23,10 @@
 	</div>
 	
 	<div class="content-wrapper">
+		<div class="login-logo">
+	    	<h1 style="color: black;">Welcome to the <b>Finance</b>Tracker</h1>
+	  	</div>
+	
 		 <section class="content-header">
 			<h2>Current balance across all accounts: <c:out value="${ balance }"></c:out></h2>
 			<h1>All accounts</h1>
@@ -84,42 +88,42 @@
 			</div>
 			
 			<div>
-				<c:set var="transactions" value="${ transactionsValues }" />
-			    <c:set var="transactionsCategories" value="${ transactionsCategories }" />
+				<c:set var="defaultTransactions" value="${ defaultTransactions }" />
 			    
-				<div style="width:60%;">
-			        <canvas id="canvas"></canvas>
+			    <div >
+			    	<canvas id="canvas" style="display: block; width: 80%; height: 20%;" width="80%" height="20%" class="chartjs-render-monitor"></canvas>
 			    </div>
 			    
 				<script>
 					var presets = window.chartColors;
 					var utils = Samples.utils;
-					var values = '${transactions}';
-					var dates = '${transactionsDates}';
+					var values = '${defaultTransactions}';
 					
-					values = values.replace(/[\[\]']+/g,'')
-					dates = dates.replace(/[\[\]']+/g,'')
+					values = values.replace(/[\{\}']+/g,'')
 					
-					var allTrans = [];
+					var dates = [];
+					var amounts = [];
+					var keyValue = [];
 					$.each(values.split(","), function(i,e){
-						allTrans.push(e);
+						keyValue.push(e);
 					});
 					
-					var allDates = [];
-					$.each(dates.split(","), function(i,e){
-						allDates.push(e);
-					});
+					for (var i = 0; i < keyValue.length; i++) {
+						var kv = keyValue[i].split("=");
+						dates.push(kv[0]);
+						amounts.push(kv[1]);
+					}
 					
 					var MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 				    var config = {
 				        type: 'line',
 				        data: {
-				            labels: allDates,
+				            labels: dates,
 				            datasets: [{
-				                label: "Cashflow",
+				                label: "Overall Cashflow",
 				                backgroundColor: utils.transparentize(presets.blue),
 				                borderColor: window.chartColors.blue,
-				                data: allTrans,
+				                data: amounts,
 				                fill: true,
 				            }]
 				        },

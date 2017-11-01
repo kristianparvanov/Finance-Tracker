@@ -3,12 +3,9 @@ package com.financeTracker.controller;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.text.NumberFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import java.time.LocalDate;
+import java.util.Collections;
+import java.util.Map;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -22,8 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.financeTracker.model.Account;
-import com.financeTracker.model.Transaction;
-import com.financeTracker.model.TransactionType;
 import com.financeTracker.model.User;
 import com.financeTracker.model.db.AccountDAO;
 import com.financeTracker.model.db.TransactionDAO;
@@ -121,43 +116,26 @@ public class UserController {
 		}
 		String balance = NumberFormat.getCurrencyInstance().format(allBalance);
 		
-		List<Transaction> allTransactions = null;
 		try {
-			allTransactions = transactionDAO.getAllTransactionsByUserId(u.getUserId());
+			Map<LocalDate, BigDecimal> defaultTransactions = transactionDAO.getTransactionAmountAndDate(u.getUserId(), 0);
+			
+			Map<LocalDate, BigDecimal> reverseDefaultTransactions = new TreeMap<LocalDate,BigDecimal>(Collections.reverseOrder());
+			reverseDefaultTransactions.putAll(defaultTransactions);
+			
+			for (LocalDate date : reverseDefaultTransactions.keySet()) {
+				BigDecimal transactionAmount = reverseDefaultTransactions.get(date);
+				allBalance = allBalance.subtract(transactionAmount);
+				reverseDefaultTransactions.put(date, transactionAmount.add(allBalance));
+			}
+			
+			Map<LocalDate, BigDecimal> finalDefaultTransactions = new TreeMap<LocalDate,BigDecimal>();
+			finalDefaultTransactions.putAll(reverseDefaultTransactions);
+			
+			viewModel.addAttribute("defaultTransactions", finalDefaultTransactions);
 		} catch (SQLException e) {
-			System.out.println("Could not get all transactions for this user");
 			e.printStackTrace();
 		}
 		
-		TreeMap<LocalDateTime, BigDecimal> allTransactionsValues = new TreeMap<LocalDateTime, BigDecimal>(new Comparator<LocalDateTime>() {
-			@Override
-			public int compare(LocalDateTime d1, LocalDateTime d2) {
-				return d1.compareTo(d2);
-			}
-		});
-		TreeMap<LocalDateTime, String> allTransactionsDates = new TreeMap<LocalDateTime, String>(new Comparator<LocalDateTime>() {
-			@Override
-			public int compare(LocalDateTime d1, LocalDateTime d2) {
-				return d1.compareTo(d2);
-			}
-		});
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		for (Transaction t : allTransactions) {
-			if (t.getType().equals(TransactionType.EXPENCE)) {
-				allTransactionsValues.put(t.getDate(), allBalance.add(t.getAmount().negate()));
-			} else {
-				allTransactionsValues.put(t.getDate(), allBalance.add(t.getAmount()));
-			}
-			allTransactionsDates.put(t.getDate(), t.getDate().format(formatter));
-				
-		}
-		List<String>allTransactionsDatesList = new ArrayList<>();
-		List<BigDecimal>allTransactionsValuesList = new ArrayList<>();
-		allTransactionsDatesList.addAll(allTransactionsDates.values());
-		allTransactionsValuesList.addAll(allTransactionsValues.values());
-		
-		viewModel.addAttribute("transactionsDates", allTransactionsDatesList);
-		viewModel.addAttribute("transactionsValues", allTransactionsValuesList);
 		viewModel.addAttribute("balance", balance);
 		return "main";
 	}
