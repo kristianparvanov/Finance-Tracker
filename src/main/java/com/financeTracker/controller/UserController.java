@@ -1,6 +1,7 @@
 package com.financeTracker.controller;
 
 import java.math.BigDecimal;
+import java.security.MessageDigest;
 import java.sql.SQLException;
 import java.text.NumberFormat;
 import java.time.LocalDate;
@@ -12,9 +13,11 @@ import java.util.TreeSet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -67,26 +70,24 @@ public class UserController {
 	}
 	
 	@RequestMapping(value="/register", method=RequestMethod.POST)
-	public String register(HttpServletRequest request, HttpSession session, Model viewModel) {
-		String username = request.getParameter("username");
-		String password = request.getParameter("password");
+	public String register(@ModelAttribute("user") User user, HttpServletRequest request, HttpSession session, Model viewModel) {
 		String repeatPassword = request.getParameter("repeatPassword");
-		String email = request.getParameter("email");
-		String firstName = request.getParameter("firstName");
-		String lastName = request.getParameter("lastName");
 		
-		if(!password.equals(repeatPassword)){
+		if(!MessageDigest.isEqual(DigestUtils.sha512(repeatPassword), user.getPassword())){
 			request.setAttribute("error", "passwords missmatch");
+			
 			return "register";
 		}
 		
 		try {
-			if (!userDAO.existsUser(username)) {
-				User u = new User(username, password, email, firstName, lastName);
+			if (!userDAO.existsUser(user.getUsername())) {
 				
-				userDAO.insertUser(u);
-				session.setAttribute("user", u);
-				EmailSender.sendSimpleEmail(email, "Welcome to the Finance Tracker", "Your new profile is ready. Track away!");
+				userDAO.insertUser(user);
+				
+				session.setAttribute("user", user);
+				
+				EmailSender.sendSimpleEmail(user.getEmail(), "Welcome to the Finance Tracker", "Your new profile is ready. Track away!");
+				
 				return "main";
 			}
 		} catch (SQLException e) {
@@ -144,7 +145,11 @@ public class UserController {
 	}
 	
 	@RequestMapping(value="/register", method=RequestMethod.GET)
-	public String getRegister() {
+	public String getRegister(Model m) {
+		User user = new User();
+		
+		m.addAttribute("user", user);
+		
 		return "register";
 	}
 	
@@ -163,7 +168,7 @@ public class UserController {
 	public String user(HttpSession session, Model model) {
 		User u =  (User) session.getAttribute("user");
 		
-		String username = u.getUserName();
+		String username = u.getUsername();
 		String email = u.getEmail();
 		String firstName = u.getFirstName();
 		String lastName = u.getLastName();

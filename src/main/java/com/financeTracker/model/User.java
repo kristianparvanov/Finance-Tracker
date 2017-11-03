@@ -44,16 +44,20 @@ public class User {
 		this.lastFill = lastFill;
 	}
 
+	public User() {
+		
+	}
+	
 	public long getUserId() {
 		return userId;
 	}
 	
-	public String getUserName() {
+	public String getUsername() {
 		return username;
 	}
 
 	public byte[] getPassword() {
-		return password.clone();
+		return password;
 	}
 
 	public String getEmail() {
@@ -102,6 +106,14 @@ public class User {
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public void setPassword(String password) {
+		this.password = DigestUtils.sha512(password);
 	}
 	
 }

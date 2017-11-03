@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+    <%@taglib uri = "http://www.springframework.org/tags/form" prefix = "f"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -29,29 +30,29 @@
   <div class="register-box-body" style="box-shadow: 0px 0px 15px black">
     <p class="login-box-msg" style="font-size: 18px">Register a new membership</p>
 
-    <form action="register" method="post">
+    <f:form action="register" method="POST" commandName="user">
       <div class="form-group has-feedback">
-        <input type="text" class="form-control" placeholder="Username" name="username">
+        <f:input type="text" class="form-control" placeholder="Username" required="" path="username" />
         <span class="glyphicon glyphicon-user form-control-feedback"></span>
       </div>
       <div class="form-group has-feedback">
-        <input type="password" class="form-control" placeholder="Password" name="password">
+        <f:input type="password" class="form-control" placeholder="Password" required="" path="password" />
         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
       </div>
       <div class="form-group has-feedback">
-        <input type="password" class="form-control" placeholder="Retype password" name="repeatPassword">
+        <input type="password" class="form-control" placeholder="Retype password"  name="repeatPassword" required="">
         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
       </div>
       <div class="form-group has-feedback">
-        <input type="email" class="form-control" placeholder="Email" name="email">
+        <f:input type="email" class="form-control" placeholder="Email" required="" path="email" />
         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
       </div>
         <div class="form-group has-feedback">
-        <input type="text" class="form-control" placeholder="First Name" name="firstName">
+        <f:input type="text" class="form-control" placeholder="First Name" required="" path="firstName" />
         <span class="glyphicon glyphicon-user form-control-feedback"></span>
       </div>
        <div class="form-group has-feedback">
-        <input type="text" class="form-control" placeholder="Last Name" name="lastName">
+        <f:input type="text" class="form-control" placeholder="Last Name" required="" path="lastName" />
         <span class="glyphicon glyphicon-user form-control-feedback"></span>
       </div>
       <div class="row">
@@ -59,7 +60,7 @@
           <button type="submit" class="btn btn-primary btn-block btn-flat">Register</button>
         </div>
       </div>
-    </form>
+    </f:form>
     <br>
     I am already registered. <a href="login" class="text-center">Log me in</a>
   </div>

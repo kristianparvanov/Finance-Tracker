@@ -63,6 +63,34 @@ public class Account {
 		this.accountId = accaountID;
 	}
 
+	public void setAccountId(long accountId) {
+		this.accountId = accountId;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setAmount(BigDecimal amount) {
+		this.amount = amount;
+	}
+
+	public void setUserID(long userID) {
+		this.userID = userID;
+	}
+
+	public void setTransactions(List<Transaction> transactions) {
+		this.transactions = transactions;
+	}
+
+	public void setBudgets(List<Budget> budgets) {
+		this.budgets = budgets;
+	}
+
+	public void setPlannedPayments(List<PlannedPayment> plannedPayments) {
+		this.plannedPayments = plannedPayments;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
