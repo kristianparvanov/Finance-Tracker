@@ -3,15 +3,31 @@ package com.financeTracker.model;
 import java.util.Collections;
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.NotEmpty;
+
 public class Category {
 
 	private long categoryId;
+	
+	@NotNull
+	@Size(min = 2, max = 30)
+	@NotEmpty
+	@Pattern(regexp="[^\\s]+")
 	private String name;
+	
 	private TransactionType type;
 	private Long userId;
 	private List<Transaction> transactions;
 	private List<Budget> budgets;
 	private List<PlannedPayment> plannedPayments;
+	
+	public Category() {
+		
+	}
 	
 	public Category(String name, TransactionType type , Long userId, List<Transaction> transactions, List<Budget> budgets, List<PlannedPayment> plannedPayments) {
 		this.name = name;
@@ -53,6 +69,26 @@ public class Category {
 	
 	public void setCategoryID(long categoryID) {
 		this.categoryId = categoryID;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setType(TransactionType type) {
+		this.type = type;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
+
+	public void setTransactions(List<Transaction> transactions) {
+		this.transactions = transactions;
+	}
+
+	public void setPlannedPayments(List<PlannedPayment> plannedPayments) {
+		this.plannedPayments = plannedPayments;
 	}
 
 	@Override
