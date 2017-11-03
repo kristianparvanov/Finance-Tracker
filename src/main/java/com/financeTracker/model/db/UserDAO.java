@@ -110,6 +110,7 @@ public class UserDAO {
 		res.next();
 		
 		u.setUserId(res.getLong(1));
+		u.setPassword(DigestUtils.sha512Hex(u.getPassword()));
 		
 		ALL_USERS.put(u.getUsername(), u);
 	}
