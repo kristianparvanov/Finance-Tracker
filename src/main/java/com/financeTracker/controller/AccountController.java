@@ -38,8 +38,8 @@ public class AccountController {
 		if (bindingResult.hasErrors()) {
 			viewModel.addAttribute("error", "Could not create account. Please, enter a valid name and amount!");
 			
-	            return "addAccount";
-		 	}
+			return "addAccount";
+	 	}
 		
 		User user = (User) request.getSession().getAttribute("user");
 		try {

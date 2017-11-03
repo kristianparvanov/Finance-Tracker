@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
     <%@taglib uri = "http://www.springframework.org/tags/form" prefix = "f"%>
+    <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -31,6 +32,9 @@
     <p class="login-box-msg" style="font-size: 18px">Register a new membership</p>
 
     <f:form action="register" method="POST" commandName="user">
+    	<c:if test="${register!=null}">
+		 <label style="color: red"><c:out value="${register}"/></label>
+	  	</c:if>
       <div class="form-group has-feedback">
         <f:input type="text" class="form-control" placeholder="Username" required="" path="username" />
         <span class="glyphicon glyphicon-user form-control-feedback"></span>
