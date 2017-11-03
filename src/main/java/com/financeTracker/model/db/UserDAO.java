@@ -130,6 +130,21 @@ public class UserDAO {
 		ALL_USERS.put(user.getUsername(), user);
 	}
 	
+	public synchronized void updateUserPassword(User user, String password) throws SQLException {
+		String sql = "UPDATE users SET password = ? WHERE user_id = ?;";
+		
+		String pass = DigestUtils.sha512Hex(DigestUtils.sha512(password));
+		
+		PreparedStatement ps = dbManager.getConnection().prepareStatement(sql);
+		ps.setString(1, pass);
+		ps.setLong(2, user.getUserId());
+		ps.executeUpdate();
+		
+		user.setPassword(pass);
+		
+		ALL_USERS.put(user.getUsername(), user);
+	}
+	
 	public synchronized User getUserByUserId(int userId) {
 		if (!ALL_USERS.isEmpty()) {
 			for (User u : ALL_USERS.values()) {
@@ -190,9 +205,44 @@ public class UserDAO {
 		
 		if (ALL_USERS.containsKey(username)) {
 			User user = ALL_USERS.get(username);
+			
 			return MessageDigest.isEqual(hashedPassword, user.getPassword());
 		}
 		
 		return false;
+	}
+
+	public boolean existEmail(String email) throws SQLException {
+		String sql = "SELECT count(*) as count FROM users WHERE email = ?;";
+		
+		PreparedStatement ps = dbManager.getConnection().prepareStatement(sql);
+		ps.setString(1, email);
+		
+		ResultSet res = ps.executeQuery();
+		res.next();
+		
+		return res.getInt("count") > 0;
+	}
+
+	public User getUserByEmail(String email) throws SQLException {
+		String sql = "SELECT user_id, username, password, first_name, last_name, last_fill FROM users WHERE email = ?;";
+		
+		PreparedStatement ps = dbManager.getConnection().prepareStatement(sql);
+		ps.setString(1, email);
+		
+		ResultSet res = ps.executeQuery();
+		res.next();
+		
+		String username = res.getString("username");
+		String password = res.getString("password");
+		String firstName = res.getString("first_name");
+		String lastName = res.getString("last_name");
+		long userId = res.getLong("user_id");
+		LocalDateTime lastFill = res.getTimestamp("last_fill").toLocalDateTime();
+		
+		User user = new User(username, password, email, firstName, lastName, null, null, null, lastFill);
+		user.setUserId(userId);
+		
+		return user;
 	}
 }

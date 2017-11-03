@@ -237,4 +237,67 @@ public class UserController {
 		
 		return "redirect:/main";
 	}
+	
+	@RequestMapping(value = "/forgottenPassword", method = RequestMethod.GET)
+	public String forgottenPassword() {
+		return "forgottenPassword";
+	}
+	
+	@RequestMapping(value = "/forgottenPassword", method = RequestMethod.POST)
+	public String sendEmail(HttpServletRequest request, Model model, HttpSession session) {
+		String email = request.getParameter("email");
+		
+		try {
+			if (userDAO.existEmail(email)) {
+				User user = userDAO.getUserByEmail(email);
+				
+				EmailSender.sendSimpleEmail(email, "FT ZABRAVENA PAROLA", "MAIKA TI! NA TI USERNAMEa" + user.getUsername() + "EI tuka nátisni :)" + "<a href=\"http://localhost:8080/FinanceTracker/resetPassword\">EI tuka nátisni :)</a>");
+			} else {
+				model.addAttribute("forgottenPassword", "Invalid email :(");
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			
+			return "error500";
+		}
+		
+		return "forgottenPassword";
+	}
+	
+	@RequestMapping(value = "/resetPassword", method = RequestMethod.GET)
+	public String resetPassword(Model model) {
+		return "resetPassword";
+	}
+	
+	@RequestMapping(value = "/resetPassword", method = RequestMethod.POST)
+	public String getNewPassword(HttpServletRequest request, Model model) {
+		String username = request.getParameter("username");
+		String password = request.getParameter("password");
+		String repeatPassword = request.getParameter("repeatPassword");
+		
+		
+		try {
+			if (userDAO.existsUser(username) && password.equals(repeatPassword)) {
+				User user = userDAO.getUser(username);
+//				user.setPassword(password);
+				
+//				userDAO.updateUser(user);
+				
+				userDAO.updateUserPassword(user, password);
+			} else {
+				model.addAttribute("ressetPassword", "Enter valid date");
+			}
+			
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			
+			return "error500";
+		}
+		
+		User user = new User();
+		
+		model.addAttribute("user", user);
+		
+		return "login";
+	}
 }
