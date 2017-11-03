@@ -20,16 +20,32 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.financeTracker.model.Account;
 import com.financeTracker.model.User;
 import com.financeTracker.model.db.AccountDAO;
 import com.financeTracker.model.db.TransactionDAO;
 import com.financeTracker.model.db.UserDAO;
+import com.financeTracker.threads.EmailService;
+import com.financeTracker.threads.PlannedPaymentService;
 import com.financeTracker.util.EmailSender;
 
 @Controller
 public class UserController {
+	
+	@Autowired
+	private PlannedPaymentService paymentService;
+
+
+	@Autowired
+	public UserController(EmailService emailService) {
+		System.out.println("Services started!");
+		Thread t = new Thread(emailService);
+		t.setDaemon(true);
+		t.start();
+	}
+	
 	@Autowired
 	private UserDAO userDAO;
 	
@@ -42,21 +58,25 @@ public class UserController {
 	@RequestMapping(value="/index", method=RequestMethod.GET)
 	public String welcome(HttpSession session, Model viewModel) {
 		if(session.getAttribute("user") == null){
+			User user = new User();
+			viewModel.addAttribute("user", user);
+			//return new ModelAndView("login", "user", new User());
 			return "login";
 		}
 		else{
+			//return new ModelAndView("main");
 			return "redirect:main";
 		}
 	}
 	
 	@RequestMapping(value="/login", method=RequestMethod.POST)
-	public String login(HttpServletRequest request, HttpSession session, Model viewModel) {
-		String username = request.getParameter("username");
+	public String login(HttpServletRequest request, HttpSession session, Model viewModel, @ModelAttribute("user") User user) {
+//		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 		
 		try {
-			if (userDAO.isValidLogin(username, password)) {
-				User u = userDAO.getUser(username);
+			if (userDAO.isValidLogin(user.getUsername(), password)) {
+				User u = userDAO.getUser(user.getUsername());
 				session.setAttribute("user", u);
 				return "redirect:main";
 			}

@@ -14,7 +14,7 @@ import com.financeTracker.model.db.UserDAO;
 import com.financeTracker.util.EmailSender;
 
 @Component
-public class EmailService extends Thread {
+public class EmailService implements Runnable {
 
 	@Autowired
 	private UserDAO userDao;

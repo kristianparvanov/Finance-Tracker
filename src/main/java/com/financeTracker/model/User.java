@@ -20,6 +20,9 @@ public class User {
 	private Set<Category> ownCategories;
 	private Set<Tag> tags;
 	
+	public User() {
+	}
+	
 	public User(String username, String password, String email, String firstName, String lastName, Set<Account> accounts, 
 			Set<Category> ownCategories, Set<Tag> tags, LocalDateTime lastFill) {
 		this.username = username;
@@ -116,4 +119,11 @@ public class User {
 		this.password = DigestUtils.sha512(password);
 	}
 	
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	
+	public void setPassword(byte[] password) {
+		this.password = password;
+	}
 }

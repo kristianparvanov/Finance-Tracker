@@ -6,7 +6,6 @@ import java.sql.SQLException;
 
 import org.springframework.stereotype.Component;
 
-import com.financeTracker.threads.TaskInitializer;
 
 @Component
 public class DBManager {
@@ -25,10 +24,6 @@ public class DBManager {
         } catch (SQLException e) {
             System.out.println("Unable to connect to database: " + e.getMessage());
         }
-        
-        TaskInitializer t = new TaskInitializer();
-        t.setDaemon(true);
-        t.start();
     }
     
     public Connection getConnection() {

@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+<%@ taglib prefix="f" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -29,7 +30,7 @@
 	  <div class="login-box-body" style="box-shadow: 0px 0px 15px black">
 	    <p class="login-box-msg" style="font-size: 18px">Sign in to start your session</p>
 	
-	    <form action="login" method="post">
+	    <%-- <form action="login" method="post">
 	      <div class="form-group has-feedback">
 	        <input type="text" class="form-control" placeholder="Username" name="username">
 	        <span class="glyphicon glyphicon-user form-control-feedback"></span>
@@ -43,7 +44,24 @@
 	          <button type="submit" class="btn btn-primary btn-block btn-flat" >Sign In</button>
 	        </div>
 	      </div>
-	    </form>
+	    </form> --%>
+	    
+	    <f:form commandName="user" method="post" action="login">
+	      <div class="form-group has-feedback">
+	        <f:input cssClass="form-control" path="username" placeholder="Username"/>
+	        <span class="glyphicon glyphicon-user form-control-feedback"></span> 
+	      </div>
+	      <div class="form-group has-feedback">
+	        <f:password cssClass="form-control" path="password" placeholder="Password"/>
+	        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+	      </div>
+	      <div class="row">
+	        <div class="col-xs-4">
+	          <button type="submit" class="btn btn-primary btn-block btn-flat" >Sign In</button>
+	        </div>
+	      </div>
+	    </f:form>
+	    
 	    <br>
 	    <a href="https://adminlte.io/themes/AdminLTE/pages/examples/login.html#">I forgot my password</a><br>
    		<a href="register" class="text-center">Register a new membership</a>

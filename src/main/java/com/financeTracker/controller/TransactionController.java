@@ -286,6 +286,15 @@ public class TransactionController {
 		try {
 			t = transactionDAO.getTransactionByTransactionId(transactionId);
 			
+//			BigDecimal newValue = t.getAmount();
+//			BigDecimal oldValue = accountDAO.getAmountByAccountId(t.getAccount());
+//			if (t.getType().equals("EXPENCE")) {
+//				accountDAO.updateAccountAmount(t.getAccount(), (oldValue.subtract(newValue)));
+//			} else 
+//			if (t.getType().equals("INCOME")) {
+//				accountDAO.updateAccountAmount(t.getAccount(), (oldValue.add(newValue)));
+//			}
+			
 			transactionDAO.deleteTransaction(t);
 			
 			user.setLastFill(LocalDateTime.now());
