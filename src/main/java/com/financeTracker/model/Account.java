@@ -1,22 +1,38 @@
 package com.financeTracker.model;
 
 import java.math.BigDecimal;
-import java.util.Set;
+
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.NotEmpty;
+
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 
 public class Account {
 
 	private long accountId;
+	
+	@NotNull
+	@Size(min = 2, max = 30)
+	@NotEmpty
+	@Pattern(regexp="[^\\s]+")
 	private String name;
+	
+	@NotNull
+	@Min(0)
 	private BigDecimal amount;
+	
 	private long userID;
 	private List<Transaction> transactions;
 	private List<Budget> budgets;
 	private List<PlannedPayment> plannedPayments;
 	
+	public Account() {}
 	
 	public Account(String name, BigDecimal amount, long userID, List<Transaction> transactions, List<Budget> budgets, List<PlannedPayment> plannedPayments) {
 		this.name = name;
@@ -68,7 +84,7 @@ public class Account {
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		this.name = name.trim();
 	}
 
 	public void setAmount(BigDecimal amount) {
@@ -144,5 +160,10 @@ public class Account {
 		if (userID != other.userID)
 			return false;
 		return true;
+	}
+	
+	@Override
+	public String toString() {
+		return name + " " + amount.toString();
 	}
 }

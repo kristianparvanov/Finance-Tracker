@@ -6,6 +6,7 @@
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/functions" prefix = "fn" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@taglib uri = "http://www.springframework.org/tags/form" prefix = "f"%>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -25,22 +26,25 @@
 		<section class="content">
 			<div class="col-md-6">
 		        <div class="box box-primary">
-		            <form role="form" action="addAccount" method="post">
+		            <f:form action="addAccount" method="POST" commandName="account">
 		              <div class="box-body">
+			              <c:if test="${error!=null}">
+							<label style="color: red"><c:out value="${error}"/></label>
+						  </c:if>
 		                <div class="form-group">
 		                  <label>Account name</label>
-		                  <input type="text" class="form-control" placeholder="Name" name="name">
+		                  <f:input type="text" cssClass="form-control" placeholder="Name" path="name" />
 		                </div>
 		                <div class="form-group">
 		                  <label>Initial value</label>
-		                  <input type="text" class="form-control" placeholder="Amount" name="amount">
+		                  <f:input type="text" cssClass="form-control" placeholder="Amount" path="amount" />
 		                </div>
 		              </div>
 		              <div class="box-footer">
 		                <button type="submit" class="btn btn-primary">Save</button>
 		                <a href="main" class="btn btn-default">Cancel</a>
 		              </div>
-		            </form>
+		            </f:form>
 	          	</div>
         	</div>
 		</section>
