@@ -5,12 +5,11 @@ import java.sql.SQLException;
 import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import javax.mail.Session;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +32,7 @@ import com.financeTracker.model.db.CategoryDAO;
 import com.financeTracker.model.db.TagDAO;
 import com.financeTracker.model.db.TransactionDAO;
 import com.financeTracker.model.db.UserDAO;
+
 
 @Controller
 @RequestMapping(value="/account")
@@ -78,8 +78,7 @@ public class TransactionController {
 			allCategories.addAll(ownCategories);
 			tags = tagDAO.getAllTagsByUserId(user.getUserId());
 		} catch (SQLException e) {
-			System.out.println("Something horrible happened to the DB");
-			e.printStackTrace();
+			return "error500";
 		}
 		
 		String balance = NumberFormat.getCurrencyInstance().format(accountBalance);
@@ -135,8 +134,6 @@ public class TransactionController {
 			u.setLastFill(LocalDateTime.now());
 			userDao.updateUser(u);
 		} catch (SQLException e) {
-			System.out.println("Something horrible happened to the DB");
-			e.printStackTrace();
 			return "error500";
 		}
 		request.setAttribute("user", u);
@@ -171,8 +168,7 @@ public class TransactionController {
 			model.addAttribute("editTransactionTags", tagNames);
 			session.setAttribute("transactionId", transactionId);
 		} catch (SQLException e) {
-			System.out.println("Could not extract transaction from database");
-			e.printStackTrace();
+			return "error500";
 		}
 		
 		return "editTransaction";
@@ -227,8 +223,7 @@ public class TransactionController {
 			u.setLastFill(LocalDateTime.now());
 			userDao.updateUser(u);
 		} catch (SQLException e) {
-			System.out.println("Something horrible happened to the DB");
-			e.printStackTrace();
+			return "error500";
 		}
 		return "redirect:/account/" + acc.getAccountId();
 	}
@@ -296,8 +291,7 @@ public class TransactionController {
 			user.setLastFill(LocalDateTime.now());
 			userDao.updateUser(user);
 		} catch (SQLException e) {
-			System.out.println("Could not delete transaction");
-			e.printStackTrace();
+			return "error500";
 		}
 		
 		return "redirect:/account/" + t.getAccount();
@@ -305,14 +299,13 @@ public class TransactionController {
 	
 	@ResponseBody
 	@RequestMapping(value="/getCategory/{type}", method=RequestMethod.GET)
-	public Set<String> getIncomeCategories(HttpSession session, @PathVariable("type") String type) {
+	public Set<String> getIncomeCategories(HttpSession session, @PathVariable("type") String type, HttpServletResponse response) {
 		User user = (User) session.getAttribute("user");
 		Set<String> categories = null;
 		try {
 			categories = categoryDao.getAllCategoriesByType(user.getUserId(), type);
 		} catch (SQLException e) {
-			System.out.println("Could not get all categories by type");
-			e.printStackTrace();
+			response.setStatus(500);
 		}
 		
 		return categories;

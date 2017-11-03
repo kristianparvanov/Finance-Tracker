@@ -46,7 +46,7 @@ public class ReportController {
 			categories.addAll(categoryDao.getAllCategoriesByUserId(user.getUserId()));
 			categories.addAll(categoryDao.getAllCategoriesByUserId());
 		} catch (SQLException e) {
-			System.out.println("mai nemame kategoriiki?");
+			return "error500";
 		}
 		
 		for (Account acc : user.getAccounts()) {
@@ -95,7 +95,7 @@ public class ReportController {
 		try {
 			transactions.addAll(transactionDao.getFilteredTransactions(accountDao.getAccountId(user, accName), type, categoryDao.getCategoryByCategoryName(categoryName).getCategoryId(), from, to));
 		} catch (SQLException e) {
-			System.out.println("ops");
+			return "error500";
 		}
 		
 		for (Transaction transaction : transactions) {

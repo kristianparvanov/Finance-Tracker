@@ -54,7 +54,7 @@ public class ChartController {
 			accounts = accountDAO.getAllAccountsByUserId(u.getUserId());
 			transactionCategories = transactionDAO.getAllCategoriesAndTheirAmountsByUserId(u.getUserId(), "EXPENCE");
 		} catch (SQLException e) {
-			e.printStackTrace();
+			return "error500";
 		}
 		
 		model.addAttribute("accounts", accounts);
@@ -91,7 +91,7 @@ public class ChartController {
 			accounts = accountDAO.getAllAccountsByUserId(u.getUserId());
 			transactions = transactionDAO.getAllTransactionsByUserDateTypeAccount(u.getUserId(), dateFrom, dateTo, type, account);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			return "error500";
 		}
 		
 		model.addAttribute("accounts", accounts);
@@ -110,7 +110,7 @@ public class ChartController {
 			model.addAttribute("transactions", transactions);
 			model.addAttribute("accounts", user.getAccounts());
 		} catch (SQLException e) {
-			System.out.println("opa");
+			return "error500";
 		}
 		
 		return "incomeVsExpenses";
@@ -154,8 +154,7 @@ public class ChartController {
 			model.addAttribute("date", date);
 			model.addAttribute("accounts", user.getAccounts());
 		} catch (SQLException e) {
-			System.out.println("opa");
-			System.out.println(e.getMessage());
+			return "error500";
 		}
 		
 		return "incomeVsExpenses";
@@ -189,7 +188,7 @@ public class ChartController {
 			model.addAttribute("accounts", accounts);
 			model.addAttribute("defaultTransactions", finalDefaultTransactions);
 		} catch (SQLException e) {
-			System.out.println("pls ne gurmi");
+			return "error500";
 		}
 		
 		return "cashflowTrend";
@@ -268,7 +267,7 @@ public class ChartController {
 			model.addAttribute("defaultTransactions", finalDefaultTransactions);
 			model.addAttribute("date", date);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			return "error500";
 		}
 		
 		return "cashflowTrend";
