@@ -6,16 +6,26 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
 public class Transaction {
 	private long transactionId;
 	private TransactionType type;
 	private String description;
+	
+	@NotNull
+	@Min(1)
 	private BigDecimal amount;
+	
 	private long account;
 	private String categoryName;
 	private long category;
 	private LocalDateTime date;
 	private Set<Tag> tags = new HashSet<Tag>();
+	
+	public Transaction() {
+	}
 	
 	public Transaction(long transactionId, TransactionType type, String description, BigDecimal amount, long account, long category,
 			LocalDateTime date, Set<Tag> tags) {
@@ -84,6 +94,34 @@ public class Transaction {
 	
 	public Set<Tag> getTags() {
 		return Collections.unmodifiableSet(tags);
+	}
+
+	public void setType(TransactionType type) {
+		this.type = type;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public void setAmount(BigDecimal amount) {
+		this.amount = amount;
+	}
+
+	public void setAccount(long account) {
+		this.account = account;
+	}
+
+	public void setCategory(long category) {
+		this.category = category;
+	}
+
+	public void setDate(LocalDateTime date) {
+		this.date = date;
+	}
+
+	public void setTags(Set<Tag> tags) {
+		this.tags = tags;
 	}
 
 	@Override

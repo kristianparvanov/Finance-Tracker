@@ -93,13 +93,16 @@ public class TransactionController {
 	}
 	
 	@RequestMapping(value="/addTransaction", method=RequestMethod.GET)
-	public String getAddTransaction(HttpServletRequest request, HttpSession session) {
-		return "addTransaction";
+	public String getAddTransaction(HttpServletRequest request, HttpSession session, Model model) {
+		User user = new User();
 		
+		model.addAttribute("user", user);	
+		
+		return "addTransaction";
 	}
 	
 	@RequestMapping(value="/addTransaction", method=RequestMethod.POST)
-	public String postAddTransaction(HttpServletRequest request, HttpSession session) {
+	public String postAddTransaction(HttpServletRequest request, HttpSession session, Model m) {
 		String type = request.getParameter("type");
 		String account = request.getParameter("account");
 		String category = request.getParameter("category");

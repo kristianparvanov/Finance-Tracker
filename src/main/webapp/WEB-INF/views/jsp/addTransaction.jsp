@@ -2,7 +2,7 @@
     pageEncoding="ISO-8859-1"%>
 <%@ page import="java.math.BigDecimal"%>
 <%@ page import="com.financeTracker.model.TransactionType" %>
-<%@ page import="com.financeTracker.model.TransactionType" %>
+<%@ taglib prefix="f" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/functions" prefix = "fn" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -28,7 +28,11 @@
 		<section class="content">
 			<div class="col-md-6">
 		        <div class="box box-primary">
+		        	<%-- <f:form commandName="transaction" method="post" action="addTransaction"> --%>
 		            <form role="form" action="addTransaction" method="post">
+		            <c:if test="${error!=null}">
+			 			<label style="color: red"><c:out value="${error}"/></label>
+		  			</c:if>
 		              <div class="box-body">
 		              	<div class="form-group">
 			                <label>Type</label>
@@ -80,7 +84,7 @@
 			            </div>
 		                <div class="form-group">
 		                  <label>Amount</label>
-		                  <input type="text" class="form-control" placeholder="Amount" name="amount">
+		                  <input type="number" class="form-control" placeholder="Amount" name="amount">
 		                </div>
 		                <div class="form-group">
 			                <label>Tags</label>
@@ -100,6 +104,7 @@
 		                <a href="<c:url value="/account/${sessionScope.accountId}"></c:url>" class="btn btn-default">Cancel</a>
 		              </div>
 		            </form>
+		            <%-- </f:form> --%>
 	          	</div>
         	</div>
 		</section>

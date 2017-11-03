@@ -144,6 +144,7 @@ public class TransactionDAO {
 			t.setTransactionId(resultSet.getLong(1));
 			
 			for (Tag tag : t.getTags()) {
+				tagDAO.insertTagToTags(tag, tag.getUserId());
 				tagDAO.insertTagToTransaction(t, tag);
 			}
 			
@@ -164,6 +165,7 @@ public class TransactionDAO {
 			ALL_TRANSACTIONS.get(t.getType()).add(t);
 			dbManager.getConnection().commit();
 		} catch (SQLException e) {
+			e.printStackTrace();
 			dbManager.getConnection().rollback();
 			throw new SQLException();
 		} finally {

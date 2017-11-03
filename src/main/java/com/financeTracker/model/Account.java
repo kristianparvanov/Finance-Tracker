@@ -24,7 +24,7 @@ public class Account {
 	private String name;
 	
 	@NotNull
-	@Min(0)
+	@Min(1)
 	private BigDecimal amount;
 	
 	private long userID;

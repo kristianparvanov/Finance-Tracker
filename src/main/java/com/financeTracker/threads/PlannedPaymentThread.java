@@ -76,6 +76,7 @@ public class PlannedPaymentThread implements Runnable {
 					
 					plannedPaymentDAO.deletePlannedPayment(this.plannedPayment.getPlannedPaymentId());
 					running = false;
+					System.err.println("pp deleted");
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
