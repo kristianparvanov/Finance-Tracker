@@ -137,6 +137,7 @@ public class TransactionController {
 		} catch (SQLException e) {
 			System.out.println("Something horrible happened to the DB");
 			e.printStackTrace();
+			return "error500";
 		}
 		request.setAttribute("user", u);
 		request.setAttribute("accountId", acc.getAccountId());

@@ -33,6 +33,7 @@
 		              	<div class="form-group">
 			                <label>Type</label>
 			                <select class="form-control select2" style="width: 100%;" data-placeholder="Select a type" name="type" onchange="myFunction()" id="typ" >
+			                  <option></option>
 			                  <option>EXPENCE</option>
 			                  <option>INCOME</option>
 			                  

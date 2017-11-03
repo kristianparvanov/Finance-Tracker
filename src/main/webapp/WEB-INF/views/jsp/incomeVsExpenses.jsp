@@ -38,6 +38,12 @@
 		<div>
 	        	<form role="form" action='<c:url value = '/incomeVsExpenses/filtered'></c:url>' method="get">
 	              <div class="row" style="height: 100%; display: flex; justify-content: center; align-items: center;">
+	              	<div class="col-sm-2" style="display:table-cell; vertical-align:middle; text-align:center">
+		            	<div class="form-group">
+		            		<label>Navigation</label><br>
+							<a href="<c:url value="/main"></c:url>" type="button" class="btn btn-block btn-default"><i class="ion ion-android-arrow-back"></i> Back</a>
+						</div>
+					</div>
 	            	<div class="col-sm-3" style="display:table-cell; vertical-align:middle; text-align:center">
 						<div class="form-group">
 			                <label>Date and time range:</label>
@@ -71,12 +77,6 @@
 		                	<button type="submit" class="btn btn-default">Filter</button>
 		             	</div>
 		             </div>
-		             <div class="col-sm-2" style="display:table-cell; vertical-align:middle; text-align:center">
-		            	<div class="form-group">
-		            		<label>Navigation</label><br>
-							<a href="<c:url value="/main"></c:url>" type="button" class="btn btn-block btn-default"><i class="ion ion-android-arrow-back"></i> Back</a>
-						</div>
-					</div>
 		          </div>
 		        </form>
 		     </div>

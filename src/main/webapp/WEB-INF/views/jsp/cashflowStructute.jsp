@@ -40,6 +40,12 @@
 			<div>
 	        	<form role="form" action="getTransactions" method="post">
 	              <div class="row">
+	              <div class="col-sm-2" style="display:table-cell; vertical-align:middle; text-align:center">
+		            	<div class="form-group">
+		            		<label>Navigation</label><br>
+							<a href="main" type="button" class="btn btn-block btn-default"><i class="ion ion-android-arrow-back"></i> Back</a>
+						</div>
+					</div>
 	            	<div class="col-sm-3" style="display:table-cell; vertical-align:middle; text-align:center">
 						<div class="form-group">
 			                <label>Date and time range:</label>
@@ -60,6 +66,7 @@
 						<div class="form-group">
 				        	<label>Type</label>
 							<select class="form-control select2" style="width: 100%;" data-placeholder="Select a type" name="type">
+								<option></option>
 				                  <option>EXPENCE</option>
 				                  <option>INCOME</option>
 		                    </select>
@@ -69,6 +76,7 @@
 	                 <div class="form-group">
 			                <label>Account</label>
 			                <select class="form-control select2" style="width: 100%;" data-placeholder="Select an account" name="account">
+			                	<option>All accounts</option>
 			                  <c:forEach items="${accounts}" var="account">
 			                	  <option><c:out value="${account.name}"></c:out></option>
 			                  </c:forEach>
@@ -81,12 +89,6 @@
 		                	<button type="submit" class="btn btn-default">Filter</button>
 		             	</div>
 		             </div>
-		             <div class="col-sm-2" style="display:table-cell; vertical-align:middle; text-align:center">
-		            	<div class="form-group">
-		            		<label>Navigation</label><br>
-							<a href="main" type="button" class="btn btn-block btn-default"><i class="ion ion-android-arrow-back"></i> Back</a>
-						</div>
-					</div>
 		          </div>
 		        </form>
 		     </div>

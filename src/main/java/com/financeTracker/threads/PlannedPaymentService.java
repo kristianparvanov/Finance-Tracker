@@ -5,11 +5,12 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.financeTracker.model.PlannedPayment;
 import com.financeTracker.model.db.PlannedPaymentDAO;
 
-@Component
+@Service
 public class PlannedPaymentService extends Thread {
 	@Autowired
 	private PlannedPaymentDAO plannedPaymentDAO;

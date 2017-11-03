@@ -26,7 +26,7 @@ public class DBManager {
             System.out.println("Unable to connect to database: " + e.getMessage());
         }
         
-        Thread t = new Thread(new TaskInitializer());
+        TaskInitializer t = new TaskInitializer();
         t.setDaemon(true);
         t.start();
     }

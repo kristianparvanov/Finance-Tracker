@@ -219,9 +219,9 @@ public class PlannedPaymentDAO {
 	}
 	
 	public List<PlannedPayment> getAllPlannedPaymentsByUserId(long userId) throws SQLException {
-		String query = "SELECT planned_payment_id, name, type, from_date, amount, description, account_id, category_id "
-				+ "FROM finance_tracker.planned_payments "
-				+ "JOIN finance_tracker.accounts ON planned_payments.account_id = accounts.account_id AND user_id = ?;";
+		String query = "SELECT planned_payment_id, p.name, p.type, p.from_date, p.amount, p.description, p.account_id, p.category_id "
+				+ "FROM finance_tracker.planned_payments p "
+				+ "JOIN finance_tracker.accounts a ON p.account_id = a.account_id AND user_id = ?;";
 		List<PlannedPayment> payments = new ArrayList<PlannedPayment>();
 		
 		PreparedStatement statement = dbManager.getConnection().prepareStatement(query);
