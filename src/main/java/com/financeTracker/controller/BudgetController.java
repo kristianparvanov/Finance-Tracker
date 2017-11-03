@@ -76,7 +76,7 @@ public class BudgetController {
 				map.put(budget, percent);
 			}
 		} catch (SQLException e) {
-			System.out.println("Izgurmqhme li?");
+			return "error500";
 		}
 		
 		model.addAttribute("budgets", map);
@@ -98,7 +98,7 @@ public class BudgetController {
 			model.addAttribute("categories", categories);
 			model.addAttribute("tags", tags);
 		} catch (SQLException e) {
-			System.out.println("NEMA BUDGETI");
+			return "error500";
 		}
 		
 		return "addBudget";
@@ -149,7 +149,7 @@ public class BudgetController {
 			user.setLastFill(LocalDateTime.now());
 			userDao.updateUser(user);
 		} catch (SQLException e) {
-			System.out.println("Nemame smetki mai? :(");
+			return "error500";
 		}
 		
 		return "redirect:/budgets";
@@ -171,7 +171,7 @@ public class BudgetController {
 			model.addAttribute("budgetId", budgetId);
 			model.addAttribute("budgetTransactions", transactions);
 		} catch (SQLException e) {
-			System.out.println("Mai nqmame tranzakciiki?? ;(");
+			return "error500";
 		}
 		
 		return "budgetInfo";
@@ -269,9 +269,7 @@ public class BudgetController {
 			user.setLastFill(LocalDateTime.now());
 			userDao.updateUser(user);
 		} catch (SQLException e) {
-			System.out.println("opala");
-			
-			e.getMessage();
+			return "error500";
 		}
 		
 		return "redirect:/budgets/" + budgetId;
@@ -318,7 +316,7 @@ public class BudgetController {
 			model.addAttribute("budget", budget);
 			model.addAttribute("date", date);
 		} catch (SQLException e) {
-			System.out.println("Nqmame budgetche??");
+			return "error500";
 		}
 		
 		return "editBudget";
@@ -337,7 +335,7 @@ public class BudgetController {
 			user.setLastFill(LocalDateTime.now());
 			userDao.updateUser(user);
 		} catch (SQLException e) {
-			System.out.println("Nema iztrivane i tova si e");
+			return "error500";
 		}
 		
 		return "redirect:/budgets";

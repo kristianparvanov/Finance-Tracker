@@ -83,8 +83,7 @@ public class UserController {
 				return "login";
 			}
 		} catch (SQLException e) {
-			request.setAttribute("error", "database problem : " + e.getMessage());
-			return "login";
+			return "error500";
 		}
 	}
 	
@@ -112,8 +111,7 @@ public class UserController {
 				return "main";
 			}
 		} catch (SQLException e) {
-			request.setAttribute("error", "database problem : " + e.getMessage());
-			return "login";
+			return "error500";
 		}
 		return "login";
 	}
@@ -126,7 +124,7 @@ public class UserController {
 		try {
 			accounts.addAll(accountDAO.getAllAccountsByUserId(u.getUserId()));
 		} catch (SQLException e) {
-			e.printStackTrace();
+			return "error500";
 		}
 		
 		viewModel.addAttribute("accounts", accounts);
@@ -154,7 +152,7 @@ public class UserController {
 			
 			viewModel.addAttribute("defaultTransactions", finalDefaultTransactions);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			return "error500";
 		}
 		
 		viewModel.addAttribute("balance", balance);
@@ -212,8 +210,7 @@ public class UserController {
 			
 			session.setAttribute("user", user);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return "error500";
 		}
 		
 		return "redirect:/main";

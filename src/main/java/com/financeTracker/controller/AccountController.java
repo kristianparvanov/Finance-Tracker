@@ -42,8 +42,7 @@ public class AccountController {
 			user.setLastFill(LocalDateTime.now());
 			userDao.updateUser(user);
 		} catch (SQLException e) {
-			System.out.println("Could not add account to database");
-			e.printStackTrace();
+			return "error500";
 		}
 		
 		return "redirect:main";
@@ -64,7 +63,7 @@ public class AccountController {
 			user.setLastFill(LocalDateTime.now());
 			userDao.updateUser(user);
 		} catch (SQLException e) {
-			System.out.println("nema da trieme acc-ta :(");
+			return "error500";
 		}
 		
 		return "redirect:/main";

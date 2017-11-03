@@ -69,8 +69,7 @@ public class PlannedPaymentController {
 			allCategories.addAll(ownCategories);
 			tags = tagDAO.getAllTagsByUserId(user.getUserId());
 		} catch (SQLException e) {
-			System.out.println("Could not get all planned payments");
-			e.printStackTrace();
+			return "error500";
 		}
 		
 		request.getSession().setAttribute("categories", allCategories);
@@ -133,8 +132,7 @@ public class PlannedPaymentController {
 			u.setLastFill(LocalDateTime.now());
 			userDao.updateUser(u);
 		} catch (SQLException e) {
-			System.out.println("Could not add planned payment");
-			e.printStackTrace();
+			return "error500";
 		}
 		request.setAttribute("user", u);
 		request.setAttribute("accountId", acc.getAccountId());
@@ -175,8 +173,7 @@ public class PlannedPaymentController {
 			model.addAttribute("editPlannedPaymentTags", tagNames);
 			session.setAttribute("plannedPaymentId", plannedPaymentId);
 		} catch (SQLException e) {
-			System.out.println("Could not extract planned payment from database");
-			e.printStackTrace();
+			return "error500";
 		}
 	
 		return "editPlannedPayment";
@@ -231,8 +228,7 @@ public class PlannedPaymentController {
 			u.setLastFill(LocalDateTime.now());
 			userDao.updateUser(u);
 		} catch (SQLException e) {
-			System.out.println("Could not edit planned payment");
-			e.printStackTrace();
+			return "error500";
 		}
 		return "redirect:/plannedPayments";
 	}
@@ -248,8 +244,7 @@ public class PlannedPaymentController {
 			user.setLastFill(LocalDateTime.now());
 			userDao.updateUser(user);
 		} catch (SQLException e) {
-			System.out.println("Could not delete planned payment");
-			e.printStackTrace();
+			return "error500";
 		}
 		return "redirect:/plannedPayments";
 	}
