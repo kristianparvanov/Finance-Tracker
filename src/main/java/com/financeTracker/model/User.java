@@ -5,16 +5,43 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
 import org.apache.commons.codec.digest.DigestUtils;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
 
 public class User {
 
 	private long userId;
+	
+	@NotNull
+	@Size(min=3)
+	@NotEmpty
+	@Pattern(regexp="[^\\s]+")
 	private String username;
+	
 	private byte[] password;
+	
+	@NotNull
+	@Email
+	@Pattern(regexp="^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$")
 	private String email;
+	
+	@NotNull
+	@Size(min=3)
+	@NotEmpty
+	@Pattern(regexp="[^\\s]+")
 	private String firstName;
+	
+	@NotNull
+	@Size(min=3)
+	@NotEmpty
+	@Pattern(regexp="[^\\s]+")
 	private String lastName;
+	
 	private LocalDateTime lastFill;
 	private Set<Account> accounts;
 	private Set<Category> ownCategories;
@@ -47,10 +74,6 @@ public class User {
 		this.lastFill = lastFill;
 	}
 
-	public User() {
-		
-	}
-	
 	public long getUserId() {
 		return userId;
 	}
@@ -117,13 +140,5 @@ public class User {
 
 	public void setPassword(String password) {
 		this.password = DigestUtils.sha512(password);
-	}
-	
-	public void setUsername(String username) {
-		this.username = username;
-	}
-	
-	public void setPassword(byte[] password) {
-		this.password = password;
 	}
 }

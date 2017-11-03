@@ -60,31 +60,31 @@ public class UserController {
 		if(session.getAttribute("user") == null){
 			User user = new User();
 			viewModel.addAttribute("user", user);
-			//return new ModelAndView("login", "user", new User());
 			return "login";
 		}
 		else{
-			//return new ModelAndView("main");
 			return "redirect:main";
 		}
 	}
 	
 	@RequestMapping(value="/login", method=RequestMethod.POST)
 	public String login(HttpServletRequest request, HttpSession session, Model viewModel, @ModelAttribute("user") User user) {
-//		String username = request.getParameter("username");
-		String password = request.getParameter("password");
 		
 		try {
-			if (userDAO.isValidLogin(user.getUsername(), password)) {
+			if (userDAO.isValidLogin(user.getUsername(), user.getPassword())) {
 				User u = userDAO.getUser(user.getUsername());
 				session.setAttribute("user", u);
 				return "redirect:main";
 			}
 			else{
-				request.setAttribute("error", "user does not exist");
+				session.setAttribute("logged", false);
+				viewModel.addAttribute("login", "Could not login. Please, enter a valid username and password!");
+				User u = new User();
+				viewModel.addAttribute("user", u);
 				return "login";
 			}
 		} catch (SQLException e) {
+			System.out.println("DB error");
 			return "error500";
 		}
 	}
@@ -160,7 +160,11 @@ public class UserController {
 	}
 	
 	@RequestMapping(value="/login", method=RequestMethod.GET)
-	public String getLogin() {
+	public String getLogin(Model viewModel) {
+		User user = new User();
+		
+		viewModel.addAttribute("user", user);
+		
 		return "login";
 	}
 	

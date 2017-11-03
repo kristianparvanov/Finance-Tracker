@@ -283,17 +283,19 @@ public class TransactionController {
 		User user = (User) session.getAttribute("user");
 		
 		Transaction t = null;
+		Account acc = null;
 		try {
 			t = transactionDAO.getTransactionByTransactionId(transactionId);
+			acc = accountDAO.getAccountByAccountId(t.getAccount());
 			
-//			BigDecimal newValue = t.getAmount();
-//			BigDecimal oldValue = accountDAO.getAmountByAccountId(t.getAccount());
-//			if (t.getType().equals("EXPENCE")) {
-//				accountDAO.updateAccountAmount(t.getAccount(), (oldValue.subtract(newValue)));
-//			} else 
-//			if (t.getType().equals("INCOME")) {
-//				accountDAO.updateAccountAmount(t.getAccount(), (oldValue.add(newValue)));
-//			}
+			BigDecimal newValue = t.getAmount();
+			BigDecimal oldValue = accountDAO.getAmountByAccountId(t.getAccount());
+			if (t.getType().equals(TransactionType.EXPENCE)) {
+				accountDAO.updateAccountAmount(acc, (oldValue.add(newValue)));
+			} else 
+			if (t.getType().equals(TransactionType.INCOME)) {
+				accountDAO.updateAccountAmount(acc, (oldValue.subtract(newValue)));
+			}
 			
 			transactionDAO.deleteTransaction(t);
 			
