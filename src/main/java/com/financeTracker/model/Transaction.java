@@ -15,16 +15,16 @@ public class Transaction {
 	private String categoryName;
 	private long category;
 	private LocalDateTime date;
-	private HashSet<Tag> tags = new HashSet<Tag>();
+	private Set<Tag> tags = new HashSet<Tag>();
 	
 	public Transaction(long transactionId, TransactionType type, String description, BigDecimal amount, long account, long category,
-			LocalDateTime date, HashSet<Tag> tags) {
+			LocalDateTime date, Set<Tag> tags) {
 		this(type, description, amount,account, category, date, tags);
 		
 		this.transactionId = transactionId;
 	}
 
-	public Transaction(TransactionType type, String description, BigDecimal amount, long account, long category, LocalDateTime date, HashSet<Tag> tags) {
+	public Transaction(TransactionType type, String description, BigDecimal amount, long account, long category, LocalDateTime date, Set<Tag> tags) {
 		this.type = type;
 		this.description = description;
 		this.amount = amount;

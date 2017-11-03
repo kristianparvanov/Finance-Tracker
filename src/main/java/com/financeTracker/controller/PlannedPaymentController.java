@@ -29,11 +29,15 @@ import com.financeTracker.model.db.CategoryDAO;
 import com.financeTracker.model.db.PlannedPaymentDAO;
 import com.financeTracker.model.db.TagDAO;
 import com.financeTracker.model.db.UserDAO;
+import com.financeTracker.threads.PlannedPaymentService;
 
 @Controller
 public class PlannedPaymentController {
 	@Autowired
 	private PlannedPaymentDAO plannedPaymentDAO;
+	
+	@Autowired
+	private PlannedPaymentService plannedPaymentService;
 	
 	@Autowired
 	private CategoryDAO categoryDao;
@@ -124,6 +128,7 @@ public class PlannedPaymentController {
 //				accountDAO.updateAccountAmount(acc, (oldValue.add(newValue)));
 //			}
 			plannedPaymentDAO.insertPlannedPayment(p);
+			plannedPaymentService.initPaymentThread(p);
 			
 			u.setLastFill(LocalDateTime.now());
 			userDao.updateUser(u);

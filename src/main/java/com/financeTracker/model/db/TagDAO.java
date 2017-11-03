@@ -162,4 +162,9 @@ public class TagDAO {
 		statement.setLong(1, plannedPaymentId);
 		statement.executeUpdate();
 	}
+
+	public boolean tagExists(long tagId, long userId) {
+		String query = "SELECT tag_id FROM tags WHERE tag_id = ? AND user_id = ?";
+		return false;
+	}
 }

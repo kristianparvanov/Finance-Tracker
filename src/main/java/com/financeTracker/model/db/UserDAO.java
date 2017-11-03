@@ -98,7 +98,7 @@ public class UserDAO {
 		PreparedStatement ps = con.prepareStatement("INSERT INTO users (username, password, email, first_name, last_name, last_fill) "
 														+ "VALUES (?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 		
-		ps.setString(1, u.getUserName());
+		ps.setString(1, u.getUsername());
 		ps.setString(2, DigestUtils.sha512Hex(u.getPassword()));
 		ps.setString(3, u.getEmail());
 		ps.setString(4, u.getFirstName());
@@ -111,7 +111,7 @@ public class UserDAO {
 		
 		u.setUserId(res.getLong(1));
 		
-		ALL_USERS.put(u.getUserName(), u);
+		ALL_USERS.put(u.getUsername(), u);
 	}
 	
 	public synchronized void updateUser(User user) throws SQLException {
@@ -126,7 +126,7 @@ public class UserDAO {
 		ps.setLong(5, user.getUserId());
 		ps.executeUpdate();
 		
-		ALL_USERS.put(user.getUserName(), user);
+		ALL_USERS.put(user.getUsername(), user);
 	}
 	
 	public synchronized User getUserByUserId(int userId) {

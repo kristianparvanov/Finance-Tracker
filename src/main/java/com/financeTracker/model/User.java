@@ -20,6 +20,9 @@ public class User {
 	private Set<Category> ownCategories;
 	private Set<Tag> tags;
 	
+	public User() {
+	}
+	
 	public User(String username, String password, String email, String firstName, String lastName, Set<Account> accounts, 
 			Set<Category> ownCategories, Set<Tag> tags, LocalDateTime lastFill) {
 		this.username = username;
@@ -48,12 +51,12 @@ public class User {
 		return userId;
 	}
 	
-	public String getUserName() {
+	public String getUsername() {
 		return username;
 	}
 
 	public byte[] getPassword() {
-		return password.clone();
+		return password;
 	}
 
 	public String getEmail() {
@@ -104,4 +107,11 @@ public class User {
 		this.lastName = lastName;
 	}
 	
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	
+	public void setPassword(byte[] password) {
+		this.password = password;
+	}
 }

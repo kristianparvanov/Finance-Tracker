@@ -134,16 +134,16 @@ public class TransactionDAO {
 		statement.setString(4, t.getDescription());
 		statement.setLong(5, t.getAccount());
 		statement.setLong(6, t.getCategory());
-		statement.executeUpdate();
 		
-		ResultSet resultSet = statement.getGeneratedKeys();
-		resultSet.next();
-		t.setTransactionId(resultSet.getLong(1));
 		try {
 			dbManager.getConnection().setAutoCommit(false);
+			statement.executeUpdate();
+			
+			ResultSet resultSet = statement.getGeneratedKeys();
+			resultSet.next();
+			t.setTransactionId(resultSet.getLong(1));
 			
 			for (Tag tag : t.getTags()) {
-				tagDAO.insertTagToTags(tag, tag.getUserId());
 				tagDAO.insertTagToTransaction(t, tag);
 			}
 			
