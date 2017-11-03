@@ -18,28 +18,31 @@ public class User {
 	private long userId;
 	
 	@NotNull
-	@Size(min=3)
+	@Size(min = 3)
 	@NotEmpty
-	@Pattern(regexp="[^\\s]+")
+	@Pattern(regexp = "[^\\s]+")
 	private String username;
 	
+	@NotNull
+	@NotEmpty
 	private byte[] password;
 	
 	@NotNull
+	@NotEmpty
 	@Email
-	@Pattern(regexp="^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$")
+	@Pattern(regexp = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$")
 	private String email;
 	
 	@NotNull
-	@Size(min=3)
+	@Size(min = 3)
 	@NotEmpty
-	@Pattern(regexp="[^\\s]+")
+	@Pattern(regexp = "[^\\s]+")
 	private String firstName;
 	
 	@NotNull
-	@Size(min=3)
+	@Size(min = 3)
 	@NotEmpty
-	@Pattern(regexp="[^\\s]+")
+	@Pattern(regexp = "[^\\s]+")
 	private String lastName;
 	
 	private LocalDateTime lastFill;
@@ -127,18 +130,18 @@ public class User {
 	}
 
 	public void setFirstName(String firstName) {
-		this.firstName = firstName;
+		this.firstName = firstName.trim();
 	}
 
 	public void setLastName(String lastName) {
-		this.lastName = lastName;
+		this.lastName = lastName.trim();
 	}
 
 	public void setUsername(String username) {
-		this.username = username;
+		this.username = username.trim();
 	}
 
 	public void setPassword(String password) {
-		this.password = DigestUtils.sha512(password);
+		this.password = DigestUtils.sha512(password.trim());
 	}
 }
