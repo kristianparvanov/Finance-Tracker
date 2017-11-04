@@ -29,42 +29,22 @@
   </div>
 
   <div class="register-box-body" style="box-shadow: 0px 0px 15px black">
-    <p class="login-box-msg" style="font-size: 18px">TEXT PLS :) MAIKA TI</p>
+    <p class="login-box-msg" style="font-size: 18px">You forgot your password? Fear not!</p>
 
-    <form action="<c:url value='/forgottenPassword'></c:url>" method="post" <%-- commandName="user" --%>>
+    <form action="<c:url value='/forgottenPassword'></c:url>" method="post">
     	<c:if test="${forgottenPassword!=null}">
 		 <label style="color: red"><c:out value="${forgottenPassword}"/></label>
 	  	</c:if>
-     <%--  <div class="form-group has-feedback">
-        <f:input type="text" class="form-control" placeholder="Username" required="" path="username" />
-        <span class="glyphicon glyphicon-user form-control-feedback"></span>
-      </div> --%>
-      <%-- <div class="form-group has-feedback">
-        <f:input type="password" class="form-control" placeholder="Password" required="" path="password" />
-        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-      </div>
       <div class="form-group has-feedback">
-        <input type="password" class="form-control" placeholder="Retype password"  name="repeatPassword" required="">
-        <span class="glyphicon glyphicon-lock form-control-feedback"></span> 
-      </div>--%>
-      <div class="form-group has-feedback">
-        <input type="email" class="form-control" placeholder="Email" required="" name="email" />
+        <input type="email" class="form-control" placeholder="Enter your email here to reset your password" required="" name="email" />
         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
       </div>
-      <%--   <div class="form-group has-feedback">
-        <f:input type="text" class="form-control" placeholder="First Name" required="" path="firstName" />
-        <span class="glyphicon glyphicon-user form-control-feedback"></span>
-      </div>
-       <div class="form-group has-feedback">
-        <f:input type="text" class="form-control" placeholder="Last Name" required="" path="lastName" />
-        <span class="glyphicon glyphicon-user form-control-feedback"></span>
-      </div> --%>
       <div class="row">
         <div class="col-xs-4">
           <button type="submit" class="btn btn-primary btn-block btn-flat">Send email</button>
         </div>
       </div>
-    </fform>
+    </form>
     <br>
     I am already registered. <a href="login" class="text-center">Log me in</a>
   </div>

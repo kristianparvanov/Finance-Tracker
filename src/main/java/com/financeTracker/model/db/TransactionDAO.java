@@ -376,15 +376,18 @@ public class TransactionDAO {
 				"FROM finance_tracker.transactions t \r\n" + 
 				"JOIN finance_tracker.accounts a ON t.account_id = a.account_id \r\n" + 
 				"JOIN finance_tracker.categories c on t.category_id = c.category_id \r\n" + 
-				"WHERE (a.user_id = ? AND c.type = ? AND (t.date BETWEEN ? AND ?) AND a.account_id = ?) \r\n" + 
+				"WHERE (a.user_id = ? AND c.type = ? AND (t.date BETWEEN ? AND ?) " + (account.equals("All accounts") ? ")" : "AND a.account_id = ? )") + 
 				"group by category_id;";
 		PreparedStatement statement = dbManager.getConnection().prepareStatement(query);
 		statement.setLong(1, userId);
 		statement.setString(2, type);
 		statement.setTimestamp(3, Timestamp.valueOf(dateFrom.withNano(0)));
 		statement.setTimestamp(4, Timestamp.valueOf(dateTo.withNano(0)));
-		Account a = accountDAO.getAccountByAccountNameAndAccountId(account, userId);
-		statement.setLong(5, a.getAccountId());
+		
+		if (!account.equals("All accounts")) {
+			Account a = accountDAO.getAccountByAccountNameAndAccountId(account, userId);
+			statement.setLong(5, a.getAccountId());
+		}
 		
 		ResultSet result = statement.executeQuery();
 		while (result.next()) {

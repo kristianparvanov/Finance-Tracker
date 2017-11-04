@@ -29,11 +29,13 @@
 	
 	        <div class="error-content">
 		          <h3><i class="fa fa-warning text-red"></i> Oops! Something went wrong.</h3>
+		          <h4>It's not you, It's us.</h4>
 				  <h4>Looks like our servers failed to load your request.</h4>
 		          <p>
 		            We will work on fixing that right away. Meanwhile, you may 
-		            <br>
-		            <a href="<c:url value="/main"></c:url>"><i class="ion ion-android-arrow-back"></i> Return to the dashboard</a>.
+		             <br>
+	           		<h4><a href="<c:url value="/main"></c:url>"><i class="ion ion-android-arrow-back"></i> Return to the dashboard</a></h4>
+	           		<h4><a href="<c:url value="/"></c:url>"><i class="ion ion-person"></i> Start over</a></h4>
 		          </p>
 		        </div>
 	      </div>
