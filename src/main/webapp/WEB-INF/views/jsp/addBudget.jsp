@@ -3,6 +3,7 @@
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/functions" prefix = "fn" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@taglib uri = "http://www.springframework.org/tags/form" prefix = "f"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
@@ -30,11 +31,14 @@
 		<section class="content">
 			<div class="col-md-6">
 		        <div class="box box-primary">
-		            <form role="form" action="addBudget" method="post">
+		            <f:form role="form" action="addBudget" method="POST" commandName="budget">
+		            <c:if test="${addBudget!=null}">
+		 				<label style="color: red"><c:out value="${addBudget}"/></label>
+	  				</c:if>
 		              <div class="box-body">
 			             <div class="form-group">
                   			<label>Name</label>
-                 			<textarea class="form-control" rows="1" placeholder="Enter budget name" name="name"></textarea>
+                 			<f:textarea class="form-control" rows="1" placeholder="Enter budget name" path="name"></f:textarea>
                			</div>
 			            
 		                <div class="form-group">
@@ -58,11 +62,11 @@
 						</div>
 		                <div class="form-group">
 		                  <label>Amount</label>
-		                  <input type="text" class="form-control" placeholder="Amount" name="amount">
+		                  <f:input type="text" class="form-control" placeholder="Amount" path="initialAmount" />
 		                </div>
 		                <div class="form-group">
 			                <label>Tags</label>
-			                <select class="form-control select2" multiple="multiple" data-placeholder="Select tags" style="width: 100%;" name="tags">
+			                <select class="form-control select2" multiple="multiple" data-placeholder="Select tags" style="width: 100%;" name="tagss">
 			                  <c:forEach items="${ tags }" var="tag">
 			                	  <option><c:out value="${ tag.name }"></c:out></option>
 			                  </c:forEach>
@@ -89,7 +93,7 @@
 		              </div>
 		              
 	               </div>
-		            </form>
+		            </f:form>
 	          	</div>
         	</div>
 		</section>
