@@ -75,11 +75,11 @@
 			                <label>Category</label>
 			                <select class="form-control select2" style="width: 100%;" data-placeholder="Select a category" name="category" id="cat">
 			                <option selected="selected"><c:out value="${ editTransactionCategory }"></c:out></option>
-			                  <c:forEach items="${sessionScope.categories }" var="category">
-			                	  <option><c:out value="${category.name}"></c:out></option>
-			                  </c:forEach>
 			                </select>
 			            </div>
+			            <div class="form-group">
+							<a href="<c:url value="/addCategory"></c:url>" type="button" class="btn btn-block btn-default" style="width: 30%;"><i class="ion ion-plus"></i> Add new category</a>
+						</div>
 		                <div class="form-group">
 		                  <label>Amount</label>
 		                  <input type="text" class="form-control" placeholder="Amount" name="amount" value="${ editTransactionAmount }">

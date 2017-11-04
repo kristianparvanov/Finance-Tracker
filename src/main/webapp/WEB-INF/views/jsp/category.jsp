@@ -46,7 +46,7 @@
 		              </div>
 		              <div class="box-footer">
 		                <button type="submit" class="btn btn-primary">Save</button>
-		                <a href="main" class="btn btn-default">Cancel</a>
+		                <a class="btn btn-default" href="javascript:history.back(1)">Cancel</a> 
 		              </div>
 		            </f:form>
 	          	</div>

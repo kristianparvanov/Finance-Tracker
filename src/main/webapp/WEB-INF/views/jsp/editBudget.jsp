@@ -60,6 +60,9 @@
 			                  </c:forEach>
 			                </select>
 			            </div>
+			            <div class="form-group">
+							<a href="<c:url value="/addCategory"></c:url>" type="button" class="btn btn-block btn-default" style="width: 30%;"><i class="ion ion-plus"></i> Add new category</a>
+						</div>
 		                <div class="form-group">
 		                  <label>Amount</label>
 		                  <input type="text" class="form-control" placeholder="Amount" name="amount" value="${ editBudgetAmount }">

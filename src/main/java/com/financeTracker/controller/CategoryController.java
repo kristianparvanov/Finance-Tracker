@@ -57,7 +57,7 @@ public class CategoryController {
 			
 			return "error500";
 		}
-		
-		return "redirect:main";
+
+		return "main";
 	}
 }
