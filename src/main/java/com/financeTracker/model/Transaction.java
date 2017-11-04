@@ -9,6 +9,8 @@ import java.util.Set;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 public class Transaction {
 	private long transactionId;
 	private TransactionType type;
@@ -108,13 +110,13 @@ public class Transaction {
 		this.amount = amount;
 	}
 
-	public void setAccount(long account) {
-		this.account = account;
-	}
-
-	public void setCategory(long category) {
-		this.category = category;
-	}
+//	public void setAccount(long account) {
+//		this.account = account;
+//	}
+//
+//	public void setCategory(long category) {
+//		this.category = category;
+//	}
 
 	public void setDate(LocalDateTime date) {
 		this.date = date;

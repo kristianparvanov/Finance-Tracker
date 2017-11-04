@@ -28,14 +28,15 @@
 		<section class="content">
 			<div class="col-md-6">
 		        <div class="box box-primary">
-		        	<%-- <f:form commandName="transaction" method="post" action="addTransaction"> --%>
-		            <form role="form" action="addTransaction" method="post">
+		        	<f:form role="form" commandName="transaction" method="post" action="addTransaction">
+		            <%-- <form role="form" action="addTransaction" method="post"> --%>
 		            <c:if test="${error!=null}">
 			 			<label style="color: red"><c:out value="${error}"/></label>
 		  			</c:if>
 		              <div class="box-body">
 		              	<div class="form-group">
 			                <label>Type</label>
+			                <%-- <f:select path="type" cssClass="form-control select2" cssStyle="width: 100%;" data-placeholder="Select a type" name="type" id="typ" onchange="myFunction()"> --%>
 			                <select class="form-control select2" style="width: 100%;" data-placeholder="Select a type" name="type" onchange="myFunction()" id="typ" >
 			                  <option></option>
 			                  <option>EXPENCE</option>
@@ -64,6 +65,7 @@
 								}
 							  </script>
 			                </select>
+			                <%-- </f:select> --%>
 			            </div>
 		                <div class="form-group">
 			                <label>Account</label>
@@ -87,11 +89,12 @@
 						</div>
 		                <div class="form-group">
 		                  <label>Amount</label>
-		                  <input type="number" class="form-control" placeholder="Amount" name="amount">
+		                 <!--  <input type="text" class="form-control" placeholder="Amount" name="amount"> -->
+		                 <f:input path="amount" type="text" cssClass="form-control" placeholder="Amount"/>
 		                </div>
 		                <div class="form-group">
 			                <label>Tags</label>
-			                <select class="form-control select2" multiple="multiple" data-placeholder="Select tags" style="width: 100%;" name="tags">
+			                <select class="form-control select2" multiple="multiple" data-placeholder="Select tags" style="width: 100%;" name="tagss">
 			                  <c:forEach items="${tags}" var="tag">
 			                	  <option><c:out value="${tag.name}"></c:out></option>
 			                  </c:forEach>
@@ -106,8 +109,8 @@
 		                <button type="submit" class="btn btn-primary">Save</button>
 		                <a href="<c:url value="/account/${sessionScope.accountId}"></c:url>" class="btn btn-default">Cancel</a>
 		              </div>
-		            </form>
-		            <%-- </f:form> --%>
+		            <%-- </form> --%>
+		            </f:form>
 	          	</div>
         	</div>
 		</section>

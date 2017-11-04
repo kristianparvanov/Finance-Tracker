@@ -11,10 +11,13 @@ import java.util.TreeSet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -94,21 +97,27 @@ public class TransactionController {
 	
 	@RequestMapping(value="/addTransaction", method=RequestMethod.GET)
 	public String getAddTransaction(HttpServletRequest request, HttpSession session, Model model) {
-		User user = new User();
+		Transaction transaction = new Transaction();
 		
-		model.addAttribute("user", user);	
+		model.addAttribute("transaction", transaction);	
 		
 		return "addTransaction";
 	}
 	
 	@RequestMapping(value="/addTransaction", method=RequestMethod.POST)
-	public String postAddTransaction(HttpServletRequest request, HttpSession session, Model m) {
+	public String postAddTransaction(HttpServletRequest request, HttpSession session, Model m, @Valid @ModelAttribute("transaction") Transaction transaction, BindingResult bindingResult) {
 		String type = request.getParameter("type");
 		String account = request.getParameter("account");
 		String category = request.getParameter("category");
 		String amount = request.getParameter("amount");
-		String[] tags = request.getParameterValues("tags");
+		String[] tags = request.getParameterValues("tagss");
 		String description = request.getParameter("description");
+		transaction.setTags(null);
+		if (type.isEmpty() || account.isEmpty() || category.isEmpty() || bindingResult.hasErrors()) {
+			m.addAttribute("error", "Could not insert transaction. Please, enter valid data!");
+			Transaction t = new Transaction();
+            return "addTransaction";
+	 	}
 		
 		User u = (User) request.getSession().getAttribute("user");
 		
