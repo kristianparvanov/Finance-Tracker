@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import javax.annotation.PostConstruct;
 
@@ -487,4 +488,68 @@ public class TransactionDAO {
 		
 		return map;
 	}
+	
+	/*public Set<Transaction> getReportTransactions(long userId, String type, long categoryId, long accountId, LocalDateTime ... dateTimes) throws SQLException {
+		Set<Transaction> transactions = new HashSet<>();
+		
+		String sql = "SELECT t.transaction_id, t.date, t.amount, t.description, t.type FROM transactions t "
+				+ "JOIN accounts a "
+				+ "ON a.account_d = t.account_id AND user_id = ?"
+				+ "WHERE " + (accountId == 0 ? "" : "AND a.account_id = ? ") + " AND "
+						   + (categoryId == 0 ? "" : "AND a.category_id = ? ") 
+						   + (dateTimes.length <= 0 ? "" : "WHERE t.date >= STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s') "
+						   + "AND t.date <= STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s')") 
+						   + (type.equals("All types") ? "type = ?" : "") + ";";
+		
+		PreparedStatement ps = dbManager.getConnection().prepareStatement(sql);
+		ps.setLong(1, userId);
+		
+		if (accountId > 0) {
+			ps.setLong(2, accountId);
+			
+			if (categoryId > 0) {
+				ps.setLong(3, categoryId);
+			} else {
+				if (dateTimes.length == 2) {
+					ps.setTimestamp(3, Timestamp.valueOf(dateTimes[0].withNano(0)));
+					ps.setTimestamp(4, Timestamp.valueOf(dateTimes[1].withNano(0)));
+				}
+			}
+			
+			if (dateTimes.length == 2) {
+				ps.setTimestamp(4, Timestamp.valueOf(dateTimes[0].withNano(0)));
+				ps.setTimestamp(5, Timestamp.valueOf(dateTimes[1].withNano(0)));
+			}
+		} else {
+			if (categoryId > 0) {
+				ps.setLong(2, categoryId);
+			} else {
+				if (dateTimes.length == 2) {
+					ps.setTimestamp(2, Timestamp.valueOf(dateTimes[0].withNano(0)));
+					ps.setTimestamp(3, Timestamp.valueOf(dateTimes[1].withNano(0)));
+				}
+			}
+			
+			if (dateTimes.length == 2) {
+				ps.setTimestamp(3, Timestamp.valueOf(dateTimes[0].withNano(0)));
+				ps.setTimestamp(4, Timestamp.valueOf(dateTimes[1].withNano(0)));
+			}
+		}
+		
+		ResultSet res = ps.executeQuery();
+		
+		while(res.next()) {
+			long transactionId = res.getLong("transaction_id");
+			String description = res.getString("description");
+			String transactionType = res.getString("type");
+			BigDecimal amount = res.getBigDecimal("amount");
+			LocalDateTime date = res.getTimestamp("date").toLocalDateTime();
+			
+			Transaction t = new Transaction(transactionId, TransactionType.valueOf(transactionType), description, amount, accountId, categoryId, date, null);
+		
+			transactions.add(t);
+		}
+		
+		return transactions;
+	}*/
 }

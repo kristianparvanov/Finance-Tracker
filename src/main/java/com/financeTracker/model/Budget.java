@@ -6,9 +6,22 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.NotEmpty;
+
 public class Budget {
 	private long budgetId;
+	
+	@NotNull
+	@Size(min = 2, max = 30)
+	@NotEmpty
 	private String name;
+
+	@NotNull
+	@Min(1)
 	private BigDecimal initialAmount;
 	private BigDecimal amount;
 	private LocalDateTime fromDate;
@@ -17,6 +30,8 @@ public class Budget {
 	private long categoryId;
 	private Set<Tag> tags = new HashSet<Tag>();
 	private Set<Transaction> transactions = new HashSet<Transaction>();
+	
+	public Budget() {}
 	
 	public Budget(long budgetId, String name, BigDecimal initialAmount, BigDecimal amount, LocalDateTime fromDate, LocalDateTime toDate,
 			long accountId, long categoryId, Set<Tag> tags, Set<Transaction> transactions) {
@@ -107,6 +122,35 @@ public class Budget {
 		this.transactions = transactions;
 	}
 
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setInitialAmount(BigDecimal initialAmount) {
+		this.initialAmount = initialAmount;
+	}
+
+	public void setFromDate(LocalDateTime fromDate) {
+		this.fromDate = fromDate;
+	}
+
+	public void setToDate(LocalDateTime toDate) {
+		this.toDate = toDate;
+	}
+
+	public void setAccountId(long accountId) {
+		this.accountId = accountId;
+	}
+
+	public void setCategoryId(long categoryId) {
+		this.categoryId = categoryId;
+	}
+
+	public void setTags(Set<Tag> tags) {
+		this.tags = tags;
+	}
+	
 	@Override
 	public String toString() {
 		return "Budget [budgetId=" + budgetId + ", name=" + name + ", amount=" + amount + ", fromDate=" + fromDate

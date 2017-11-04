@@ -12,10 +12,13 @@ import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -97,6 +100,7 @@ public class BudgetController {
 			model.addAttribute("accounts", accounts);
 			model.addAttribute("categories", categories);
 			model.addAttribute("tags", tags);
+			model.addAttribute("budget", new Budget());
 		} catch (SQLException e) {
 			return "error500";
 		}
@@ -105,15 +109,42 @@ public class BudgetController {
 	}
 	
 	@RequestMapping (value ="/addBudget", method = RequestMethod.POST)
-	public String addBudget(HttpServletRequest request, HttpSession session, Model model) {
+	public String addBudget(HttpServletRequest request, HttpSession session, Model model, @Valid @ModelAttribute("budget") Budget budget, BindingResult bindingResult) {
 		User user = (User) session.getAttribute("user");
+
+		budget.setTags(null);
+		budget.setAmount(BigDecimal.valueOf(0));
+		
+		if (bindingResult.hasErrors()) {
+			Set<Account> accounts;
+			try {
+				accounts = accountDAO.getAllAccountsByUserId(user.getUserId());
+				Set<String> categories = categoryDao.getAllCategoriesByType(user.getUserId(), "EXPENCE");
+//			categories.addAll(categoryDao.getAllCategoriesByUserId());
+				Set<Tag> tags = tagDAO.getAllTagsByUserId(user.getUserId());
+
+				model.addAttribute("accounts", accounts);
+				model.addAttribute("categories", categories);
+				model.addAttribute("tags", tags);
+				
+				model.addAttribute("addBudget", "Could not create budget. Please, enter a valid data!");
+			} catch (SQLException e) {
+				System.out.println(e.getMessage());
+				
+				return "error500";
+			}
+			
+			
+			return "addBudget";
+		}
+		
 		
 		try {
-			String name = request.getParameter("name");
+//			String name = request.getParameter("name");
 			Account acc = accountDAO.getAccountByUserIDAndAccountName(user.getUserId(), request.getParameter("account"));
 			Category category = categoryDao.getCategoryByCategoryName(request.getParameter("category"));
-			BigDecimal amount = new BigDecimal(request.getParameter("amount"));
-			String[] tags = request.getParameterValues("tags");
+//			BigDecimal amount = new BigDecimal(request.getParameter("amount"));
+			String[] tags = request.getParameterValues("tagss");
 			String date = request.getParameter("date");
 			
 			String[] inputDate = date.split("/");
@@ -142,13 +173,22 @@ public class BudgetController {
 				}
 			}
 
-			Budget b = new Budget(name, amount, dateFrom, dateTo, acc.getAccountId(), category.getCategoryId(), tagsSet);
+//			Budget b = new Budget(name, amount, dateFrom, dateTo, acc.getAccountId(), category.getCategoryId(), tagsSet);
 			
-			budgetDao.insertBudget(b);
+			budget.setFromDate(dateFrom);
+			budget.setToDate(dateTo);
+			budget.setAccountId(acc.getAccountId());
+			budget.setCategoryId(category.getCategoryId());
+			budget.setTags(tagsSet);
+			
+			
+			budgetDao.insertBudget(budget);
 
 			user.setLastFill(LocalDateTime.now());
 			userDao.updateUser(user);
 		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			
 			return "error500";
 		}
 		
