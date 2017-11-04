@@ -29,38 +29,26 @@
   </div>
 
   <div class="register-box-body" style="box-shadow: 0px 0px 15px black">
-    <p class="login-box-msg" style="font-size: 18px">TEXT PLS :) MAIKA TI</p>
+    <p class="login-box-msg" style="font-size: 18px">Welcome back! We missed you</p>
 
     <form action="<c:url value='/resetPassword'></c:url>" method="post" <%-- commandName="user" --%>>
     	<c:if test="${resetPassword!=null}">
 		 <label style="color: red"><c:out value="${resetPassword}"/></label>
 	  	</c:if>
       <div class="form-group has-feedback">
-        <input type="text" class="form-control" placeholder="Username" required="" name="username">
+        <input type="text" class="form-control" placeholder="Enter your new username here" required="" name="username">
         <span class="glyphicon glyphicon-user form-control-feedback"></span>
       </div>
       <div class="form-group has-feedback">
-        <input type="password" class="form-control" placeholder="Password" required="" name="password">
+        <input type="password" class="form-control" placeholder="Enter new password" required="" name="password">
         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
       </div>
       <div class="form-group has-feedback">
-        <input type="password" class="form-control" placeholder="Retype password"  name="repeatPassword" required="">
+        <input type="password" class="form-control" placeholder="Retype new password"  name="repeatPassword" required="">
         <span class="glyphicon glyphicon-lock form-control-feedback"></span> 
       </div>
-      <!-- <div class="form-group has-feedback">
-        <input type="email" class="form-control" placeholder="Email" required="" name="email" />
-        <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-      </div> -->
-      <%--   <div class="form-group has-feedback">
-        <f:input type="text" class="form-control" placeholder="First Name" required="" path="firstName" />
-        <span class="glyphicon glyphicon-user form-control-feedback"></span>
-      </div>
-       <div class="form-group has-feedback">
-        <f:input type="text" class="form-control" placeholder="Last Name" required="" path="lastName" />
-        <span class="glyphicon glyphicon-user form-control-feedback"></span>
-      </div> --%>
       <div class="row">
-        <div class="col-xs-4">
+        <div class="col-xs-6">
           <button type="submit" class="btn btn-primary btn-block btn-flat">Set new password</button>
         </div>
       </div>

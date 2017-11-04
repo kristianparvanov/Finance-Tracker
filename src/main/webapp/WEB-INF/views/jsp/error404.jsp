@@ -29,11 +29,13 @@
 	
 	        <div class="error-content">
 	          <h3><i class="fa fa-warning text-red"></i> Oops! Something went wrong.</h3>
+	          <h4>Either you can't type or we broke something.</h4>
 			  <h4>The page you requested could not be found.</h4>
 	          <p>
 	            We will work on fixing that right away. Meanwhile, you may 
 	            <br>
-	            <a href="<c:url value="/main"></c:url>"><i class="ion ion-android-arrow-back"></i> Return to the dashboard</a>.
+           		<h4><a href="<c:url value="/main"></c:url>"><i class="ion ion-android-arrow-back"></i> Return to the dashboard</a></h4>
+           		<h4><a href="<c:url value="/"></c:url>"><i class="ion ion-person"></i> Start over</a></h4>
 	          </p>
 	        </div>
 	      </div>

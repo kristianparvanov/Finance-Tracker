@@ -99,6 +99,7 @@
 			                <label>Account</label>
 			                <select class="form-control select2" style="width: 100%;" data-placeholder="Select an account" name="account">
 			            <%--       <option selected="selected"><c:out value="${ sessionScope.accountName }"></c:out></option> --%>
+			            	<option>All accounts</option>
 			                  <c:forEach items="${allAccounts}" var="account">
 			                	  <option><c:out value="${account.name}"></c:out></option>
 			                  </c:forEach>
