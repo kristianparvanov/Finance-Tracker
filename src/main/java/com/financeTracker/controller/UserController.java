@@ -138,6 +138,8 @@ public class UserController {
 		try {
 			accounts.addAll(accountDAO.getAllAccountsByUserId(u.getUserId()));
 		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			
 			return "error500";
 		}
 		

@@ -46,6 +46,8 @@ public class AccountController {
 			account.setUserID(user.getUserId());
 			accountDAO.insertAccount(account);
 			
+			user.addAccount(account);
+			
 			user.setLastFill(LocalDateTime.now());
 			userDao.updateUser(user);
 		} catch (SQLException e) {
@@ -71,11 +73,15 @@ public class AccountController {
 		User user = (User) session.getAttribute("user");
 		
 		try {
+			user.removeAccount(accountDAO.getAccountByAccountId(accountId));
+
 			accountDAO.deleteAccount(accountId);
 			
 			user.setLastFill(LocalDateTime.now());
 			userDao.updateUser(user);
 		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			
 			return "error500";
 		}
 		

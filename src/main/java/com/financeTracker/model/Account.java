@@ -20,7 +20,7 @@ public class Account {
 	@NotNull
 	@Size(min = 2, max = 30)
 	@NotEmpty
-	@Pattern(regexp="[^\\s]+")
+//	@Pattern(regexp="[^\\s]+")
 	private String name;
 	
 	@NotNull
@@ -106,6 +106,7 @@ public class Account {
 	public void setPlannedPayments(List<PlannedPayment> plannedPayments) {
 		this.plannedPayments = plannedPayments;
 	}
+	
 
 	@Override
 	public int hashCode() {

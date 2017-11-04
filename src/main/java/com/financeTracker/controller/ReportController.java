@@ -45,15 +45,16 @@ public class ReportController {
 		try {
 			categories.addAll(categoryDao.getAllCategoriesByUserId(user.getUserId()));
 			categories.addAll(categoryDao.getAllCategoriesByUserId());
+
+			for (Account acc : accountDao.getAllAccountsByUserId(user.getUserId())) {
+				allAccounts.add(acc);
+				
+				allTransactions.addAll(acc.getTransactions());
+			}
 		} catch (SQLException e) {
 			return "error500";
 		}
 		
-		for (Account acc : user.getAccounts()) {
-			allAccounts.add(acc);
-			
-			allTransactions.addAll(acc.getTransactions());
-		}
 		
 		model.addAttribute("categories", categories);
 		model.addAttribute("allAccounts", allAccounts);
@@ -107,14 +108,14 @@ public class ReportController {
 		try {
 			categories.addAll(categoryDao.getAllCategoriesByUserId(user.getUserId()));
 			categories.addAll(categoryDao.getAllCategoriesByUserId());
+
+			for (Account acc : accountDao.getAllAccountsByUserId(user.getUserId())) {
+				allAccounts.add(acc);
+			}
 		} catch (SQLException e) {
 			System.out.println("mai nemame kategoriiki?");
 		}
 		
-		for (Account acc : user.getAccounts()) {
-			allAccounts.add(acc);
-			
-		}
 		
 		model.addAttribute("date", date);
 		model.addAttribute("categories", categories);

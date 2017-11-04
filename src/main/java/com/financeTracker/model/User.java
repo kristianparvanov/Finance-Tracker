@@ -144,4 +144,12 @@ public class User {
 	public void setPassword(String password) {
 		this.password = DigestUtils.sha512(password.trim());
 	}
+	
+	public void addAccount(Account acc) {
+		this.accounts.add(acc);
+	}
+	
+	public void removeAccount(Account acc) {
+		this.accounts.remove(acc);
+	}
 }

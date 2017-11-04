@@ -108,7 +108,7 @@ public class ChartController {
 			Map<String, BigDecimal> transactions = transactionDAO.getIncomeVsExpences(user.getUserId(), 0);
 			
 			model.addAttribute("transactions", transactions);
-			model.addAttribute("accounts", user.getAccounts());
+			model.addAttribute("accounts", accountDAO.getAllAccountsByUserId(user.getUserId()));
 		} catch (SQLException e) {
 			return "error500";
 		}
@@ -152,7 +152,7 @@ public class ChartController {
 			
 			model.addAttribute("transactions", transactions);
 			model.addAttribute("date", date);
-			model.addAttribute("accounts", user.getAccounts());
+			model.addAttribute("accounts", accountDAO.getAllAccountsByUserId(user.getUserId()));
 		} catch (SQLException e) {
 			return "error500";
 		}
@@ -167,7 +167,7 @@ public class ChartController {
 		try {
 			Map<LocalDate, BigDecimal> defaultTransactions = transactionDAO.getTransactionAmountAndDate(user.getUserId(), 0);
 			
-			Set<Account> accounts = user.getAccounts();
+			Set<Account> accounts = accountDAO.getAllAccountsByUserId(user.getUserId());
 			BigDecimal allBalance = new BigDecimal(0);
 			for (Account account : accounts) {
 				allBalance = allBalance.add(account.getAmount());
@@ -222,9 +222,9 @@ public class ChartController {
 		
 		Map<LocalDate, BigDecimal> defaultTransactions = new TreeMap<>();
 		
-		Set<Account> accounts = user.getAccounts();
-		
 		try {
+			Set<Account> accounts = accountDAO.getAllAccountsByUserId(user.getUserId());
+			
 			Map<LocalDate, BigDecimal> finalDefaultTransactions = new TreeMap<LocalDate,BigDecimal>();
 			if (account.equals("All accounts")) {
 				defaultTransactions = transactionDAO.getTransactionAmountAndDate(user.getUserId(), 0, from, to);
