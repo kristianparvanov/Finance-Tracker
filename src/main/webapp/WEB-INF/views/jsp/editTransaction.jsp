@@ -2,6 +2,7 @@
     pageEncoding="ISO-8859-1"%>
 <%@ page import="java.math.BigDecimal"%>
 <%@ page import="com.financeTracker.model.TransactionType" %>
+<%@ taglib prefix="f" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/functions" prefix = "fn" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -30,7 +31,11 @@
 		<section class="content">
 			<div class="col-md-6">
 		        <div class="box box-primary">
-		            <form role="form" action="editTransaction" method="post">
+		        	<f:form role="form" commandName="transaction" method="post" action="editTransaction">
+		            <%-- <form role="form" action="editTransaction" method="post"> --%>
+		             <c:if test="${error!=null}">
+			 			<label style="color: red"><c:out value="${error}"/></label>
+		  			 </c:if>
 		              <div class="box-body">
 		              	<div class="form-group">
 			                <label>Type</label>
@@ -83,7 +88,8 @@
 						</div>
 		                <div class="form-group">
 		                  <label>Amount</label>
-		                  <input type="text" class="form-control" placeholder="Amount" name="amount" value="${ editTransactionAmount }">
+		                  <%-- <input type="text" class="form-control" placeholder="Amount" name="amount" value="${ editTransactionAmount }"> --%>
+		                  <f:input path="amount" type="text" cssClass="form-control" placeholder="Amount" value="${ editTransactionAmount }"/>
 		                </div>
 		                <div class="form-group">
 		                  <label>Date</label>
@@ -92,12 +98,12 @@
 	                    			<i class="fa fa-calendar"></i>
 	                  			</div>
 	                  			<fmt:parseDate value="${ editTransactionDate }" pattern="yyyy-MM-dd'T'HH:mm" var="parsedDateTime" type="both" />
-                  		 		<input type="text" class="form-control pull-right" id="datepicker" value="<fmt:formatDate pattern="dd.MM.yyyy HH:mm" value="${ parsedDateTime }" />" name="date">
+                  		 		<input type="text" class="form-control pull-right" id="datepicker" value="<fmt:formatDate pattern="MM/dd/yyyy" value="${ parsedDateTime }" />" name="date">
                 			</div>
 		                </div>
 		                <div class="form-group">
 			                <label>Tags</label>
-			                <select id="multy" class="form-control select2" multiple="multiple" data-placeholder="Select tags" style="width: 100%;" name="tags">
+			                <select id="multy" class="form-control select2" multiple="multiple" data-placeholder="Select tags" style="width: 100%;" name="tagss">
 				                <c:forEach items="${tags }" var="tag">
 				                	<option><c:out value="${tag.name}"></c:out></option>
 				                </c:forEach>
@@ -135,7 +141,8 @@
 		                <button type="submit" class="btn btn-primary">Save</button>
 		                <a href="<c:url value="/account/${sessionScope.accountId}"></c:url>" class="btn btn-default">Cancel</a>
 		              </div>
-		            </form>
+		            <%-- </form> --%>
+		            </f:form>
 		            <form action="deleteTransaction/${transactionId}" method="post">
 		            	<div class="box-footer">	
 		            		<button type="submit" class="btn btn-danger">Delete transaction</button>

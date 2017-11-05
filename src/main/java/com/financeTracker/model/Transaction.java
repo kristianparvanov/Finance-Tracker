@@ -6,10 +6,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.NotEmpty;
 
 public class Transaction {
 	private long transactionId;
@@ -18,6 +17,7 @@ public class Transaction {
 	
 	@NotNull
 	@Min(1)
+	@Max((long) 999999999.9999)
 	private BigDecimal amount;
 	
 	private long account;
@@ -118,9 +118,9 @@ public class Transaction {
 //		this.category = category;
 //	}
 
-	public void setDate(LocalDateTime date) {
-		this.date = date;
-	}
+//	public void setDate(LocalDateTime date) {
+//		this.date = date;
+//	}
 
 	public void setTags(Set<Tag> tags) {
 		this.tags = tags;

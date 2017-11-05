@@ -36,7 +36,6 @@ import com.financeTracker.model.db.TagDAO;
 import com.financeTracker.model.db.TransactionDAO;
 import com.financeTracker.model.db.UserDAO;
 
-
 @Controller
 @RequestMapping(value="/account")
 public class TransactionController {
@@ -171,6 +170,7 @@ public class TransactionController {
 				tagNames.add(tag.getName());
 			}
 			
+			model.addAttribute("transaction", t);	
 			model.addAttribute("editTransactionType", type);
 			model.addAttribute("editTransactionDescription", description);
 			model.addAttribute("editTransactionAmount", amount);
@@ -187,15 +187,46 @@ public class TransactionController {
 	}
 
 	@RequestMapping(value="/transaction/editTransaction", method=RequestMethod.POST)
-	public String postEditTransaction(HttpServletRequest request, HttpSession session, Model model) {
+	public String postEditTransaction(HttpServletRequest request, HttpSession session, Model model, @Valid @ModelAttribute("transaction") Transaction transaction, BindingResult bindingResult) {
+		transaction.setTags(null);
 		String type = request.getParameter("type");
 		String account = request.getParameter("account");
 		String category = request.getParameter("category");
 		String amount = request.getParameter("amount");
 		String date = request.getParameter("date");
-		String[] tags = request.getParameterValues("tags");
+		String[] tags = request.getParameterValues("tagss");
 		String description = request.getParameter("description");
 		long transactionId = (long) request.getSession().getAttribute("transactionId");
+		
+		if (type.isEmpty() || account.isEmpty() || category.isEmpty() || bindingResult.hasErrors()) {
+			model.addAttribute("error", "Could not update transaction. Please, enter valid data!");
+			try {
+				Transaction t = new Transaction();
+				Set<String> tagNames = new HashSet<String>();
+				for (String tag : tags) {
+					tagNames.add(tag);
+				}
+				
+				String[] inputDate = date.split("/");
+				int month = Integer.valueOf(inputDate[0]);
+				int dayOfMonth = Integer.valueOf(inputDate[1]);
+				int year = Integer.valueOf(inputDate[2]);
+				
+				LocalDateTime newDate = LocalDateTime.of(year, month, dayOfMonth, 0, 0, 0);
+				
+				model.addAttribute("editTransactionType", type);
+				model.addAttribute("editTransactionDescription", description);
+				model.addAttribute("editTransactionAmount", amount);
+				model.addAttribute("editTransactionAccount", account);
+				model.addAttribute("editTransactionCategory", category);
+				model.addAttribute("editTransactionDate", newDate);
+				model.addAttribute("editTransactionTags", tagNames);
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+			
+            return "editTransaction";
+	 	}
 		
 		String[] inputDate = date.split("/");
 		int month = Integer.valueOf(inputDate[0]);
