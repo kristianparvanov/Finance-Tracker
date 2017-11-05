@@ -82,6 +82,8 @@ public class PlannedPaymentController {
 	
 	@RequestMapping(value="/addPlannedPayment", method=RequestMethod.GET)
 	public String getAddPlannedPayment(HttpServletRequest request, HttpSession session) {
+		
+		session.setAttribute("link", "addPlannedPayment");
 		return "addPlannedPayment";
 	}
 	
@@ -163,6 +165,7 @@ public class PlannedPaymentController {
 				tagNames.add(tag.getName());
 			}
 			
+			session.setAttribute("link", "payment/" + plannedPaymentId);
 			model.addAttribute("editPlannedPaymentName", name);
 			model.addAttribute("editPlannedPaymentType", type);
 			model.addAttribute("editTPlannedPaymentDescription", description);

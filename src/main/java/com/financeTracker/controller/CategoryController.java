@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.financeTracker.model.Budget;
 import com.financeTracker.model.Category;
+import com.financeTracker.model.Transaction;
 import com.financeTracker.model.User;
 import com.financeTracker.model.db.CategoryDAO;
 import com.financeTracker.model.db.UserDAO;
@@ -30,9 +32,12 @@ public class CategoryController {
 	private UserDAO userDao;
 	
 	@RequestMapping(value="/addCategory", method=RequestMethod.GET)
-	public String displayCategory(HttpSession session, Model model) {
+	public String displayCategory(HttpSession session, Model model, HttpServletRequest request) {
+		String link = (String) session.getAttribute("link");
+		
 		Category category = new Category();
 		
+		model.addAttribute("link", link);
 		model.addAttribute("category", category);
 		return "category";
 	}
@@ -44,6 +49,8 @@ public class CategoryController {
 			
 			return "category";
 	 	}
+		
+		String link = (String) session.getAttribute("link");
 		
 		User user = (User) request.getSession().getAttribute("user");
 		try {
@@ -57,7 +64,7 @@ public class CategoryController {
 			
 			return "error500";
 		}
-
-		return "main";
+		
+		return "redirect:" + link;
 	}
 }

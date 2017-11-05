@@ -98,6 +98,7 @@ public class TransactionController {
 	public String getAddTransaction(HttpServletRequest request, HttpSession session, Model model) {
 		Transaction transaction = new Transaction();
 		
+		session.setAttribute("link", "addTransaction");
 		model.addAttribute("transaction", transaction);	
 		
 		return "addTransaction";
@@ -170,6 +171,7 @@ public class TransactionController {
 				tagNames.add(tag.getName());
 			}
 			
+			session.setAttribute("link", "account/transaction/" + transactionId);
 			model.addAttribute("transaction", t);	
 			model.addAttribute("editTransactionType", type);
 			model.addAttribute("editTransactionDescription", description);

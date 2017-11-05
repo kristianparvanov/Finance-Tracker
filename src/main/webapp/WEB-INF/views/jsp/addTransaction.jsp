@@ -86,7 +86,9 @@
 			                </select>
 			            </div>
 			            <div class="form-group">
-							<a href="<c:url value="/addCategory"></c:url>" type="button" class="btn btn-block btn-default" style="width: 30%;"><i class="ion ion-plus"></i> Add new category</a>
+							<a href="<c:url value="/addCategory"></c:url>" type="button" class="btn btn-block btn-default" style="width: 30%;"><i class="ion ion-plus" name="link"></i> Add new category'
+								<input type="hidden" name="link" value="addTransaction">
+							</a>
 						</div>
 		                <div class="form-group">
 		                  <label>Amount</label>
