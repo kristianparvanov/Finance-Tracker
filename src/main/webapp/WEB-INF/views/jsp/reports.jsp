@@ -119,7 +119,7 @@
 			
 			<c:forEach items="${ allTransactions }" var="transaction">
 				<div>
-					<a href="transaction/${transaction.transactionId}">
+					<a href="account/transaction/${transaction.transactionId}">
 			            <div class="info-box" style="width: auto;">
 				            <div class="info-box-content">
 					            <div class="row">

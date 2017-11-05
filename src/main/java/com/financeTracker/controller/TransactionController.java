@@ -98,7 +98,7 @@ public class TransactionController {
 	public String getAddTransaction(HttpServletRequest request, HttpSession session, Model model) {
 		Transaction transaction = new Transaction();
 		
-		session.setAttribute("link", "addTransaction");
+		session.setAttribute("link", "account/addTransaction");
 		model.addAttribute("transaction", transaction);	
 		
 		return "addTransaction";
