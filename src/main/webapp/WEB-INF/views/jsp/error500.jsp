@@ -32,6 +32,8 @@
 		          <h3><i class="fa fa-warning text-red"></i> Oops! Something went wrong.</h3>
 		          <h4>It's not you, It's us.</h4>
 				  <h4>Looks like our servers failed to load your request.</h4>
+				  <h4>OR</h4>
+				  <h4>Your session has just expired.</h4>
 		          <p>
 		            We will work on fixing that right away. Meanwhile, you may 
 		             <br>

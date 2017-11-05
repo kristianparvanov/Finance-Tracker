@@ -61,11 +61,6 @@
 		                <a href="main" class="btn btn-default">Cancel</a>
 		              </div>
 		            </form>
-		            <form action="deletePlannedPayment/${sessionScope.userId}" method="post">
-		            	<div class="box-footer">
-    						<button type="submit" class="btn btn-danger">Delete my profile</button>
-    					</div>
-					</form>
 	          	</div>
         	</div>
 		</section>

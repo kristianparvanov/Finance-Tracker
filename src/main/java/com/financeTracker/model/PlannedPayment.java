@@ -17,7 +17,7 @@ public class PlannedPayment {
 	private long plannedPaymentId;
 	
 	@NotNull
-	@Size(min = 2, max = 30)
+	@Size(min = 2, max = 45)
 	@NotEmpty
 	private String name;
 	
@@ -34,6 +34,9 @@ public class PlannedPayment {
 	private String categoryName;
 	private long category;
 	private HashSet<Tag> tags = new HashSet<Tag>();
+	
+	public PlannedPayment() {
+	}
 	
 	public PlannedPayment(String name, TransactionType paymentType, LocalDateTime fromDate, BigDecimal amount,
 			String description, long account, long category, HashSet<Tag> tags) {
@@ -94,6 +97,38 @@ public class PlannedPayment {
 	
 	public Set<Tag> getTags() {
 		return Collections.unmodifiableSet(tags);
+	}
+
+	public void setName(String name) {
+		this.name = name.trim();
+	}
+
+	public void setPaymentType(TransactionType paymentType) {
+		this.paymentType = paymentType;
+	}
+
+//	public void setFromDate(LocalDateTime fromDate) {
+//		this.fromDate = fromDate;
+//	}
+
+	public void setAmount(BigDecimal amount) {
+		this.amount = amount;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+//	public void setAccount(long account) {
+//		this.account = account;
+//	}
+//
+//	public void setCategory(long category) {
+//		this.category = category;
+//	}
+
+	public void setTags(HashSet<Tag> tags) {
+		this.tags = tags;
 	}
 
 	@Override

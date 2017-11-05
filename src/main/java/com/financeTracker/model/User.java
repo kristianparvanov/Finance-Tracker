@@ -18,7 +18,7 @@ public class User {
 	private long userId;
 	
 	@NotNull
-	@Size(min = 3)
+	@Size(min = 3, max = 45)
 	@NotEmpty
 	@Pattern(regexp = "[^\\s]+")
 	private String username;

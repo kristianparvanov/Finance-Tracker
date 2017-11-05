@@ -17,7 +17,7 @@ public class Budget {
 	private long budgetId;
 	
 	@NotNull
-	@Size(min = 2, max = 30)
+	@Size(min = 2, max = 45)
 	@NotEmpty
 	private String name;
 

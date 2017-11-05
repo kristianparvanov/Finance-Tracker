@@ -10,10 +10,13 @@ import java.util.Set;
 import javax.mail.Session;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,6 +25,7 @@ import com.financeTracker.model.Account;
 import com.financeTracker.model.Category;
 import com.financeTracker.model.PlannedPayment;
 import com.financeTracker.model.Tag;
+import com.financeTracker.model.Transaction;
 import com.financeTracker.model.TransactionType;
 import com.financeTracker.model.User;
 import com.financeTracker.model.db.AccountDAO;
@@ -81,20 +85,30 @@ public class PlannedPaymentController {
 	}
 	
 	@RequestMapping(value="/addPlannedPayment", method=RequestMethod.GET)
-	public String getAddPlannedPayment(HttpServletRequest request, HttpSession session) {
+	public String getAddPlannedPayment(HttpServletRequest request, HttpSession session, Model model) {
+		PlannedPayment plannedPayment = new PlannedPayment();
+		
+		model.addAttribute("plannedPayment", plannedPayment);	
 		return "addPlannedPayment";
 	}
 	
 	@RequestMapping(value="/addPlannedPayment", method=RequestMethod.POST)
-	public String postAddPlannedPayment(HttpServletRequest request, HttpSession session) {
+	public String postAddPlannedPayment(HttpServletRequest request, HttpSession session, Model m, @Valid @ModelAttribute("plannedPayment") PlannedPayment plannedPayment, BindingResult bindingResult) {
 		String name = request.getParameter("name");
 		String type = request.getParameter("type");
 		String account = request.getParameter("account");
 		String category = request.getParameter("category");
 		String amount = request.getParameter("amount");
 		String date = request.getParameter("date");
-		String[] tags = request.getParameterValues("tags");
+		String[] tags = request.getParameterValues("tagss");
 		String description = request.getParameter("description");
+		
+		plannedPayment.setTags(null);
+		if (type.isEmpty() || account.isEmpty() || category.isEmpty() || date.isEmpty()  || bindingResult.hasErrors()) {
+			m.addAttribute("error", "Could not insert planned payment. Please, enter valid data!");
+			PlannedPayment p = new PlannedPayment();
+            return "addPlannedPayment";
+	 	}
 		
 		String[] inputDate = date.split("/");
 		int month = Integer.valueOf(inputDate[0]);

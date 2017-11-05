@@ -76,7 +76,13 @@
 					</div>
 					<div class="box-footer">
 						<h3 class="box-title" style="font-size: 18px">Made possible by</h3>
-						<img src="http://ittalents.bg/images/logo-black.png" alt="ITT">
+						<div class="col-sm-4" style="display:table-cell; vertical-align:middle; text-align:center">
+							<img src="http://ittalents.bg/images/logo-black.png" alt="ITT">
+						</div>
+						<div class="col-sm-4" style="display:table-cell; vertical-align:middle; text-align:center">
+							<img src="https://media.licdn.com/mpr/mpr/shrinknp_200_200/AAEAAQAAAAAAAAUfAAAAJDhlM2JlNDI1LTljMTEtNGEyNS1iMjM3LTE3MTBmOWQ2YTY0MA.jpg" alt="Krasity">
+							<h3>IT Talents Trainer Krasimir Stoev</h3>
+						</div>
 					</div>
 					<!-- /.box-body -->
 				</div>

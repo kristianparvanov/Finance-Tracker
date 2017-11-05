@@ -19,7 +19,7 @@ public class Account {
 	private long accountId;
 	
 	@NotNull
-	@Size(min = 2, max = 30)
+	@Size(min = 2, max = 45)
 	@NotEmpty
 //	@Pattern(regexp="[^\\s]+")
 	private String name;

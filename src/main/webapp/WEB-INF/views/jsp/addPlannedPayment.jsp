@@ -2,7 +2,7 @@
     pageEncoding="ISO-8859-1"%>
 <%@ page import="java.math.BigDecimal"%>
 <%@ page import="com.financeTracker.model.TransactionType" %>
-<%@ page import="com.financeTracker.model.TransactionType" %>
+<%@ taglib prefix="f" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/functions" prefix = "fn" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -29,11 +29,16 @@
 		<section class="content">
 			<div class="col-md-6">
 		        <div class="box box-primary">
-		        	 <form role="form" action="addPlannedPayment" method="post">
+		        	 <!-- <form role="form" action="addPlannedPayment" method="post"> -->
+		        	 <f:form role="form" commandName="plannedPayment" method="post" action="addPlannedPayment">
+			        	 <c:if test="${error!=null}">
+				 			<label style="color: red"><c:out value="${error}"/></label>
+			  			</c:if>
 		        	 	<div class="box-body">
 		        	 		<div class="form-group">
                   				<label>Name</label>
-                  				<input type="text" class="form-control" placeholder="Enter planned payment name" name="name" >
+                  				<f:input type="text" cssClass="form-control" placeholder="Enter planned payment name" path="name" />
+                  				<!-- <input type="text" class="form-control" placeholder="Enter planned payment name" name="name" > -->
                 			</div>
 		        	 		<div class="form-group">
 			                	<label>Type</label>
@@ -87,7 +92,8 @@
 							</div>
 			                <div class="form-group">
 			                  <label>Amount</label>
-			                  <input type="text" class="form-control" placeholder="Amount" name="amount">
+			                   <f:input path="amount" type="text" cssClass="form-control" placeholder="Amount"/>
+			                  <!-- <input type="text" class="form-control" placeholder="Amount" name="amount"> -->
 			                </div>
 			                <div class="form-group">
 			                  	<label>Date</label>
@@ -100,7 +106,7 @@
 		               		</div>
 			                <div class="form-group">
 				                <label>Tags</label>
-				                <select class="form-control select2" multiple="multiple" data-placeholder="Select tags" style="width: 100%;" name="tags">
+				                <select class="form-control select2" multiple="multiple" data-placeholder="Select tags" style="width: 100%;" name="tagss">
 				                  <c:forEach items="${tags}" var="tag">
 				                	  <option><c:out value="${tag.name}"></c:out></option>
 				                  </c:forEach>
@@ -115,7 +121,8 @@
 			                <button type="submit" class="btn btn-primary">Save</button>
 			                <a href="<c:url value="/plannedPayments"></c:url>" class="btn btn-default">Cancel</a>
 		             	</div>
-		            </form>
+		            <%-- </form> --%>
+		            </f:form>
 	          	</div>
         	</div>
 		</section>
