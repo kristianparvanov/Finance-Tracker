@@ -5,11 +5,12 @@
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/functions" prefix = "fn" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@taglib uri = "http://www.springframework.org/tags/form" prefix = "f"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>User | Finance Tracker</title>
+<title>Profile | Finance Tracker</title>
 <link href="<c:url value="/img/favicon.ico" />" rel="icon" type="image/x-icon">
 </head>
 <body>
@@ -21,16 +22,20 @@
 	</div>
 	<div class="content-wrapper">
 		<section class="content-header">
-			<h2>Your profile, <span>${ sessionScope.user.firstName }</span></h2>
+			<h2>Your profile, <span>${ firstName }</span></h2>
 		</section>
 		<section class="content">
 			<div class="col-md-6">
 		        <div class="box box-primary">
-		            <form role="form" action='<c:url value='/user/edit'></c:url>' method="post">
+		        <c:url var="url" value='/user/edit'></c:url>
+		            <f:form role="form" action="${ url }" method="POST" commandName="newUser">
 		              <div class="box-body">
+		              <c:if test="${editUser!=null}">
+		 					<label style="color: red"><c:out value="${editUser}"/></label>
+	  					</c:if>
 		                <div class="form-group">
 			                <label>Email</label>
-               				<input type="text" id="email" class="form-control" name="email" >
+               				<f:input type="text" id="email" class="form-control" path="email" />
                				<c:set var="email" value="${ email }" />
                  			<script type="text/javascript">
                  				var asd = '${email}';
@@ -39,7 +44,7 @@
 			            </div>
 		                 <div class="form-group">
 			                <label>First name</label>
-               				<input type="text" id="firstName" class="form-control" name="firstName" >
+               				<f:input type="text" id="firstName" class="form-control" path="firstName" />
                				<c:set var="firstName" value="${ firstName }" />
                  			<script type="text/javascript">
                  				var asd = '${firstName}';
@@ -48,7 +53,7 @@
 			            </div>
 		                <div class="form-group">
 		                  <label>Last name</label>
-               				<input type="text" id="lastName" class="form-control" name="lastName" >
+               				<f:input type="text" id="lastName" class="form-control" path="lastName" />
                				<c:set var="lastName" value="${ lastName }" />
                  			<script type="text/javascript">
                  				var asd = '${lastName}';
@@ -60,7 +65,7 @@
 		                <button type="submit" class="btn btn-primary">Save</button>
 		                <a href="main" class="btn btn-default">Cancel</a>
 		              </div>
-		            </form>
+		            </f:form>
 		            <form action="deletePlannedPayment/${sessionScope.userId}" method="post">
 		            	<div class="box-footer">
     						<button type="submit" class="btn btn-danger">Delete my profile</button>
