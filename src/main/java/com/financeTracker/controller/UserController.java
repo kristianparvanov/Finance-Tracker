@@ -222,17 +222,36 @@ public class UserController {
 		model.addAttribute("email", email);
 		model.addAttribute("firstName", firstName);
 		model.addAttribute("lastName", lastName);
+		model.addAttribute("newUser", new User());
 		session.setAttribute("userId", u.getUserId());
 		return "user";
 	}
 	
 	@RequestMapping(value="/user/edit", method=RequestMethod.POST)
-	public String UpdateUser(HttpSession session, HttpServletRequest request) {
+	public String UpdateUser(HttpSession session, HttpServletRequest request, Model model, @Valid @ModelAttribute("newUser") User newUser, BindingResult bindingResult) {
 		User user = (User) session.getAttribute("user");
 		
-		user.setEmail(request.getParameter("email"));
-		user.setFirstName(request.getParameter("firstName"));
-		user.setLastName(request.getParameter("lastName"));
+		if (bindingResult.hasErrors()) {
+			model.addAttribute("editUser", "Could not edit your profile. Please, enter a valid email, first name and last name!");
+			String username = user.getUsername();
+			String email = user.getEmail();
+			String firstName = user.getFirstName();
+			String lastName = user.getLastName();
+			
+			model.addAttribute("username", username);
+			model.addAttribute("email", email);
+			model.addAttribute("firstName", firstName);
+			model.addAttribute("lastName", lastName);
+			model.addAttribute("newUser", new User());
+			session.setAttribute("userId", user.getUserId());
+			
+			return "user";
+		}
+		
+		
+		user.setEmail(newUser.getEmail());
+		user.setFirstName(newUser.getFirstName());
+		user.setLastName(newUser.getLastName());
 		
 		try {
 			userDAO.updateUser(user);

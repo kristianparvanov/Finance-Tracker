@@ -169,12 +169,13 @@ public class BudgetController {
 			Set<Tag> tagsSet = new HashSet<>();
 			if (tags != null) {
 				for (String tagName : tags) {
-					tagsSet.add(new Tag(tagName, user.getUserId()));
+					tagsSet.add(tagDAO.getTagByNameAndUser(tagName, user.getUserId()));
 				}
 			}
 
 //			Budget b = new Budget(name, amount, dateFrom, dateTo, acc.getAccountId(), category.getCategoryId(), tagsSet);
 			
+			session.setAttribute("link", "addBudget");
 			budget.setFromDate(dateFrom);
 			budget.setToDate(dateTo);
 			budget.setAccountId(acc.getAccountId());
@@ -398,6 +399,7 @@ public class BudgetController {
 				tagNames.add(tag.getName());
 			}
 			
+			session.setAttribute("link", "budgets/" + budgetId + "/editBudget");
 			model.addAttribute("categoryName", categoryName);
 			model.addAttribute("categories", categories);
 			model.addAttribute("tagNames", tagNames);

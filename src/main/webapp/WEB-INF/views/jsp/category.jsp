@@ -43,6 +43,8 @@
 			                  <option>EXPENCE</option>
 			                  <option>INCOME</option>
 			                </f:select>
+			                
+			                <input type="hidden" name="link" value="${ link }">
 			            </div>
 		              </div>
 		              <div class="box-footer">
