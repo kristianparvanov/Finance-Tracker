@@ -167,4 +167,19 @@ public class TagDAO {
 		String query = "SELECT tag_id FROM tags WHERE tag_id = ? AND user_id = ?";
 		return false;
 	}
+	
+	public Tag getTagByNameAndUser(String name, long userId) throws SQLException {
+		String sql = "SELECT tag_id FROM tags WHERE name = ? AND user_id = ?;";
+		
+		PreparedStatement ps = dbManager.getConnection().prepareStatement(sql);
+		ps.setString(1, name);
+		ps.setLong(2, userId);
+		
+		ResultSet res = ps.executeQuery();
+		res.next();
+		
+		Tag t = new Tag(res.getLong("tag_id"), name, userId);
+		
+		return t;
+	}
 }

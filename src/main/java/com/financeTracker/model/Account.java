@@ -2,6 +2,7 @@ package com.financeTracker.model;
 
 import java.math.BigDecimal;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -25,6 +26,7 @@ public class Account {
 	
 	@NotNull
 	@Min(1)
+	@Max((long) 999999999.9999)
 	private BigDecimal amount;
 	
 	private long userID;
