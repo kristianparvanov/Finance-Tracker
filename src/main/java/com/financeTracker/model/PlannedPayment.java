@@ -29,6 +29,7 @@ public class PlannedPayment {
 	@Max((long) 999999999.9999)
 	private BigDecimal amount;
 	
+	@Size(min = 2, max = 45)
 	private String description;
 	private long account;
 	private String categoryName;

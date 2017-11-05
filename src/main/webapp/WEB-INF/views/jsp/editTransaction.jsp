@@ -129,7 +129,7 @@
 			            </div>
 		                <div class="form-group">
                   			<label>Description</label>
-                 			<textarea id="desc" class="form-control" rows="3" placeholder="Enter transaction description here" name="description" ></textarea>
+                 			<f:textarea id="desc" class="form-control" rows="3" placeholder="Enter transaction description here" path="description" ></f:textarea>
                  			<c:set var="description" value="${ editTransactionDescription }" />
                  			<script type="text/javascript">
                  				var asd = '${description}';

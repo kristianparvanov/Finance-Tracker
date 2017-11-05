@@ -114,7 +114,7 @@
 				            </div>
 			                <div class="form-group">
 	                  			<label>Description</label>
-	                 			<textarea class="form-control" rows="3" placeholder="Enter transaction description here" name="description"></textarea>
+	                 			<f:textarea class="form-control" rows="3" placeholder="Enter transaction description here" path="description"></f:textarea>
 	               			</div>
 	               		  </div>
 	               		  <div class="box-footer">

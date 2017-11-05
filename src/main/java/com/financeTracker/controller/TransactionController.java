@@ -111,7 +111,7 @@ public class TransactionController {
 		String category = request.getParameter("category");
 		String amount = request.getParameter("amount");
 		String[] tags = request.getParameterValues("tagss");
-		String description = request.getParameter("description");
+//		String description = request.getParameter("description");
 		transaction.setTags(null);
 		if (type.isEmpty() || account.isEmpty() || category.isEmpty() || bindingResult.hasErrors()) {
 			m.addAttribute("error", "Could not insert transaction. Please, enter valid data!");
@@ -132,7 +132,7 @@ public class TransactionController {
 		try {
 			acc = accountDAO.getAccountByAccountNameAndAccountId(account, u.getUserId());
 			Category cat = categoryDao.getCategoryByCategoryName(category);
-			Transaction t = new Transaction(TransactionType.valueOf(type), description, BigDecimal.valueOf(Double.valueOf(amount)), acc.getAccountId(), cat.getCategoryId(), LocalDateTime.now(), tagsSet);
+			Transaction t = new Transaction(TransactionType.valueOf(type), transaction.getDescription(), BigDecimal.valueOf(Double.valueOf(amount)), acc.getAccountId(), cat.getCategoryId(), LocalDateTime.now(), tagsSet);
 			BigDecimal newValue = BigDecimal.valueOf(Double.valueOf(amount));
 			BigDecimal oldValue = accountDAO.getAmountByAccountId((int)acc.getAccountId());
 			if (type.equals("EXPENCE")) {
@@ -197,7 +197,7 @@ public class TransactionController {
 		String amount = request.getParameter("amount");
 		String date = request.getParameter("date");
 		String[] tags = request.getParameterValues("tagss");
-		String description = request.getParameter("description");
+//		String description = request.getParameter("description");
 		long transactionId = (long) request.getSession().getAttribute("transactionId");
 		
 		if (type.isEmpty() || account.isEmpty() || category.isEmpty() || bindingResult.hasErrors()) {
@@ -217,7 +217,7 @@ public class TransactionController {
 				LocalDateTime newDate = LocalDateTime.of(year, month, dayOfMonth, 0, 0, 0);
 				
 				model.addAttribute("editTransactionType", type);
-				model.addAttribute("editTransactionDescription", description);
+				model.addAttribute("editTransactionDescription", transaction.getDescription());
 				model.addAttribute("editTransactionAmount", amount);
 				model.addAttribute("editTransactionAccount", account);
 				model.addAttribute("editTransactionCategory", category);
@@ -250,7 +250,7 @@ public class TransactionController {
 		try {
 			acc = accountDAO.getAccountByAccountNameAndAccountId(account, u.getUserId());
 			Category cat = categoryDao.getCategoryByCategoryName(category);
-			Transaction t = new Transaction(TransactionType.valueOf(type), description, BigDecimal.valueOf(Double.valueOf(amount)), acc.getAccountId(), cat.getCategoryId(), newDate, tagsSet);
+			Transaction t = new Transaction(TransactionType.valueOf(type), transaction.getDescription(), BigDecimal.valueOf(Double.valueOf(amount)), acc.getAccountId(), cat.getCategoryId(), newDate, tagsSet);
 			t.setTransactionId(transactionId);
 			BigDecimal newValue = BigDecimal.valueOf(Double.valueOf(amount));
 			BigDecimal oldValue = accountDAO.getAmountByAccountId((int)acc.getAccountId());
