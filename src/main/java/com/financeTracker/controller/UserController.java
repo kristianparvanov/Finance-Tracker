@@ -72,7 +72,6 @@ public class UserController {
 	
 	@RequestMapping(value="/login", method=RequestMethod.POST)
 	public String login(HttpServletRequest request, HttpSession session, Model viewModel, @ModelAttribute("user") User user) {
-		
 		try {
 			if (userDAO.isValidLogin(user.getUsername(), user.getPassword())) {
 				User u = userDAO.getUser(user.getUsername());
@@ -94,7 +93,6 @@ public class UserController {
 	
 	@RequestMapping(value="/register", method=RequestMethod.POST)
 	public String register(HttpServletRequest request, HttpSession session, Model viewModel, @Valid @ModelAttribute("user") User user, BindingResult bindingResult) {
-		
 		if (bindingResult.hasErrors()) {
 			viewModel.addAttribute("register", "Could not create profile. Please, enter a valid username and password!");
 			
@@ -222,13 +220,13 @@ public class UserController {
 		model.addAttribute("email", email);
 		model.addAttribute("firstName", firstName);
 		model.addAttribute("lastName", lastName);
-		model.addAttribute("newUser", new User());
+		model.addAttribute("user", new User());
 		session.setAttribute("userId", u.getUserId());
 		return "user";
 	}
 	
 	@RequestMapping(value="/user/edit", method=RequestMethod.POST)
-	public String UpdateUser(HttpSession session, HttpServletRequest request, Model model, @Valid @ModelAttribute("newUser") User newUser, BindingResult bindingResult) {
+	public String UpdateUser(HttpSession session, HttpServletRequest request, Model model, @Valid @ModelAttribute("user") User newUser, BindingResult bindingResult) {
 		User user = (User) session.getAttribute("user");
 		
 		if (bindingResult.hasErrors()) {
@@ -242,7 +240,7 @@ public class UserController {
 			model.addAttribute("email", email);
 			model.addAttribute("firstName", firstName);
 			model.addAttribute("lastName", lastName);
-			model.addAttribute("newUser", new User());
+			model.addAttribute("user", new User());
 			session.setAttribute("userId", user.getUserId());
 			
 			return "user";
@@ -258,6 +256,8 @@ public class UserController {
 			
 			session.setAttribute("user", user);
 		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			
 			return "error500";
 		}
 		

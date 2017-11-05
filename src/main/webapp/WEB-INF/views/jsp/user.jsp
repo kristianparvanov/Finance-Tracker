@@ -28,11 +28,13 @@
 			<div class="col-md-6">
 		        <div class="box box-primary">
 		        <c:url var="url" value='/user/edit'></c:url>
-		            <f:form role="form" action="${ url }" method="POST" commandName="newUser">
+		            <f:form role="form" action="${ url }" method="POST" commandName="user">
 		              <div class="box-body">
 		              <c:if test="${editUser!=null}">
 		 					<label style="color: red"><c:out value="${editUser}"/></label>
 	  					</c:if>
+	  					<f:hidden path="username" value="${ username }" />
+	  					<f:hidden path="password" value="passddsfs" />
 		                <div class="form-group">
 			                <label>Email</label>
                				<f:input type="text" id="email" class="form-control" path="email" />
