@@ -41,7 +41,7 @@ public class AccountController {
 			return "addAccount";
 	 	}
 		
-		User user = (User) request.getSession().getAttribute("user");
+		User user = (User) session.getAttribute("user");
 		try {
 			account.setUserID(user.getUserId());
 			accountDAO.insertAccount(account);

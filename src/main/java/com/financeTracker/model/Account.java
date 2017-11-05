@@ -32,7 +32,11 @@ public class Account {
 	private List<Budget> budgets;
 	private List<PlannedPayment> plannedPayments;
 	
-	public Account() {}
+	public Account() {
+		this.transactions = new ArrayList<>();
+		this.budgets =  new ArrayList<>();
+		this.plannedPayments =  new ArrayList<>();
+	}
 	
 	public Account(String name, BigDecimal amount, long userID, List<Transaction> transactions, List<Budget> budgets, List<PlannedPayment> plannedPayments) {
 		this.name = name;

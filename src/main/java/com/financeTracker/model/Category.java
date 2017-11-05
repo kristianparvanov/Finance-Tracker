@@ -1,5 +1,6 @@
 package com.financeTracker.model;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -26,7 +27,9 @@ public class Category {
 	private List<PlannedPayment> plannedPayments;
 	
 	public Category() {
-		
+		this.transactions = new ArrayList<>();
+		this.budgets = new ArrayList<>();
+		this.plannedPayments = new ArrayList<>();
 	}
 	
 	public Category(String name, TransactionType type , Long userId, List<Transaction> transactions, List<Budget> budgets, List<PlannedPayment> plannedPayments) {

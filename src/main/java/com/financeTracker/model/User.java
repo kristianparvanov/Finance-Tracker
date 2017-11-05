@@ -52,6 +52,9 @@ public class User {
 	private Set<Tag> tags;
 	
 	public User() {
+		this.accounts = new HashSet<>();
+		this.ownCategories = new HashSet<>();
+		this.tags = new HashSet<>();
 	}
 	
 	public User(String username, String password, String email, String firstName, String lastName, Set<Account> accounts, 
