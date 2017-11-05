@@ -11,6 +11,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Add Category | Finance Tracker</title>
+<link href="<c:url value="/img/favicon.ico" />" rel="icon" type="image/x-icon">
 <link href="<c:url value="/css/select2.min.css" />" rel="stylesheet" type="text/css">
 </head>
 <body>

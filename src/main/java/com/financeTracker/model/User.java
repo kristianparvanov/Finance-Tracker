@@ -46,6 +46,7 @@ public class User {
 	private String lastName;
 	
 	private LocalDateTime lastFill;
+	private String passwordToken;
 	private Set<Account> accounts;
 	private Set<Category> ownCategories;
 	private Set<Tag> tags;
@@ -54,7 +55,7 @@ public class User {
 	}
 	
 	public User(String username, String password, String email, String firstName, String lastName, Set<Account> accounts, 
-			Set<Category> ownCategories, Set<Tag> tags, LocalDateTime lastFill) {
+			Set<Category> ownCategories, Set<Tag> tags, LocalDateTime lastFill, String passwordToken) {
 		this.username = username;
 		this.password = DigestUtils.sha512(password);
 		this.email = email;
@@ -64,10 +65,12 @@ public class User {
 		this.ownCategories = ownCategories;
 		this.tags = tags;
 		this.lastFill = lastFill;
+		this.passwordToken = passwordToken;
 	}
 	
 	public User(String username, String password, String email, String firstName, String lastName) {
-		this(username, password, email, firstName, lastName, new HashSet<>(), new HashSet<>(), new HashSet<>(), LocalDateTime.now());
+		this(username, password, email, firstName, lastName, new HashSet<>(), new HashSet<>(), new HashSet<>(), LocalDateTime.now(),
+				DigestUtils.sha512Hex(DigestUtils.sha512Hex(password) + username));
 		
 	}
 	
@@ -151,5 +154,13 @@ public class User {
 	
 	public void removeAccount(Account acc) {
 		this.accounts.remove(acc);
+	}
+
+	public String getPasswordToken() {
+		return passwordToken;
+	}
+
+	public void setPasswordToken(String passwordToken) {
+		this.passwordToken = passwordToken;
 	}
 }

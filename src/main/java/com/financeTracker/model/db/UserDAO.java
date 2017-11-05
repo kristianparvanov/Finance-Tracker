@@ -53,7 +53,7 @@ public class UserDAO {
 			return;
 		}
 		
-		String sql = "SELECT user_id, username, password, email, first_name, last_name, last_fill FROM users";
+		String sql = "SELECT user_id, username, password, email, first_name, last_name, last_fill, password_token FROM users";
 		
 		PreparedStatement ps = dbManager.getConnection().prepareStatement(sql);
 		ResultSet res = ps.executeQuery();
@@ -66,11 +66,12 @@ public class UserDAO {
 			String lastName = res.getString("last_name");
 			Long userId = Long.valueOf(res.getLong("user_id"));
 			LocalDateTime lastFill = res.getTimestamp("last_fill").toLocalDateTime();
+			String passwordToken = res.getString("password_token");
 			Set<Account> accounts = accountDAO.getAllAccountsByUserId(userId);
 			Set<Category> ownCategories = categoryDao.getAllCategoriesByUserId(userId);
 			Set<Tag> tags = tagDAO.getAllTagsByUserId(userId);
 			
-			User user = new User(userName, password, email, firstName, lastName, accounts, ownCategories, tags, lastFill);
+			User user = new User(userName, password, email, firstName, lastName, accounts, ownCategories, tags, lastFill, passwordToken);
 			user.setUserId(userId);
 			
 			ALL_USERS.put(userName, user);
@@ -95,8 +96,8 @@ public class UserDAO {
 
 	public synchronized void insertUser(User u) throws SQLException {
 		Connection con = dbManager.getConnection();
-		PreparedStatement ps = con.prepareStatement("INSERT INTO users (username, password, email, first_name, last_name, last_fill) "
-														+ "VALUES (?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+		PreparedStatement ps = con.prepareStatement("INSERT INTO users (username, password, email, first_name, last_name, last_fill, password_token) "
+														+ "VALUES (?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 		
 		ps.setString(1, u.getUsername());
 		ps.setString(2, DigestUtils.sha512Hex(u.getPassword()));
@@ -104,6 +105,7 @@ public class UserDAO {
 		ps.setString(4, u.getFirstName());
 		ps.setString(5, u.getLastName());
 		ps.setTimestamp(6, Timestamp.valueOf(LocalDateTime.now().withNano(0)));
+		ps.setString(7, u.getPasswordToken());
 		ps.executeUpdate();
 		
 		ResultSet res = ps.getGeneratedKeys();
@@ -117,14 +119,15 @@ public class UserDAO {
 	
 	public synchronized void updateUser(User user) throws SQLException {
 		String sql = "UPDATE users SET email = ?, first_name = ?, last_name = ?, "
-				+ "last_fill = STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s') WHERE user_id = ?;";
+				+ "last_fill = STR_TO_DATE(?, '%Y-%m-%d %H:%i:%s'), password_token = ? WHERE user_id = ?;";
 		
 		PreparedStatement ps = dbManager.getConnection().prepareStatement(sql);
 		ps.setString(1, user.getEmail());
 		ps.setString(2, user.getFirstName());
 		ps.setString(3, user.getLastName());
 		ps.setTimestamp(4, Timestamp.valueOf(user.getLastFill().withNano(0)));
-		ps.setLong(5, user.getUserId());
+		ps.setString(5, user.getPasswordToken());
+		ps.setLong(6, user.getUserId());
 		ps.executeUpdate();
 		
 		ALL_USERS.put(user.getUsername(), user);
@@ -225,7 +228,7 @@ public class UserDAO {
 	}
 
 	public User getUserByEmail(String email) throws SQLException {
-		String sql = "SELECT user_id, username, password, first_name, last_name, last_fill FROM users WHERE email = ?;";
+		String sql = "SELECT user_id, username, password, first_name, last_name, last_fill, password_token FROM users WHERE email = ?;";
 		
 		PreparedStatement ps = dbManager.getConnection().prepareStatement(sql);
 		ps.setString(1, email);
@@ -239,8 +242,44 @@ public class UserDAO {
 		String lastName = res.getString("last_name");
 		long userId = res.getLong("user_id");
 		LocalDateTime lastFill = res.getTimestamp("last_fill").toLocalDateTime();
+		String passwordToken = res.getString("password_token");
 		
-		User user = new User(username, password, email, firstName, lastName, null, null, null, lastFill);
+		User user = new User(username, password, email, firstName, lastName, null, null, null, lastFill, passwordToken);
+		user.setUserId(userId);
+		
+		return user;
+	}
+	
+	public boolean existUserByPasswordToken(String token) throws SQLException {
+		String sql = "SELECT count(*) as count FROM users WHERE password_token = ?;";
+		
+		PreparedStatement ps = dbManager.getConnection().prepareStatement(sql);
+		ps.setString(1, token);
+		
+		ResultSet res = ps.executeQuery();
+		res.next();
+		
+		return res.getInt("count") > 0;
+	}
+	
+	public User getUserByPasswordToken(String token) throws SQLException {
+		String sql = "SELECT user_id, username, password, first_name, last_name, last_fill, email FROM users WHERE password_token = ?;";
+		
+		PreparedStatement ps = dbManager.getConnection().prepareStatement(sql);
+		ps.setString(1, token);
+		
+		ResultSet res = ps.executeQuery();
+		res.next();
+		
+		String username = res.getString("username");
+		String password = res.getString("password");
+		String firstName = res.getString("first_name");
+		String lastName = res.getString("last_name");
+		long userId = res.getLong("user_id");
+		LocalDateTime lastFill = res.getTimestamp("last_fill").toLocalDateTime();
+		String email = res.getString("email");
+		
+		User user = new User(username, password, email, firstName, lastName, null, null, null, lastFill, token);
 		user.setUserId(userId);
 		
 		return user;

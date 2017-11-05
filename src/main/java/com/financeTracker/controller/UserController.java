@@ -20,6 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -116,6 +117,8 @@ public class UserController {
 		try {
 			if (!userDAO.existsUser(user.getUsername())) {
 				
+				user.setPasswordToken(DigestUtils.sha512Hex(DigestUtils.sha512Hex(user.getPassword()) + user.getPassword()));
+				
 				userDAO.insertUser(user);
 				
 				session.setAttribute("user", user);
@@ -125,6 +128,8 @@ public class UserController {
 				return "main";
 			}
 		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			
 			return "error500";
 		}
 		return "login";
@@ -253,7 +258,8 @@ public class UserController {
 			if (userDAO.existEmail(email)) {
 				User user = userDAO.getUserByEmail(email);
 				
-				EmailSender.sendSimpleEmail(email, "FT ZABRAVENA PAROLA", "MAIKA TI! NA TI USERNAMEa" + user.getUsername() + "EI tuka nátisni :)" + "<a href=\"http://localhost:8080/FinanceTracker/resetPassword\">EI tuka nátisni :)</a>");
+				EmailSender.sendSimpleEmail(email, "FT FORGOTTEN PASSWORD", "Hello " + user.getFirstName() + " " + user.getLastName() + ",\n" 
+				+ "Click on the link to change password:\n" + "http://localhost:8080/FinanceTracker/resetPassword/" + user.getPasswordToken());
 			} else {
 				model.addAttribute("forgottenPassword", "Invalid email :(");
 			}
@@ -266,28 +272,27 @@ public class UserController {
 		return "forgottenPassword";
 	}
 	
-	@RequestMapping(value = "/resetPassword", method = RequestMethod.GET)
-	public String resetPassword(Model model) {
+	@RequestMapping(value = "/resetPassword/{passwordToken}", method = RequestMethod.GET)
+	public String resetPassword(Model model, @PathVariable("passwordToken") String passwordToken) {
+		model.addAttribute("token", passwordToken);
+		
 		return "resetPassword";
 	}
 	
-	@RequestMapping(value = "/resetPassword", method = RequestMethod.POST)
-	public String getNewPassword(HttpServletRequest request, Model model) {
-		String username = request.getParameter("username");
+	@RequestMapping(value = "/resetPassword/{passwordToken}", method = RequestMethod.POST)
+	public String getNewPassword(HttpServletRequest request, Model model, @PathVariable("passwordToken") String passwordToken) {
 		String password = request.getParameter("password");
 		String repeatPassword = request.getParameter("repeatPassword");
 		
-		
 		try {
-			if (userDAO.existsUser(username) && password.equals(repeatPassword)) {
-				User user = userDAO.getUser(username);
-//				user.setPassword(password);
-				
-//				userDAO.updateUser(user);
+			if (userDAO.existUserByPasswordToken(passwordToken) && password.equals(repeatPassword)) {
+				User user = userDAO.getUserByPasswordToken(passwordToken);
 				
 				userDAO.updateUserPassword(user, password);
 			} else {
 				model.addAttribute("ressetPassword", "Enter valid date");
+				
+				return "resetPassword";
 			}
 			
 		} catch (SQLException e) {
@@ -300,6 +305,6 @@ public class UserController {
 		
 		model.addAttribute("user", user);
 		
-		return "login";
+		return "redirect:/login";
 	}
 }

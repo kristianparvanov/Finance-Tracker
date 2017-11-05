@@ -10,6 +10,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Main | Finance Tracker</title>
+ <link href="<c:url value="/img/favicon.ico" />" rel="icon" type="image/x-icon">
 <script src="<c:url value="/js/Chart.bundle.js" />"  type ="text/javascript"></script>
 <script src="<c:url value="/js/utils.js" />"  type ="text/javascript"></script>
 </head>

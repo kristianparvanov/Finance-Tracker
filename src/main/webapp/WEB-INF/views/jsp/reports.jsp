@@ -10,6 +10,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Reports | Finance Tracker</title>
+<link href="<c:url value="/img/favicon.ico" />" rel="icon" type="image/x-icon">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <link rel="stylesheet" href="<c:url value='/css/daterangepicker.css'></c:url>">

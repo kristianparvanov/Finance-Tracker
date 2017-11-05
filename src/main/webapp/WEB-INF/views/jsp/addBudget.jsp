@@ -14,6 +14,7 @@
 		<script src="js/moment.min.js"></script>
 		<script src="js/daterangepicker.js"></script>
 		<title>Add Budget | Finance Tracker</title>
+		<link href="<c:url value="/img/favicon.ico" />" rel="icon" type="image/x-icon">
 	</head>
 	<body>
 		<div>

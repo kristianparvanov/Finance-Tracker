@@ -7,6 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Left | Finance Tracker</title>
 <!-- Tell the browser to be responsive to screen width -->
+ <link href="<c:url value="/img/favicon.ico" />" rel="icon" type="image/x-icon">
 <meta
 	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
 	name="viewport">

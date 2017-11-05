@@ -10,7 +10,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Transactions | Finance Tracker</title>
-		 
+		 <link href="<c:url value="/img/favicon.ico" />" rel="icon" type="image/x-icon">
 </head>
 <body>
 	<div>

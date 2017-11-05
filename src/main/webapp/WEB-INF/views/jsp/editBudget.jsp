@@ -13,6 +13,7 @@
 		<script src='<c:url value='/js/moment.min.js'></c:url>'></script>
 		<script src='<c:url value='/js/daterangepicker.js'></c:url>'></script>
 		<title>Edit Budget | Finance Tracker</title>
+		<link href="<c:url value="/img/favicon.ico" />" rel="icon" type="image/x-icon">
 	</head>
 	<body>
 		<div>
