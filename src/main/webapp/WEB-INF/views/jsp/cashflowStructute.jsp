@@ -133,7 +133,9 @@
 				                    window.chartColors.yellow,
 				                    window.chartColors.green,
 				                    window.chartColors.blue,
-				                    window.chartColors.purple
+				                    window.chartColors.purple,
+				                    window.chartColors.white
+				                    
 				                ],
 				                label: 'Dataset 1'
 				            }],

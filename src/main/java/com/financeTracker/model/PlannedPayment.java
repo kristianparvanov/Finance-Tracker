@@ -6,12 +6,29 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.NotEmpty;
+
 public class PlannedPayment {
 	private long plannedPaymentId;
+	
+	@NotNull
+	@Size(min = 2, max = 30)
+	@NotEmpty
 	private String name;
+	
 	private TransactionType paymentType;
 	private LocalDateTime fromDate;
+	
+	@NotNull
+	@Min(1)
+	@Max((long) 999999999.9999)
 	private BigDecimal amount;
+	
 	private String description;
 	private long account;
 	private String categoryName;

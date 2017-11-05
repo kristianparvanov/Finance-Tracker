@@ -101,7 +101,7 @@
 		                    			<i class="fa fa-calendar"></i>
 		                  			</div>
 		                  			<fmt:parseDate value="${ editPlannedPaymentDate }" pattern="yyyy-MM-dd'T'HH:mm" var="parsedDateTime" type="both" />
-                  		 			<input type="text" class="form-control pull-right" id="datepicker" value="<fmt:formatDate pattern="dd.MM.yyyy HH:mm" value="${ parsedDateTime }" />" name="date">
+                  		 			<input type="text" class="form-control pull-right" id="datepicker" value="<fmt:formatDate pattern="MM/dd/yyyy" value="${ parsedDateTime }" />" name="date">
 	                			</div>
 		               		</div>
 			                <div class="form-group">
