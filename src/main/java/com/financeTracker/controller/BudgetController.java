@@ -218,18 +218,69 @@ public class BudgetController {
 	}
 	
 	@RequestMapping (value ="/budgets/{budgetId}/editBudget", method = RequestMethod.POST)
-	public String postEditBudget(HttpSession session, HttpServletRequest request, @PathVariable("budgetId") Long budgetId) {
+	public String postEditBudget(Model model,HttpSession session, HttpServletRequest request, @PathVariable("budgetId") Long budgetId,
+			@Valid @ModelAttribute("newBudget") Budget budget, BindingResult bindingResult) {
+		
 		User user = (User) session.getAttribute("user");
+		budget.setTags(null);
+		budget.setAmount(BigDecimal.valueOf(0));
+		if (bindingResult.hasErrors()) {
+			try {
+				Budget b = budget = budgetDao.getBudgetByBudgetId(budgetId);
+				
+				Account acc = accountDAO.getAccountByAccountId(b.getAccountId());
+				Set<Account> accounts = accountDAO.getAllAccountsByUserId(user.getUserId());
+				BigDecimal amount = b.getInitialAmount();
+				String categoryName = categoryDao.getCategoryNameByCategoryId(b.getCategoryId());
+				Set<String> categories = categoryDao.getAllCategoriesByType(user.getUserId(), "EXPENCE");
+//				Set<Category> categories = categoryDao.getAllCategoriesByUserId(user.getUserId());
+//				categories.addAll(categoryDao.getAllCategoriesByUserId());
+				
+				Set<Tag> tags = tagDAO.getAllTagsByUserId(user.getUserId());
+				LocalDateTime fromDate = b.getFromDate();
+				LocalDateTime toDate = b.getToDate();
+				
+				StringBuilder date = new StringBuilder();
+				
+				date.append(fromDate.getMonthValue()).append("/").append(fromDate.getDayOfMonth()).append("/").append(fromDate.getYear());
+				date.append(" - ");
+				date.append(toDate.getMonthValue()).append("/").append(toDate.getDayOfMonth()).append("/").append(toDate.getYear());
+				
+				Set<String> tagNames = new HashSet<String>();
+				for (Tag tag : tags) {
+					tagNames.add(tag.getName());
+				}
+				
+				model.addAttribute("categoryName", categoryName);
+				model.addAttribute("categories", categories);
+				model.addAttribute("tagNames", tagNames);
+				model.addAttribute("tags", tags);
+				model.addAttribute("editBudgetAmount", amount);
+				model.addAttribute("accounts", accounts);
+				model.addAttribute("accountName", acc.getName());
+				model.addAttribute("budget", b);
+				model.addAttribute("date", date);
+				model.addAttribute("newBudget", new Budget());
+				
+				model.addAttribute("editBudget", "Could not edit budget. Please, enter a valid data!");
+			} catch (SQLException e) {
+				System.out.println(e.getMessage());
+				
+				return "error500";
+			}
+			
+			
+			return "editBudget";
+		}
 		
 		try {
 			Budget oldBudget = budgetDao.getBudgetByBudgetId(budgetId);
 			
-			
-			String name = request.getParameter("name");
+//			String name = request.getParameter("name");
 			Account acc = accountDAO.getAccountByUserIDAndAccountName(user.getUserId(), request.getParameter("account"));
 			Category category = categoryDao.getCategoryByCategoryName(request.getParameter("category"));
-			BigDecimal amount = new BigDecimal(request.getParameter("amount"));
-			String[] tags = request.getParameterValues("tags");
+//			BigDecimal amount = new BigDecimal(request.getParameter("amount"));
+			String[] tags = request.getParameterValues("tagss");
 			String date = request.getParameter("date");
 			
 			String[] inputDate = date.split("/");
@@ -239,7 +290,6 @@ public class BudgetController {
 			int dayOfMonthFrom = Integer.valueOf(inputDate[1]);
 			
 			String[] temp = inputDate[2].toString().split(" - ");
-			
 			
 			int yearFrom = Integer.valueOf(temp[0]);
 			
@@ -255,11 +305,11 @@ public class BudgetController {
 			Set<Tag> tagsSet = new HashSet<>();
 			if (tags != null) {
 				for (String tagName : tags) {
-					tagsSet.add(new Tag(tagName, user.getUserId()));
+					tagsSet.add(tagDAO.getTagByNameAndUser(tagName, user.getUserId()));
 				}
 			}
 
-			Budget newBudget = new Budget(name, amount, dateFrom, dateTo, acc.getAccountId(), category.getCategoryId(), tagsSet);
+			Budget newBudget = new Budget(budget.getName(), budget.getInitialAmount(), dateFrom, dateTo, acc.getAccountId(), category.getCategoryId(), tagsSet);
 			newBudget.setBudgetId(budgetId);
 			
 			boolean exist = newBudget.getCategoryId() != oldBudget.getCategoryId() || newBudget.getAccountId() != oldBudget.getAccountId()
@@ -309,6 +359,8 @@ public class BudgetController {
 			user.setLastFill(LocalDateTime.now());
 			userDao.updateUser(user);
 		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			
 			return "error500";
 		}
 		
@@ -355,6 +407,7 @@ public class BudgetController {
 			model.addAttribute("accountName", acc.getName());
 			model.addAttribute("budget", budget);
 			model.addAttribute("date", date);
+			model.addAttribute("newBudget", new Budget());
 		} catch (SQLException e) {
 			return "error500";
 		}

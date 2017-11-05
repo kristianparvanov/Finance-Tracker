@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -22,6 +23,7 @@ public class Budget {
 
 	@NotNull
 	@Min(1)
+	@Max((long) 999999999.9999)
 	private BigDecimal initialAmount;
 	private BigDecimal amount;
 	private LocalDateTime fromDate;

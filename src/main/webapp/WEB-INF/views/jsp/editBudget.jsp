@@ -3,6 +3,7 @@
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/functions" prefix = "fn" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@taglib uri = "http://www.springframework.org/tags/form" prefix = "f"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
@@ -26,21 +27,29 @@
 		
 		<div class="content-wrapper" style="height: auto">
 		 <section class="content-header">
-			<h1>Add budget</h1>
+			<h1>Edit budget</h1>
 		</section>
 		<section class="content">
 			<div class="col-md-6">
 		        <div class="box box-primary">
-		            <form role="form" action='<c:url value='/budgets/${ budget.budgetId }/editBudget'></c:url>' method="post">
+		        <c:url var="url" value='/budgets/${ budget.budgetId }/editBudget'></c:url>
+		            <f:form role="form" action="${ url }" method="POST" commandName="newBudget">
 		              <div class="box-body">
+		               	<c:if test="${editBudget!=null}">
+		 					<label style="color: red"><c:out value="${editBudget}"/></label>
+	  					</c:if>
 			             <div class="form-group">
                   			<label>Name</label>
-                 			<textarea id="bName" class="form-control" rows="1" placeholder="Enter budget name" name="name"></textarea>
+                 			<f:textarea id="bName" class="form-control" rows="1" placeholder="Enter budget name" name="name" path="name"></f:textarea>
                  			<c:set var="name" value="${ budget.name }" />
                  			<script type="text/javascript">
                  				var budgetName = '${ name }';
 								document.getElementById("bName").value = budgetName;
 							</script>
+						  <!-- 	<script type="text/javascript">
+			       				var date = '${ date }';
+								document.getElementById("reservationtime").value = date;
+							</script> -->
                			</div>
 			            
 		                <div class="form-group">
@@ -66,11 +75,11 @@
 						</div>
 		                <div class="form-group">
 		                  <label>Amount</label>
-		                  <input type="text" class="form-control" placeholder="Amount" name="amount" value="${ editBudgetAmount }">
+		                  <f:input type="text" class="form-control" placeholder="Amount" path="initialAmount" value="${ editBudgetAmount }" />
 		                </div>
 		                <div class="form-group">
 			                <label>Tags</label>
-			                <select id="multy" class="form-control select2" multiple="multiple" data-placeholder="Select tags" style="width: 100%;" name="tags">
+			                <select id="multy" class="form-control select2" multiple="multiple" data-placeholder="Select tags" style="width: 100%;" name="tagss">
 			                  <c:forEach items="${ tags }" var="tag">
 			                	  <option><c:out value="${ tag.name }"></c:out></option>
 			                  </c:forEach>
@@ -119,7 +128,7 @@
 		              </div>
 		              
 	               </div>
-		            </form>
+		            </f:form>
 	          	</div>
         	</div>
 		</section>
