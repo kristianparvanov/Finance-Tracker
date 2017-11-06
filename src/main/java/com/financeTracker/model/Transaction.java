@@ -113,18 +113,6 @@ public class Transaction {
 		this.amount = amount;
 	}
 
-//	public void setAccount(long account) {
-//		this.account = account;
-//	}
-//
-//	public void setCategory(long category) {
-//		this.category = category;
-//	}
-
-//	public void setDate(LocalDateTime date) {
-//		this.date = date;
-//	}
-
 	public void setTags(Set<Tag> tags) {
 		this.tags = tags;
 	}

@@ -84,16 +84,10 @@ public class PlannedPaymentDAO {
 			payments.add(payment);
 		}
 		
-//		for (PlannedPayment payment : ALL_PLANNED_PAYMENTS.values()) {
-//			if (payment.getAccount() == accountId) {
-//				payments.add(payment);
-//			}
-//		}
 		return payments;
 	}
 	
 	public synchronized List<PlannedPayment> getAllPlannedPaymentsByCategoryId(long categoryId) throws SQLException {
-		//SELECT planned_payment_id, name, type, from_date, amount, description, account_id, category_id, own_category_id FROM finance_tracker.planned_payments WHERE category_id = ?
 		List<PlannedPayment> payments = new ArrayList<PlannedPayment>();
 		String query = "SELECT planned_payment_id, name, type, from_date, amount, description, account_id, category_id FROM finance_tracker.planned_payments WHERE category_id = ?";
 		
@@ -116,11 +110,6 @@ public class PlannedPaymentDAO {
 			payments.add(payment);
 		}
 		
-//		for (PlannedPayment payment : ALL_PLANNED_PAYMENTS.values()) {
-//			if (payment.getCategory() == categoryId) {
-//				payments.add(payment);
-//			}
-//		}
 		return payments;
 	}
 	

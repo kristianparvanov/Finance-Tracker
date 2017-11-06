@@ -100,13 +100,7 @@ public class TransactionDAO {
 			t.setCategoryName(categoryName);
 			transactions.add(t);
 		}
-//		for (ArrayList<Transaction> transactionTypes : ALL_TRANSACTIONS.values()) {
-//			for (Transaction transaction : transactionTypes) {
-//				if (transaction.getAccount() == accountId) { 
-//					transactions.add(transaction);
-//				}
-//			}
-//		}
+		
 		return transactions;
 	}
 	

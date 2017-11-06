@@ -68,7 +68,13 @@ public class BudgetController {
 		Set<Budget> budgets = null;
 		BigDecimal percent = new BigDecimal(0.0);
 		
-		Map<Budget, BigDecimal> map = new TreeMap<>((b1, b2) -> b1.getFromDate().compareTo(b2.getFromDate()));
+		Map<Budget, BigDecimal> map = new TreeMap<>((b1, b2) -> {
+			if(b2.getFromDate().compareTo(b1.getFromDate()) == 0) {
+				return Long.compare(b2.getBudgetId() , b1.getBudgetId());
+			}
+			
+			return b2.getFromDate().compareTo(b1.getFromDate());
+		});
 		
 		try {
 			budgets = budgetDao.getAllBudgetsByUserId(u.getUserId());
@@ -94,7 +100,6 @@ public class BudgetController {
 		try {
 			Set<Account> accounts = accountDAO.getAllAccountsByUserId(user.getUserId());
 			Set<String> categories = categoryDao.getAllCategoriesByType(user.getUserId(), "EXPENCE");
-//			categories.addAll(categoryDao.getAllCategoriesByUserId());
 			Set<Tag> tags = tagDAO.getAllTagsByUserId(user.getUserId());
 			
 			model.addAttribute("accounts", accounts);
@@ -120,7 +125,6 @@ public class BudgetController {
 			try {
 				accounts = accountDAO.getAllAccountsByUserId(user.getUserId());
 				Set<String> categories = categoryDao.getAllCategoriesByType(user.getUserId(), "EXPENCE");
-//			categories.addAll(categoryDao.getAllCategoriesByUserId());
 				Set<Tag> tags = tagDAO.getAllTagsByUserId(user.getUserId());
 
 				model.addAttribute("accounts", accounts);
@@ -140,10 +144,8 @@ public class BudgetController {
 		
 		
 		try {
-//			String name = request.getParameter("name");
 			Account acc = accountDAO.getAccountByUserIDAndAccountName(user.getUserId(), request.getParameter("account"));
 			Category category = categoryDao.getCategoryByCategoryName(request.getParameter("category"));
-//			BigDecimal amount = new BigDecimal(request.getParameter("amount"));
 			String[] tags = request.getParameterValues("tagss");
 			String date = request.getParameter("date");
 			
@@ -173,8 +175,6 @@ public class BudgetController {
 				}
 			}
 
-//			Budget b = new Budget(name, amount, dateFrom, dateTo, acc.getAccountId(), category.getCategoryId(), tagsSet);
-			
 			session.setAttribute("link", "addBudget");
 			budget.setFromDate(dateFrom);
 			budget.setToDate(dateTo);
@@ -234,8 +234,6 @@ public class BudgetController {
 				BigDecimal amount = b.getInitialAmount();
 				String categoryName = categoryDao.getCategoryNameByCategoryId(b.getCategoryId());
 				Set<String> categories = categoryDao.getAllCategoriesByType(user.getUserId(), "EXPENCE");
-//				Set<Category> categories = categoryDao.getAllCategoriesByUserId(user.getUserId());
-//				categories.addAll(categoryDao.getAllCategoriesByUserId());
 				
 				Set<Tag> tags = tagDAO.getAllTagsByUserId(user.getUserId());
 				LocalDateTime fromDate = b.getFromDate();
@@ -277,10 +275,8 @@ public class BudgetController {
 		try {
 			Budget oldBudget = budgetDao.getBudgetByBudgetId(budgetId);
 			
-//			String name = request.getParameter("name");
 			Account acc = accountDAO.getAccountByUserIDAndAccountName(user.getUserId(), request.getParameter("account"));
 			Category category = categoryDao.getCategoryByCategoryName(request.getParameter("category"));
-//			BigDecimal amount = new BigDecimal(request.getParameter("amount"));
 			String[] tags = request.getParameterValues("tagss");
 			String date = request.getParameter("date");
 			
@@ -381,8 +377,6 @@ public class BudgetController {
 			BigDecimal amount = budget.getInitialAmount();
 			String categoryName = categoryDao.getCategoryNameByCategoryId(budget.getCategoryId());
 			Set<String> categories = categoryDao.getAllCategoriesByType(user.getUserId(), "EXPENCE");
-//			Set<Category> categories = categoryDao.getAllCategoriesByUserId(user.getUserId());
-//			categories.addAll(categoryDao.getAllCategoriesByUserId());
 			
 			Set<Tag> tags = tagDAO.getAllTagsByUserId(user.getUserId());
 			LocalDateTime fromDate = budget.getFromDate();

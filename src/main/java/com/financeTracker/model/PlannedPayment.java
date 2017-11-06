@@ -108,10 +108,6 @@ public class PlannedPayment {
 		this.paymentType = paymentType;
 	}
 
-//	public void setFromDate(LocalDateTime fromDate) {
-//		this.fromDate = fromDate;
-//	}
-
 	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
 	}
@@ -119,14 +115,6 @@ public class PlannedPayment {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-
-//	public void setAccount(long account) {
-//		this.account = account;
-//	}
-//
-//	public void setCategory(long category) {
-//		this.category = category;
-//	}
 
 	public void setTags(HashSet<Tag> tags) {
 		this.tags = tags;

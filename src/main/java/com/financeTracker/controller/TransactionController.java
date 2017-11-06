@@ -120,7 +120,6 @@ public class TransactionController {
 		String category = request.getParameter("category");
 		String amount = request.getParameter("amount");
 		String[] tags = request.getParameterValues("tagss");
-//		String description = request.getParameter("description");
 		transaction.setTags(null);
 		if (type.isEmpty() || account.isEmpty() || category.isEmpty() || bindingResult.hasErrors()) {
 			m.addAttribute("error", "Could not insert transaction. Please, enter valid data!");
@@ -206,7 +205,6 @@ public class TransactionController {
 		String amount = request.getParameter("amount");
 		String date = request.getParameter("date");
 		String[] tags = request.getParameterValues("tagss");
-//		String description = request.getParameter("description");
 		long transactionId = (long) request.getSession().getAttribute("transactionId");
 		
 		if (type.isEmpty() || account.isEmpty() || category.isEmpty() || bindingResult.hasErrors()) {

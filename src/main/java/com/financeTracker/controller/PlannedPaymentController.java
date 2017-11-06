@@ -133,15 +133,7 @@ public class PlannedPaymentController {
 			acc = accountDAO.getAccountByAccountNameAndAccountId(account, u.getUserId());
 			Category cat = categoryDao.getCategoryByCategoryName(category);
 			PlannedPayment p = new PlannedPayment(name, TransactionType.valueOf(type), newDate, BigDecimal.valueOf(Double.valueOf(amount)), description, acc.getAccountId(), cat.getCategoryId(), tagsSet);
-//			BigDecimal newValue = BigDecimal.valueOf(Double.valueOf(amount));
-//			BigDecimal oldValue = accountDAO.getAmountByAccountId((int)acc.getAccountId());
-			
-//			if (type.equals("EXPENCE")) {
-//				accountDAO.updateAccountAmount(acc, (oldValue.subtract(newValue)));
-//			} else 
-//			if (type.equals("INCOME")) {
-//				accountDAO.updateAccountAmount(acc, (oldValue.add(newValue)));
-//			}
+
 			plannedPaymentDAO.insertPlannedPayment(p);
 			plannedPaymentService.initPaymentThread(p);
 			
@@ -153,14 +145,10 @@ public class PlannedPaymentController {
 		request.setAttribute("user", u);
 		request.setAttribute("accountId", acc.getAccountId());
 		
-		//response.sendRedirect("transaction");
-		//transaction?accountId=${sessionScope.accountId}
 		
 		return "redirect:/plannedPayments";
-		//request.getRequestDispatcher("transaction?accountId=" + acc.getAccountId()).forward(request, response);
 	}
 	
-	//"payment/${payment.plannedPaymentId}
 	@RequestMapping(value="/payment/{plannedPaymentId}", method=RequestMethod.GET)
 	public String getEditPlannedPayment(HttpServletRequest request, HttpSession session, Model model, @PathVariable("plannedPaymentId") Long plannedPaymentId) {
 		try {
@@ -207,7 +195,6 @@ public class PlannedPaymentController {
 		String amount = request.getParameter("amount");
 		String date = request.getParameter("date");
 		String[] tags = request.getParameterValues("tagss");
-		/*String description = request.getParameter("description");*/
 		long plannedPaymentId = (long) request.getSession().getAttribute("plannedPaymentId");
 		
 		if (type.isEmpty() || account.isEmpty() || category.isEmpty() || bindingResult.hasErrors()) {
@@ -265,14 +252,7 @@ public class PlannedPaymentController {
 			Category cat = categoryDao.getCategoryByCategoryName(category);
 			PlannedPayment p = new PlannedPayment(name, TransactionType.valueOf(type), newDate, BigDecimal.valueOf(Double.valueOf(amount)), plannedPayment.getDescription(), acc.getAccountId(), cat.getCategoryId(), tagsSet);
 			p.setPlannedPaymentId(plannedPaymentId);
-//			BigDecimal newValue = BigDecimal.valueOf(Double.valueOf(amount));
-//			BigDecimal oldValue = accountDAO.getAmountByAccountId((int)acc.getAccountId());
-//			if (type.equals("EXPENCE")) {
-//				accountDAO.updateAccountAmount(acc, (oldValue.subtract(newValue)));
-//			} else 
-//			if (type.equals("INCOME")) {
-//				accountDAO.updateAccountAmount(acc, (oldValue.add(newValue)));
-//			}
+
 			tagDAO.deleteAllTagsForPlannedPayment(plannedPaymentId);
 			plannedPaymentDAO.updatePlannedPayment(p);
 			
