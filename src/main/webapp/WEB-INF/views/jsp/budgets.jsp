@@ -43,7 +43,7 @@
 					<div class="col-md-4" style="width: 50%">
 						
 						<div class="info-box" style="background-color: khaki" >
-				            <a href="budgets/${ budget.key.budgetId }" style="color: #FFFFFF; text-decoration: none !important;">
+				            <a href="budgets/${ budget.key.budgetId }" style="color: #FFFFFF; text-decoration: none !important; margin-bottom: 0px">
 								<span class="info-box-icon"><i class="ion ion-information-circled" style="margin-top: 20px"></i></span>
 							</a>
 				            <div class="info-box-content">
@@ -60,9 +60,18 @@
 				                	<div class="progress-bar" style="height: 10px; background-color: #75FF33; width: <c:out value = "${ percent }"/>%"></div>
 			                	</c:if>
 				              </div>
-				              <span class="progress-description">
-				                    <c:out value="${ percent }%"></c:out> percent spent <%-- Increase in  <c:out value="${ budget.key.toDate - budget.key.fromDate }"></c:out> --%>
-				              </span>
+				              <div class="row">
+				             	 <div class="col-sm-7">
+						              <span class="progress-description" style="font-size: 18px">
+						                    <c:out value="Amount ${ budget.key.amount } $"></c:out>
+						              </span>
+					              </div>
+					              <div class="col-sm-4">
+						              <span class="progress-description" style="float:right; font-size: 18px">
+						                    <c:out value="Spent ${ percent }%"></c:out> 
+						              </span>
+					              </div>
+				              </div>
 				            </div>
 				          </div>
 						</div>
