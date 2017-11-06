@@ -229,6 +229,25 @@ public class UserController {
 	public String UpdateUser(HttpSession session, HttpServletRequest request, Model model, @Valid @ModelAttribute("user") User newUser, BindingResult bindingResult) {
 		User user = (User) session.getAttribute("user");
 		
+		
+		
+		if (!MessageDigest.isEqual(DigestUtils.sha512(DigestUtils.sha512Hex(newUser.getPassword())), user.getPassword())) {
+			model.addAttribute("editUser", "Could not edit your profile. Please, enter a correct password!");
+			String username = user.getUsername();
+			String email = user.getEmail();
+			String firstName = user.getFirstName();
+			String lastName = user.getLastName();
+			
+			model.addAttribute("username", username);
+			model.addAttribute("email", email);
+			model.addAttribute("firstName", firstName);
+			model.addAttribute("lastName", lastName);
+			model.addAttribute("user", new User());
+			session.setAttribute("userId", user.getUserId());
+			
+			return "user";
+		}
+		
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("editUser", "Could not edit your profile. Please, enter a valid email, first name and last name!");
 			String username = user.getUsername();

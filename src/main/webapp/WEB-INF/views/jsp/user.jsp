@@ -34,7 +34,7 @@
 		 					<label style="color: red"><c:out value="${editUser}"/></label>
 	  					</c:if>
 	  					<f:hidden path="username" value="${ username }" />
-	  					<f:hidden path="password" value="passddsfs" />
+	  					<%-- <f:hidden path="password" value="passddsfs" /> --%>
 		                <div class="form-group">
 			                <label>Email</label>
                				<f:input type="text" id="email" class="form-control" path="email" />
@@ -61,6 +61,11 @@
                  				var asd = '${lastName}';
 								document.getElementById("lastName").value = asd;
 							</script>
+		                </div>
+		                
+		                <div class="form-group">
+		                  <label>Enter password to confirm your update</label>
+               				<f:input type="password" id="password" class="form-control" path="password" />
 		                </div>
                		  </div>
                		  <div class="box-footer">
