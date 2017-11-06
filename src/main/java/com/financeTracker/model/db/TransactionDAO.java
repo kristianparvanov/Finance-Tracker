@@ -79,15 +79,34 @@ public class TransactionDAO {
 		}
 	}
 
-	public synchronized List<Transaction> getAllTransactionsByAccountId(long accountId) {
+	public synchronized List<Transaction> getAllTransactionsByAccountId(long accountId) throws SQLException {
 		List<Transaction> transactions = new ArrayList<Transaction>();
-		for (ArrayList<Transaction> transactionTypes : ALL_TRANSACTIONS.values()) {
-			for (Transaction transaction : transactionTypes) {
-				if (transaction.getAccount() == accountId) { 
-					transactions.add(transaction);
-				}
-			}
+		String query = "SELECT transaction_id, type, date, description, amount, account_id, category_id FROM finance_tracker.transactions WHERE account_id = ?";
+		PreparedStatement statement = dbManager.getConnection().prepareStatement(query);
+		statement.setLong(1, accountId);
+		ResultSet result = statement.executeQuery();
+		while (result.next()) {
+			long transactionId = result.getInt("transaction_id");
+			String type = result.getString("type");
+			TransactionType transactionType = TransactionType.valueOf(type);
+			LocalDateTime date = result.getTimestamp("date").toLocalDateTime();
+			BigDecimal amount = result.getBigDecimal("amount");
+			String description = result.getString("description");
+			int account = result.getInt("account_id");
+			int categoryId = result.getInt("category_id");
+			HashSet<Tag> tags = tagDAO.getTagsByTransactionId(transactionId);
+			String categoryName = categoryDao.getCategoryNameByCategoryId(categoryId);
+			Transaction t = new Transaction(transactionId, transactionType, description, amount, account, categoryId, date, tags);
+			t.setCategoryName(categoryName);
+			transactions.add(t);
 		}
+//		for (ArrayList<Transaction> transactionTypes : ALL_TRANSACTIONS.values()) {
+//			for (Transaction transaction : transactionTypes) {
+//				if (transaction.getAccount() == accountId) { 
+//					transactions.add(transaction);
+//				}
+//			}
+//		}
 		return transactions;
 	}
 	

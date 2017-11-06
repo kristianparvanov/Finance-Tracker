@@ -3,6 +3,7 @@ package com.financeTracker.controller;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.text.NumberFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -60,7 +61,15 @@ public class TransactionController {
 	@RequestMapping(value="/{accountId}", method=RequestMethod.GET)
 	public String getAllTransactions(HttpServletRequest request, HttpSession session, Model model, @PathVariable("accountId") Long accountId) {
 		User user = (User) session.getAttribute("user");
-		TreeSet<Transaction> transactions = new TreeSet<>((t1, t2) -> t2.getDate().compareTo(t1.getDate()));
+		TreeSet<Transaction> transactions = new TreeSet<>((t1, t2) -> 
+			{
+				if(t2.getDate().compareTo(t1.getDate()) == 0) {
+					return Long.compare(t2.getTransactionId() , t1.getTransactionId());
+				}
+				
+				return t2.getDate().compareTo(t1.getDate());
+			}
+		);
 		BigDecimal accountBalance = null;
 		String accountName = null;
 		Set<Category> allCategories = new HashSet<Category>();
@@ -205,8 +214,10 @@ public class TransactionController {
 			try {
 				Transaction t = new Transaction();
 				Set<String> tagNames = new HashSet<String>();
-				for (String tag : tags) {
-					tagNames.add(tag);
+				if (tags != null) {
+					for (String tag : tags) {
+						tagNames.add(tag);
+					}
 				}
 				
 				String[] inputDate = date.split("/");
@@ -224,7 +235,7 @@ public class TransactionController {
 				model.addAttribute("editTransactionDate", newDate);
 				model.addAttribute("editTransactionTags", tagNames);
 			} catch (Exception e) {
-				// TODO: handle exception
+				return "error500";
 			}
 			
             return "editTransaction";
@@ -262,7 +273,6 @@ public class TransactionController {
 			}
 			
 			tagDAO.deleteAllTagsForTransaction(transactionId);
-//			transactionDAO.removeTransaction(transactionId);
 			transactionDAO.updateTransaction(t);
 			
 			u.setLastFill(LocalDateTime.now());
@@ -272,10 +282,6 @@ public class TransactionController {
 		}
 		return "redirect:/account/" + acc.getAccountId();
 	}
-	
-	//transfer/accountId/${accountId}
-	//http://localhost:8080/FinanceTracker/account/transfer/accountId/2
-	//@RequestMapping(value="/account/transfer/accountId/${accountId}", method=RequestMethod.GET)
 	
 	@RequestMapping(value="/transfer/accountId/{accountId}", method=RequestMethod.GET)
 	public String getTransfer(HttpServletRequest request, Model model, HttpSession session, @PathVariable("accountId") Long originAccountId) {
@@ -297,27 +303,52 @@ public class TransactionController {
 	}
 	
 	@RequestMapping(value="/transfer/accountId/transfer", method=RequestMethod.POST)
-	public String postTransfer(HttpServletRequest request, HttpSession session) {
+	public String postTransfer(HttpServletRequest request, HttpSession session, Model model) {
 		User user = (User) session.getAttribute("user");
 		
 		String amountParam = request.getParameter("amount");
 		String fromAccount = request.getParameter("fromAccount");
 		String toAccount = request.getParameter("toAccount");
 		
+		if (amountParam.isEmpty() || fromAccount.equals(toAccount) || BigDecimal.valueOf(Double.valueOf(amountParam)).compareTo(BigDecimal.ZERO) < 0 || BigDecimal.valueOf(Double.valueOf(amountParam)).compareTo(BigDecimal.ZERO) == 0) {
+			model.addAttribute("error", "Could not make transfer. Please, enter valid data!");
+			try {
+				Account originAccount = null;
+				Set<Account> userAccounts = null;
+				try {
+					originAccount = accountDAO.getAccountByAccountNameAndAccountId(fromAccount, user.getUserId());
+					userAccounts = accountDAO.getAllAccountsByUserId(user.getUserId());
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				
+				model.addAttribute("firstAccount", originAccount);
+				model.addAttribute("userAccounts", userAccounts);
+			} catch (Exception e) {
+				return "error500";
+			}
+			return "transfer";
+		}
+		
 		BigDecimal amount = BigDecimal.valueOf(Double.valueOf(amountParam));
 		
 		Account from = null;
 		Account to = null;
+		Category transferCategory = null;
 		try {
 			from = accountDAO.getAccountByAccountNameAndAccountId(fromAccount, user.getUserId());
 			to = accountDAO.getAccountByAccountNameAndAccountId(toAccount, user.getUserId());
-			accountDAO.makeTransferToOtherAccount(from, to, amount);
+			transferCategory = categoryDao.getCategoryByCategoryName("Transfer");
+			Transaction t1 = new Transaction(TransactionType.EXPENCE, LocalDateTime.now(), amount, from.getAccountId(), transferCategory.getCategoryId());
+			t1.setDescription("Transfer to account " + to.getName());
+			Transaction t2 = new Transaction(TransactionType.INCOME, LocalDateTime.now(), amount, to.getAccountId(), transferCategory.getCategoryId());
+			t2.setDescription("Transfer from account " + from.getName());
+			accountDAO.makeTransferToOtherAccount(from, to, amount, t1, t2);
 			
 			user.setLastFill(LocalDateTime.now());
 			userDao.updateUser(user);
 		} catch (SQLException e) {
-			System.out.println("Collosal fail when making the transfer");
-			e.printStackTrace();
+			//return "error500";
 		}
 		
 		return "redirect:/account/" + from.getAccountId();

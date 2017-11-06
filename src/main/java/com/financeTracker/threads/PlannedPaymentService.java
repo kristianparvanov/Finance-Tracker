@@ -25,11 +25,9 @@ public class PlannedPaymentService {
 	
 	@PostConstruct
 	public void init() {
-		System.out.println("Payment service started");
 		try {
 			List<PlannedPayment> allPlannedPayments = plannedPaymentDAO.getAllPlannedPayments();
 			for (PlannedPayment plannedPayment : allPlannedPayments) {
-				//foreach pp -> new thread
 				initPaymentThread(plannedPayment);
 			}
 		} catch (SQLException e) {
@@ -41,7 +39,6 @@ public class PlannedPaymentService {
 		PlannedPaymentThread runnable = applicationContext.getBean(PlannedPaymentThread.class);
 		runnable.setPlannedPayment(p);
 		Thread t = new Thread(runnable);
-		System.out.println("Startring ppt");
 		t.setDaemon(true);
 		t.start();
 	}

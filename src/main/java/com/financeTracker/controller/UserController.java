@@ -121,7 +121,7 @@ public class UserController {
 				
 				session.setAttribute("user", user);
 				
-//				EmailSender.sendSimpleEmail(user.getEmail(), "Welcome to the Finance Tracker", "Your new profile is ready. Track away!");
+				EmailSender.sendSimpleEmail(user.getEmail(), "Welcome to the Finance Tracker", "Your new profile is ready. Track away!");
 				
 				return "main";
 			}

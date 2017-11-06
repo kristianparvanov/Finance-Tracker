@@ -180,6 +180,7 @@ public class PlannedPaymentController {
 			}
 			
 			session.setAttribute("link", "payment/" + plannedPaymentId);
+			model.addAttribute("plannedPayment", p);	
 			model.addAttribute("editPlannedPaymentName", name);
 			model.addAttribute("editPlannedPaymentType", type);
 			model.addAttribute("editTPlannedPaymentDescription", description);
@@ -197,17 +198,50 @@ public class PlannedPaymentController {
 	}
 	
 	@RequestMapping(value="/payment/editPlannedPayment", method=RequestMethod.POST)
-	public String postEditPlannedPayment(HttpServletRequest request, HttpSession session, Model model) {
-		
+	public String postEditPlannedPayment(HttpServletRequest request, HttpSession session, Model model, @Valid @ModelAttribute("plannedPayment") PlannedPayment plannedPayment, BindingResult bindingResult) {
+		plannedPayment.setTags(null);
 		String name = request.getParameter("name");
 		String type = request.getParameter("type");
 		String account = request.getParameter("account");
 		String category = request.getParameter("category");
 		String amount = request.getParameter("amount");
 		String date = request.getParameter("date");
-		String[] tags = request.getParameterValues("tags");
-		String description = request.getParameter("description");
+		String[] tags = request.getParameterValues("tagss");
+		/*String description = request.getParameter("description");*/
 		long plannedPaymentId = (long) request.getSession().getAttribute("plannedPaymentId");
+		
+		if (type.isEmpty() || account.isEmpty() || category.isEmpty() || bindingResult.hasErrors()) {
+			model.addAttribute("error", "Could not update payment. Please, enter valid data!");
+			try {
+				PlannedPayment p = new PlannedPayment();
+				Set<String> tagNames = new HashSet<String>();
+				if (tags != null) {
+					for (String tag : tags) {
+						tagNames.add(tag);
+					}
+				}
+				
+				String[] inputDate = date.split("/");
+				int month = Integer.valueOf(inputDate[0]);
+				int dayOfMonth = Integer.valueOf(inputDate[1]);
+				int year = Integer.valueOf(inputDate[2]);
+				
+				LocalDateTime newDate = LocalDateTime.of(year, month, dayOfMonth, 0, 0, 0);
+				
+				model.addAttribute("editPlannedPaymentName", name);
+				model.addAttribute("editPlannedPaymentType", type);
+				model.addAttribute("editTPlannedPaymentDescription", plannedPayment.getDescription());
+				model.addAttribute("editPlannedPaymentAmount", amount);
+				model.addAttribute("editPlannedPaymentAccount", account);
+				model.addAttribute("editPlannedPaymentCategory", category);
+				model.addAttribute("editPlannedPaymentDate", newDate);
+				model.addAttribute("editPlannedPaymentTags", tagNames);
+			} catch (Exception e) {
+				return "error500";
+			}
+			
+			return "editPlannedPayment";
+		}
 		
 		String[] inputDate = date.split("/");
 		int month = Integer.valueOf(inputDate[0]);
@@ -229,7 +263,7 @@ public class PlannedPaymentController {
 		try {
 			acc = accountDAO.getAccountByAccountNameAndAccountId(account, u.getUserId());
 			Category cat = categoryDao.getCategoryByCategoryName(category);
-			PlannedPayment p = new PlannedPayment(name, TransactionType.valueOf(type), newDate, BigDecimal.valueOf(Double.valueOf(amount)), description, acc.getAccountId(), cat.getCategoryId(), tagsSet);
+			PlannedPayment p = new PlannedPayment(name, TransactionType.valueOf(type), newDate, BigDecimal.valueOf(Double.valueOf(amount)), plannedPayment.getDescription(), acc.getAccountId(), cat.getCategoryId(), tagsSet);
 			p.setPlannedPaymentId(plannedPaymentId);
 //			BigDecimal newValue = BigDecimal.valueOf(Double.valueOf(amount));
 //			BigDecimal oldValue = accountDAO.getAmountByAccountId((int)acc.getAccountId());

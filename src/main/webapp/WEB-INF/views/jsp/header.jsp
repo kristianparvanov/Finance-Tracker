@@ -44,31 +44,11 @@
 		        <span class="icon-bar"></span>
 		      </a>
 				
-		      <!-- <div class="collapse navbar-collapse pull-left">
-		        <ul class="nav navbar-nav">
-		          Messages: style can be found in dropdown.less
-		          	<li><a href="#" style="font-size: 18px;">Link</a></li>
-		            <li><a href="#" style="font-size: 18px;">Link</a></li>
-		            <li class="dropdown">
-		              <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="font-size: 18px;">Dropdown <span class="caret"></span></a>
-		              <ul class="dropdown-menu" role="menu">
-		                <li><a href="#">Action</a></li>
-		                <li><a href="#">Another action</a></li>
-		                <li><a href="#">Something else here</a></li>
-		                <li class="divider"></li>
-		                <li><a href="#">Separated link</a></li>
-		                <li class="divider"></li>
-		                <li><a href="#">One more separated link</a></li>
-		              </ul>
-		            </li>
-		        </ul>
-		       </div> -->
-		            
 		        <div class="collapse navbar-collapse pull-right">
 		        <ul class="nav navbar-nav">
 		          <!-- User Account: style can be found in dropdown.less -->
 		          <li>
-		            <a href="<c:url value="/user"></c:url>" style="font-size: 18px;">
+		            <a href="<c:url value="/user"></c:url>" style="font-size: 20px;">
 		            <i class="ion ion-person"></i>
 		              <% User u = (User) request.getSession().getAttribute("user"); %>
 		              <span><%= u.getFirstName() %></span>
@@ -76,7 +56,7 @@
 		          </li>
 		          <!-- Control Sidebar Toggle Button -->
 		          <li>
-		            <a href="<c:url value="/logout"></c:url>" style="font-size: 18px;"><i class="glyphicon glyphicon-log-out"></i> Log out</a>
+		            <a href="<c:url value="/logout"></c:url>" style="font-size: 20px;"><i class="glyphicon glyphicon-log-out"></i> Log out</a>
 		          </li>
 		        </ul>
 		      </div>

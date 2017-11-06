@@ -29,7 +29,6 @@ public class EmailService implements Runnable {
 					Period diff = Period.between(lastFill.toLocalDate(), LocalDate.now());
 					System.out.println(user.getFirstName() + " " + diff.getDays());
 					if (diff.getDays() > 7) {
-						System.out.println("Entered. ready to send email");
 //						EmailSender.sendSimpleEmail(user.getEmail(), "We miss you on Finance Tracker", ("Dear " + user.getFirstName() + ", We here at the Finance tracker noticed you have not used our service for some time now and miss you dearly.. Please come back we have wonderful things in store for you!"));
 					}
 				}

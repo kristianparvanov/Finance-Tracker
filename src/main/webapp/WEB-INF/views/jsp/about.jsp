@@ -25,11 +25,11 @@
 			<section class="content">
 				<div class="box">
 					<div class="box-header with-border">
-						<h3 class="box-title" style="font-size: 18px">About the project</h3>
+						<h3 class="box-title" style="font-size: 22px">About the project</h3>
 					</div>
 					<div class="box-body">
 						<div>
-							<p style="font-size: 16px">
+							<p style="font-size: 20px">
 								The <b>Finance</b>Tracker is a web based Java Application which
 								helps you manage your bank accounts. It keeps track of all your cash 
 								inflow and outflow and collects information about your financial wealth. 
@@ -39,7 +39,7 @@
 						</div>
 						<div class="row">
 							<div class="box-header with-border">
-								<h3 class="box-title" style="font-size: 18px">Technologies used</h3>
+								<h3 class="box-title" style="font-size: 22px">Technologies used</h3>
 							</div>
 						    <div class="col-sm-4" style="display:table-cell; vertical-align:middle; text-align:center">
 						    	<img src="http://www.canoo.com/wp-content/uploads/2017/03/java_ee_logo.png" alt="JEE" width="180" height="auto" align="middle">   
@@ -62,6 +62,18 @@
 						    	<img src="https://spring.io/img/spring-by-pivotal.png" alt="Spring" width="300" height="auto" align="">  
 						    </div>
 						</div>
+						<br>
+						<div class="row">
+						    <div class="col-sm-4" style="display:table-cell; vertical-align:middle; text-align:center">
+						    	<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/AJAX_logo_by_gengns.svg/2000px-AJAX_logo_by_gengns.svg.png" alt="AJAX" width="180" height="auto">   
+						    </div>
+						    <div class="col-sm-4" style="display:table-cell; vertical-align:middle; text-align:center">
+						    	<img src="https://www.shareicon.net/data/512x512/2015/10/24/661304_interface_512x512.png" alt="JSP" width="180" height="auto">   
+						    </div>
+						    <div class="col-sm-4" style="display:table-cell; vertical-align:middle; text-align:center">
+						    	<img src="http://marketplace.intelledox.com/wp-content/uploads/edd/2017/01/Bootstrap.png" alt="Bootstrap" width="250" height="auto">   
+						    </div>
+						</div>
 						<div class="row">
 						    <div class="col-sm-4" style="display:table-cell; vertical-align:middle; text-align:center">
 						    	<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Badge_js-strict.svg/1000px-Badge_js-strict.svg.png" alt="JS" width="180" height="auto">   
@@ -75,12 +87,12 @@
 						</div>
 					</div>
 					<div class="box-footer">
-						<h3 class="box-title" style="font-size: 18px">Made possible by</h3>
+						<h3 class="box-title" style="font-size: 22px">Made possible by</h3>
 						<div class="col-sm-4" style="display:table-cell; vertical-align:middle; text-align:center">
 							<img src="http://ittalents.bg/images/logo-black.png" alt="ITT">
 						</div>
 						<div class="col-sm-4" style="display:table-cell; vertical-align:middle; text-align:center">
-							<img src="https://media.licdn.com/mpr/mpr/shrinknp_200_200/AAEAAQAAAAAAAAUfAAAAJDhlM2JlNDI1LTljMTEtNGEyNS1iMjM3LTE3MTBmOWQ2YTY0MA.jpg" alt="Krasity">
+							<img src="https://media.licdn.com/mpr/mpr/shrinknp_200_200/AAEAAQAAAAAAAAUfAAAAJDhlM2JlNDI1LTljMTEtNGEyNS1iMjM3LTE3MTBmOWQ2YTY0MA.jpg" alt="Krasity" style="border-radius: 50%; box-shadow: 0px 0px 15px black;">
 							<h3>IT Talents Trainer Krasimir Stoev</h3>
 						</div>
 					</div>

@@ -27,6 +27,9 @@
 			<div class="col-md-6">
 		        <div class="box box-primary">
 		            <form role="form" action="transfer" method="post">
+		            <c:if test="${error!=null}">
+			 			<label style="color: red"><c:out value="${error}"/></label>
+		  			 </c:if>
 		              <div class="box-body">
 		              <div class="form-group">
 		                  <label>Amount</label>

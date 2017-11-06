@@ -153,18 +153,17 @@ public class AccountDAO {
 		ps.executeUpdate();
 	}
 	
-	public synchronized void makeTransferToOtherAccount(Account currentAcc, Account otherAcc, BigDecimal amount) throws SQLException {
+	public synchronized void makeTransferToOtherAccount(Account currentAcc, Account otherAcc, BigDecimal amount, Transaction from, Transaction to) throws SQLException {
 		dbManager.getConnection().setAutoCommit(false);
 		
 		try {
 			updateAccountAmount(currentAcc, currentAcc.getAmount().subtract(amount));
 			updateAccountAmount(otherAcc, otherAcc.getAmount().add(amount));
-			
+			transactionDAO.insertTransaction(from);
+			transactionDAO.insertTransaction(to);
 			dbManager.getConnection().commit();
 		} catch (Exception e) {
 			dbManager.getConnection().rollback();
-			
-			throw new SQLException();
 		} finally {
 			dbManager.getConnection().setAutoCommit(true);
 		}

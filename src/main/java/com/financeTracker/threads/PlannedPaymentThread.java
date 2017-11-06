@@ -38,7 +38,6 @@ public class PlannedPaymentThread implements Runnable {
 	
 	public void setPlannedPayment(PlannedPayment plannedPayment) {
 		this.plannedPayment = plannedPayment;
-		System.out.println("Bitch i`m working");
 	}
 	
 	@Override
@@ -51,9 +50,7 @@ public class PlannedPaymentThread implements Runnable {
 			//if is negative dont sleep
 			if (!diff.isNegative()) {
 				try {
-					System.out.println("Thread going to sleep");
 					Thread.sleep(diff.getDays()*24*60*60*1000); //days*24h*60m*60s*1000ms
-					System.out.println("Thread is now sleeping");
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

@@ -2,6 +2,7 @@
     pageEncoding="ISO-8859-1"%>
 <%@ page import="java.math.BigDecimal"%>
 <%@ page import="com.financeTracker.model.TransactionType" %>
+<%@ taglib prefix="f" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/functions" prefix = "fn" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -30,7 +31,11 @@
 		<section class="content">
 			<div class="col-md-6">
 		        <div class="box box-primary">
-		        	 <form role="form" action="editPlannedPayment" method="post">
+		        	<f:form role="form" commandName="plannedPayment" method="post" action="editPlannedPayment">
+		        	 <%-- <form role="form" action="editPlannedPayment" method="post"> --%>
+		        	 <c:if test="${error!=null}">
+				 			<label style="color: red"><c:out value="${error}"/></label>
+			  			</c:if>
 		        	 	<div class="box-body">
 		        	 		<div class="form-group">
                   				<label>Name</label>
@@ -92,7 +97,8 @@
 							</div>
 			                <div class="form-group">
 			                  <label>Amount</label>
-			                  <input type="text" class="form-control" placeholder="Amount" name="amount" value="${ editPlannedPaymentAmount }">
+			                  <f:input path="amount" type="text" cssClass="form-control" placeholder="Amount" value="${ editPlannedPaymentAmount }"/>
+			                 <%--  <input type="text" class="form-control" placeholder="Amount" name="amount" value="${ editPlannedPaymentAmount }"> --%>
 			                </div>
 			                <div class="form-group">
 			                  	<label>Date</label>
@@ -106,7 +112,7 @@
 		               		</div>
 			                <div class="form-group">
 				                 <label>Tags</label>
-			                <select id="multy" class="form-control select2" multiple="multiple" data-placeholder="Select tags" style="width: 100%;" name="tags">
+			                <select id="multy" class="form-control select2" multiple="multiple" data-placeholder="Select tags" style="width: 100%;" name="tagss">
 				                <c:forEach items="${tags }" var="tag">
 				                	<option><c:out value="${tag.name}"></c:out></option>
 				                </c:forEach>
@@ -131,7 +137,8 @@
 			           		</div>
 		  					<div class="form-group">
 	                  			<label>Description</label>
-	                 			<textarea id="desc" class="form-control" rows="3" placeholder="Enter planned payment description here" name="description" ></textarea>
+	                  			<f:textarea id="desc" class="form-control" rows="3" placeholder="Enter transaction description here" path="description" ></f:textarea>
+	                 			<!-- <textarea id="desc" class="form-control" rows="3" placeholder="Enter planned payment description here" name="description" ></textarea> -->
 	                 			<c:set var="description" value="${ editTPlannedPaymentDescription }" />
 	                 			<script type="text/javascript">
 	                 				var asd = '${description}';
@@ -143,7 +150,8 @@
 			                <button type="submit" class="btn btn-primary">Save</button>
 			                <a href="<c:url value="/plannedPayments"></c:url>" class="btn btn-default">Cancel</a>
 		             	</div>
-		            </form>
+		            <%-- </form> --%>
+		            </f:form>
 		            <form action="deletePlannedPayment/${plannedPaymentId}" method="post">
 		            	<div class="box-footer">
     						<button type="submit" class="btn btn-danger">Delete planned payment</button>

@@ -32,29 +32,29 @@
 			<section class="sidebar">
 				<!-- sidebar menu: : style can be found in sidebar.less -->
 				<ul class="sidebar-menu" data-widget="tree">
-					<li class="header" style="font-size: 16px">MAIN NAVIGATION</li>
+					<li class="header" style="font-size: 18px">MAIN NAVIGATION</li>
 					<li>
 						<a href="<c:url value="/main"></c:url>">
 							<i class="fa fa-credit-card"></i> 
-							<span style="font-size: 18px">Accounts</span>
+							<span style="font-size: 20px">Accounts</span>
 						</a>
 					</li>
 					<li>
 						<a href="<c:url value="/plannedPayments"></c:url>">
 							<i class="fa fa-dollar"></i> 
-							<span style="font-size: 18px">Planned Payments</span>
+							<span style="font-size: 20px">Planned Payments</span>
 						</a>
 					</li>
 					<li>
 						<a href="<c:url value="/budgets"></c:url>">
 							<i class="fa fa-money"></i> 
-							<span style="font-size: 18px">Budgets</span>
+							<span style="font-size: 20px">Budgets</span>
 						</a>
 					</li>
 					<li class="treeview">
 						<a href="#"> 
 							<i class="fa fa-pie-chart"></i> 
-							<span style="font-size: 18px">Charts</span>
+							<span style="font-size: 20px">Charts</span>
 							<span class="pull-right-container">
 								<i class="fa fa-angle-left pull-right"></i>
 							</span>
@@ -62,17 +62,17 @@
 						<ul class="treeview-menu">
 							<li>
 								<a href="<c:url value="/cashflowStructute"></c:url>">
-									<i class="glyphicon glyphicon-menu-right"></i>Cashflow structure
+									<h4 style="font-size: 16px"><i class="glyphicon glyphicon-menu-right"></i> Cashflow structure</h4>
 								</a>
 							</li>
 							<li>
 								<a href="<c:url value="/incomeVsExpenses"></c:url>">
-									<i class="glyphicon glyphicon-menu-right"></i>Income vs Expenses
+									<h4 style="font-size: 16px"><i class="glyphicon glyphicon-menu-right"></i> Income vs Expenses</h4>
 								</a>
 							</li>
 							<li>
 								<a href="<c:url value="/cashflowTrend"></c:url>">
-									<i class="glyphicon glyphicon-menu-right"></i>Cashflow trend
+									<h4 style="font-size: 16px"><i class="glyphicon glyphicon-menu-right"></i> Cashflow trend</h4>
 								</a>
 							</li>
 						</ul>
@@ -81,13 +81,13 @@
 					<li>
 						<a href="<c:url value="/reports"></c:url>">
 							<i class="fa fa-book"></i> 
-							<span style="font-size: 18px">Reports</span>
+							<span style="font-size: 20px">Reports</span>
 						</a>
 					</li>
 					<li>
 						<a href="<c:url value="/about"></c:url>">
 							<i class="fa fa-question-circle"></i>
-							<span style="font-size: 18px">About</span>
+							<span style="font-size: 20px">About</span>
 						</a>
 					</li>
 				</ul>
