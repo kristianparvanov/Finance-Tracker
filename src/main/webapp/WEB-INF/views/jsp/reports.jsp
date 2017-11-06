@@ -77,6 +77,7 @@
 						<div class="form-group">
 			                <label>Type</label>
 			                <select class="form-control select2" style="width: 100%;" data-placeholder="Select a type" name="type" onchange="myFunction()" id="type" >
+			                  <option>All types</option>
 			                  <option>EXPENCE</option>
 			                  <option>INCOME</option>
 			                  
@@ -88,6 +89,7 @@
 		               <div class="form-group">
 			                <label>Category</label>
 			                <select class="form-control select2" style="width: 100%;" data-placeholder="Select a category" name="category" id="category">
+			                <option>All categories</option>
 			                  <%-- <c:forEach items="${categories }" var="category">
 			                	  <option><c:out value="${category.name}"></c:out></option>
 			                  </c:forEach> --%>
@@ -119,7 +121,7 @@
 			
 			<c:forEach items="${ allTransactions }" var="transaction">
 				<div>
-					<a href="account/transaction/${transaction.transactionId}">
+					<a href="<c:url value='/account/transaction/${transaction.transactionId}'></c:url>">
 			            <div class="info-box" style="width: auto;">
 				            <div class="info-box-content">
 					            <div class="row">
@@ -183,6 +185,7 @@
 					var categories = JSON.parse(this.responseText);
 					
 					$(select).html(""); //reset child options
+			    	$(select).append("<option>All categories</option>");
 				    $(categories).each(function (i) { //populate child options 
 				        $(select).append("<option>"+categories[i]+"</option>");
 				    });

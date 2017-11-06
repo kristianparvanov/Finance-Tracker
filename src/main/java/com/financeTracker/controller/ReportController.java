@@ -37,7 +37,15 @@ public class ReportController {
 	public String getAllReports(HttpSession session, Model model) {
 		User user = (User) session.getAttribute("user");
 		
-		Set<Transaction> allTransactions = new TreeSet<>((t1, t2) -> t2.getDate().compareTo(t1.getDate()));
+		TreeSet<Transaction> allTransactions = new TreeSet<>(
+				(t1, t2) -> {
+					if(t2.getDate().compareTo(t1.getDate()) == 0) {
+						return Long.compare(t2.getTransactionId() , t1.getTransactionId());
+					}
+					
+					return t2.getDate().compareTo(t1.getDate());
+				}
+		);
 		
 		Set<Account> allAccounts = new TreeSet<>((a1, a2) -> a1.getName().compareToIgnoreCase(a2.getName()));
 		
@@ -91,17 +99,26 @@ public class ReportController {
 		LocalDateTime from = LocalDateTime.of(yearFrom, monthFrom, dayOfMonthFrom, 0, 0, 0);
 		LocalDateTime to = LocalDateTime.of(yearTo, monthTo, dayOfMonthTo, 0, 0, 0);
 		
-		Set<Transaction> transactions = new TreeSet<>((t1, t2) -> t1.getDate().compareTo(t2.getDate()));
+		TreeSet<Transaction> transactions = new TreeSet<>(
+				(t1, t2) -> {
+					if(t2.getDate().compareTo(t1.getDate()) == 0) {
+						return Long.compare(t2.getTransactionId() , t1.getTransactionId());
+					}
+					
+					return t2.getDate().compareTo(t1.getDate());
+				}
+		);
 		
 		try {
-			transactions.addAll(transactionDao.getFilteredTransactions(accountDao.getAccountId(user, accName), type, categoryDao.getCategoryByCategoryName(categoryName).getCategoryId(), from, to));
+			transactions.addAll(transactionDao.getReportTransactions(user.getUserId(), type,
+					categoryName.equals("All categories") ? 0 : categoryDao.getCategoryByCategoryName(categoryName).getCategoryId(),
+					accName.equals("All accounts") ? 0 : accountDao.getAccountId(user, accName), from, to));
 		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			
 			return "error500";
 		}
 		
-		for (Transaction transaction : transactions) {
-			transaction.setCategoryName(categoryName);
-		}
 		Set<Account> allAccounts = new TreeSet<>((a1, a2) -> a1.getName().compareToIgnoreCase(a2.getName()));
 		
 		Set<Category> categories = new TreeSet<>((c1, c2) -> c1.getName().compareToIgnoreCase(c2.getName()));
@@ -113,7 +130,7 @@ public class ReportController {
 				allAccounts.add(acc);
 			}
 		} catch (SQLException e) {
-			System.out.println("mai nemame kategoriiki?");
+			return "error500";
 		}
 		
 		
